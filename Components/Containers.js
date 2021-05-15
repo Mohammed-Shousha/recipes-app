@@ -19,7 +19,7 @@ export const CenterContainer = styled.View `
 export const RowContainer = styled.Pressable`
    flex-direction: row;
    width: ${props => props.width || '100%'};
-   justify-content: ${props => props.flexStart ? 'flex-start' : props.between ? 'space-between' : 'space-around'};
+   justify-content: ${props => props.flexStart ? 'flex-start' : props.between ? 'space-between' : props.center? 'center': 'space-around'};
    align-items: center;
    align-self: center;
    padding: ${props => props.Nav ? '7px 0' : props.noPadding ? '0' : props.user? '15px 10px' : '5px 0'};
@@ -45,7 +45,7 @@ export const BoxesContainer = styled.View`
 
 export const RecipeInfo = styled.View` 
    flex-direction: row;
-   width: 30%;
+   width: ${props => props.user ? '45%' : '30%'};
    justify-content: space-evenly;
    align-items: center;
    background-color: ${props => props.color};
@@ -56,7 +56,7 @@ export const RecipeInfo = styled.View`
 
 
 export const RecipeDetail = styled.Pressable`
-   width: 33%;
+   width: ${props => props.user ? '50%': '33%'};
    align-items: center;
    justify-content: center;
    height: 40px;
@@ -75,4 +75,41 @@ export const RecipeDetailsContainer = styled.View`
    padding: 5px;
    border-top-width: 1px;
    border-top-color: grey;
+`
+
+export const ModalContainer = styled.View`
+   background-color: #eff7e1;
+   border-width: 2px;
+   border-color: #d3d3d3;
+   border-radius: 10px;
+   justify-content:${props => props.password ? 'space-evenly' : 'center'};
+   align-self: center;
+   width: ${props => props.password? '90%' :'60%'};
+   height: ${props => props.password? '65%' :'55%'};
+   margin: ${props => props.password ? '20%' : '30%'};;
+   padding: 10px 0 0;
+`
+
+export const ModalDetails = styled.Pressable`
+   flex: 1;
+   justify-content: center;
+   align-items: center;
+   align-self: center;
+   border-bottom-width:1px;
+   border-color: #d3d3d3;
+   margin: 5px 0 0;
+   width: 97%;
+`
+
+export const AlertContainer = styled.View `
+   background-color: #eff7e1;
+   border-width: 2px;
+   border-color: red;
+   border-radius: 10px;
+   align-self: center;
+   justify-content: center;
+   align-items: center;
+   width: 90%;
+   height: 10%;
+   margin: 15px 0;
 `

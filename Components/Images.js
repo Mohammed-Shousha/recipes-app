@@ -6,11 +6,26 @@ export const Icon = styled.Image `
    align-self: center;
 `
 export const PressableIcon = styled.Pressable `
-   position: ${props => props.back ? 'absolute': 'relative'};
-   top: ${props => props.back ? '20px': '0'};
-   left: ${props => props.back ? '15px': '0'};
+   position: ${props => props.back  || props.multi ? 'absolute': 'relative'};
+   top: ${props => props.back ? '20px' : '0'};
+   left: ${props => props.back ? '15px' : '0'};
    justify-content: center;
    z-index: 50;
+`
+
+export const Exit = styled.Pressable `
+   position: absolute;
+   top: 10px;
+   right: 10px;
+   justify-content: center;
+   z-index: 50;
+`
+
+export const SelectionIcon = styled.Pressable `
+   position: absolute;
+   bottom: 9px;
+   right: 7px;
+   justify-content: center;
 `
 
 export const RecipeMiniImage = styled.Image `
@@ -23,7 +38,7 @@ export const RecipeMiniImage = styled.Image `
 
 export const RecipeImage = styled.Image `
    width: 98%;
-   height: 40%;
+   height:${props => props.added ? '250px' : '40%'};
    align-self: center;
    border-radius: 5px;
    margin: 1%;
@@ -37,7 +52,7 @@ export const UserImage = styled.Image `
    margin-top: 25px;
 `
 
-export const EditImage = styled.Pressable `
+export const EditUserImage = styled.Pressable `
    position: absolute;
    bottom: 5px;
    right: 15px;
@@ -47,4 +62,16 @@ export const EditImage = styled.Pressable `
    width: 20px;
    height: 20px;
    border-radius: 10px;
+`
+
+export const EditRecipeImage = styled.Pressable`
+   position: absolute;
+   bottom: 15px;
+   left: 10px;
+   justify-content: center;
+   z-index: 100;
+   background-color: white;
+   width: 40px;
+   height: 40px;
+   border-radius: 20px;
 `

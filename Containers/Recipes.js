@@ -5,19 +5,21 @@ import { CenterContainer, RowContainer } from '../Components/Containers'
 import { Text, Title } from '../Components/Texts'
 import { RecipeMiniImage } from '../Components/Images'
 import { Icon } from '../Components/Images'
-import { RecipesContext } from '../Data/Context'
+import { RecipesContext, DataContext } from '../Data/Context'
 import emptyDish from '../Data/images/emptyDish.png'
 import { StyledButton, ButtonText } from '../Components/Buttons'
 
 const Recipes = ({ favourite }) => {
 
-   const { recipes, favRecipes } = useContext(RecipesContext)
+   const { recipes } = useContext(RecipesContext)
+   const { userData } = useContext(DataContext)
+   const { favRecipes } = userData
    const history = useHistory()
    const [recpicesNum, setRecipesNum] = useState(7)
 
    return (
       <>
-         {favourite && !favRecipes.length ?
+         {favourite && !favRecipes ?
             <CenterContainer>
                <Icon
                   source={emptyDish}

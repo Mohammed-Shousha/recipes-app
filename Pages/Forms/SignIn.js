@@ -2,6 +2,7 @@ import React, { useContext, useRef, useState } from 'react'
 import { useHistory } from 'react-router-native'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+import { gql, useMutation } from '@apollo/client'
 import { Container } from '../../Components/Containers'
 import { ErrorText, Title } from '../../Components/Texts'
 import { FormInput } from '../../Components/Inputs'
@@ -13,10 +14,64 @@ import xImg from '../../Data/images/x.png'
 
 const SignIn = () => {
 
-   const { setIsSignedIn } = useContext(DataContext)
-   const [active, setActive] = useState()
-   const history = useHistory()
+   const { setIsSignedIn, setUserData } = useContext(DataContext)
+
+   const [active, setActive] = useState(null)
+   const [signInError, setSignInError] = useState(null)
+
    const passwordRef = useRef()
+
+   const history = useHistory()
+   
+
+   const HANDLE_SIGN_IN = gql`
+      mutation SignIn($email: String!, $password: String!){
+         SignIn(email: $email, password: $password){
+            ... on User{
+               id
+               name
+               email
+               fav_recipes{
+                  id
+                  title
+                  image
+               }
+               recipes{
+                  title
+                  time
+                  type
+                  ingredients
+                  directions
+                  image
+               }
+               image
+            }
+            ... on Error{
+               message
+            }
+         }
+      }
+	`
+
+   const [SignIn] = useMutation(HANDLE_SIGN_IN, {
+      onCompleted({ SignIn }) {
+         if (SignIn.id) {
+            const { name, email, fav_recipes, recipes } = SignIn
+            setIsSignedIn(true)
+            history.push('/user')
+            setUserData({
+               name,
+               email,
+               favRecipes: fav_recipes,
+               recipes
+            })
+
+         } else if (SignIn.message) {
+            setSignInError(SignIn.message)
+            setTimeout(() => setSignInError(null), 3000)
+         }
+      }
+   })
 
 
    return (
@@ -43,12 +98,16 @@ const SignIn = () => {
                password: Yup.string()
                   .required('Required')
             })}
-            onSubmit={({email, password}) =>{
-               setIsSignedIn(true)
-               history.push('/user')
+            onSubmit={({ email, password }) => {
+               SignIn({
+                  variables: {
+                     email,
+                     password,
+                  }
+               })
             }}
          >
-            {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldTouched }) => (
+            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                <>
                   <FormInput
                      placeholder='Email'
@@ -58,9 +117,9 @@ const SignIn = () => {
                      onFocus={() => setActive('email')}
                      onBlur={() => setActive(false)}
                      onBlur={handleBlur('email')}
-                     active={active=== 'email'? true : false}
+                     active={active === 'email' ? true : false}
                      returnKeyType='next'
-                     onSubmitEditing ={() => passwordRef.current.focus()}
+                     onSubmitEditing={() => passwordRef.current.focus()}
                   />
                   {errors.email && touched.email && <ErrorText>{errors.email}</ErrorText>}
                   <FormInput
@@ -76,7 +135,8 @@ const SignIn = () => {
                      ref={passwordRef}
                   />
                   {errors.password && touched.password && <ErrorText>{errors.password}</ErrorText>}
-                  <FormButton 
+                  {signInError && <ErrorText>{signInError}</ErrorText>}
+                  <FormButton
                      onPress={handleSubmit}
                      width='70%'
                   >
@@ -88,7 +148,7 @@ const SignIn = () => {
             )}
          </Formik>
       </Container>
-   )  
+   )
 }
 
 export default SignIn

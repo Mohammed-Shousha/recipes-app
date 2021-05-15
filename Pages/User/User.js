@@ -1,56 +1,50 @@
 import React, { useContext, useState } from 'react'
+import { useHistory } from 'react-router-native'
 import * as ImagePicker from 'expo-image-picker'
 import { Container, RowContainer } from '../../Components/Containers'
-import { EditImage, Icon, PressableIcon, UserImage } from '../../Components/Images'
+import { Icon, PressableIcon, UserImage } from '../../Components/Images'
 import { Line, Text, Title } from '../../Components/Texts'
 import { DataContext } from '../../Data/Context'
 import { userDetails } from '../../Data/Database'
 import user from '../../Data/images/chef.png'
-import edit from '../../Data/images/edit.png'
 
 
 const User = () => {
 
-   const { setIsSignedIn } = useContext(DataContext)
-   const [userImage, setUserImage] = useState(null)
+   const { setIsSignedIn, userData } = useContext(DataContext)
+   const { userImage } = useContext(DataContext)
 
-   let openImagePickerAsync = async () => {
-      let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
-      if (permissionResult.granted === false) {
-         alert("Permission to access camera roll is required!")
-         return
-      }
+   const history = useHistory()
 
-      let pickerResult = await ImagePicker.launchImageLibraryAsync()
-      setUserImage(pickerResult.uri)
-   }
+   const url = 'https://res.cloudinary.com/dn8thrc9l/image/upload/v1619016794/t33h3i78tccef9uatq5h.png'
 
 
    const onPressAction = (action) => {
       if (action === 'logout') {
          setIsSignedIn(false)
-      } else {
-         console.log(action)
+      } else if ( action == 'profile'){
+         history.push('/editprofile')
+      } else if ( action == 'recipes'){
+         history.push('/userrecipes')
       }
    }
+
+
    return (
-      <Container center>
+      <Container>
+         <Title>Hi, Chef</Title>
          <RowContainer
             width='120px'
+            noPadding
+            center
          >
             <UserImage
                source={userImage?  {uri: userImage }: user}
+               // source={{uri: url}}
             />
-            <EditImage onPress={openImagePickerAsync}>
-               <Icon
-                  source={edit}
-                  size='15'
-               />
-            </EditImage>
          </RowContainer>
-         <Title>Mohammed Shousha</Title>
-         <Text center>Passionate Cooker</Text>
+         <Title>{userData.name}</Title>
          <Line />
          {userDetails.map((detail, i) =>
             <RowContainer

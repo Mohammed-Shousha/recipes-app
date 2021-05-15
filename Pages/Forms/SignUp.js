@@ -2,6 +2,7 @@ import React, { useContext, useRef, useState } from 'react'
 import { useHistory } from 'react-router-native'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+import { gql, useMutation } from '@apollo/client'
 import { Container } from '../../Components/Containers'
 import { ErrorText, Title } from '../../Components/Texts'
 import { FormInput } from '../../Components/Inputs'
@@ -9,17 +10,54 @@ import { ButtonText, FormButton } from '../../Components/Buttons'
 import { PressableIcon, Icon } from '../../Components/Images'
 import { DataContext } from '../../Data/Context'
 import xImg from '../../Data/images/x.png'
+import { passwordRegex } from '../../Data/Database'
 
 
 const SingUp = () => {
 
-   const { setIsSignedIn } = useContext(DataContext)
-   const [active, setActive] = useState()
-   const history = useHistory()
+   const { setIsSignedIn, setUserData } = useContext(DataContext)
+
+   const [active, setActive] = useState(null)
+   const [signUpError, setSignUpError] = useState(null)
+
    const emailRef = useRef()
    const passwordRef = useRef()
    const confirmPasswordRef = useRef()
 
+   const history = useHistory()
+
+
+   const HANDLE_SIGN_UP = gql`
+      mutation SignUp($name: String! ,$email: String!, $password: String!){
+         SignUp(name: $name, email: $email, password: $password){
+            ... on User{
+               id
+               name
+               email
+            }
+            ... on Error{
+               message
+            }
+         }
+      }
+	`
+
+   const [SignUp] = useMutation(HANDLE_SIGN_UP, {
+      onCompleted({ SignUp }) {
+         if (SignUp.id) {
+            const { name, email } = SignUp
+            setIsSignedIn(true)
+            history.push('/user')
+            setUserData({
+               name,
+               email
+            })
+         } else if (SignUp.message) {
+            setSignUpError(SignUp.message)
+            setTimeout(() => setSignUpError(null), 3000)
+         }
+      }
+   })
 
    return (
       <Container>
@@ -38,6 +76,7 @@ const SingUp = () => {
                name: '',
                email: '',
                password: '',
+               confirmPassword: '',
             }}
             validationSchema={Yup.object({
                name: Yup.string()
@@ -47,14 +86,20 @@ const SingUp = () => {
                   .email('Wrong Email')
                   .required('Required'),
                password: Yup.string()
-                  .required('Required'),
+                  .required('Required')
+                  .matches(passwordRegex, 'Password must contain at least one letter, at least one number, and be longer than 8 charaters'),
                confirmPassword: Yup.string()
                   .required('Required')
                   .oneOf([Yup.ref('password'), null], 'Passwords must match')
             })}
-            onSubmit={({ name, email, password, confirmPassword}) => {
-               setIsSignedIn(true)
-               history.push('/user')
+            onSubmit={({ name, email, password, confirmPassword }) => {
+               SignUp({
+                  variables: {
+                     name,
+                     email,
+                     password,
+                  }
+               })
             }}
          >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
@@ -69,7 +114,7 @@ const SingUp = () => {
                      onBlur={handleBlur('name')}
                      active={active === 'name' ? true : false}
                      returnKeyType='next'
-                     onSubmitEditing ={() => emailRef.current.focus()}
+                     onSubmitEditing={() => emailRef.current.focus()}
                   />
                   {errors.name && touched.name && <ErrorText>{errors.name}</ErrorText>}
                   <FormInput
@@ -112,6 +157,7 @@ const SingUp = () => {
                      ref={confirmPasswordRef}
                   />
                   {errors.confirmPassword && touched.confirmPassword && <ErrorText>{errors.confirmPassword}</ErrorText>}
+                  {signUpError && <ErrorText>{signUpError}</ErrorText>}
                   <FormButton
                      onPress={handleSubmit}
                      width='70%'

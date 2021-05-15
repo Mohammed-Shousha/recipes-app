@@ -6,10 +6,9 @@ export const DataContext = createContext()
 export const RecipesProvider = ({ children }) => {
 
    const [recipes, setRecipes] = useState([])
-   const [favRecipes, setFavRecipes] = useState([])
 
    return (
-      <RecipesContext.Provider value={{ recipes, setRecipes, favRecipes, setFavRecipes }}>
+      <RecipesContext.Provider value={{ recipes, setRecipes }}>
          {children}
       </RecipesContext.Provider>
    )
@@ -17,10 +16,19 @@ export const RecipesProvider = ({ children }) => {
 
 export const DataProvider = ({ children }) => {
 
-   const [isSignedIn, setIsSignedIn] = useState(true)
+   const [isSignedIn, setIsSignedIn] = useState(false)
+   const [userData, setUserData] = useState({
+      name: '',
+      email: '',
+      image: '',
+      favRecipes: [],
+      recipes: []
+   })
+   const [userImage, setUserImage] = useState(null)
+
 
    return (
-      <DataContext.Provider value={{ isSignedIn, setIsSignedIn }}>
+      <DataContext.Provider value={{ isSignedIn, setIsSignedIn, userData, setUserData, userImage, setUserImage }}>
          {children}
       </DataContext.Provider>
    )

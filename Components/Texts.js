@@ -6,7 +6,9 @@ export const Text = styled.Text`
    color: ${props => props.color || '#222831'};
    text-align: ${props => props.center ? 'center' : 'auto'};
    align-self: ${props => props.center ? 'center' : 'auto'};
+   font-weight: ${props => props.bold? 'bold' : 'normal'}
 `
+
 
 export const Title = styled.Text`
    color: #214151;
@@ -27,7 +29,7 @@ export const RecipeTitle = styled.Text`
 
 export const Line = styled.View`
    border-bottom-width:1px;
-   border-color: #222831;
+   border-color: ${props => props.color || '#222831'};
    margin: 10px 0 5px;
    width: 97%;
    align-self: center;
@@ -39,4 +41,8 @@ export const ErrorText = styled.Text`
    align-self: center;
    font-size: 15px;
    margin: 3px 0; 
+`
+
+export const ProfileText = styled(Text)`
+   margin: 10px 7px 0px;
 `

@@ -30,10 +30,12 @@ import star from './images/star.png'
 import myRecipes from './images/myRecipes.png'
 import settings from './images/settings.png'
 
+export const passwordRegex = /^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{8,}$/
+
 
 export const userDetails = [
    {
-      name: 'Profile Details',
+      name: 'Edit Profile',
       img:  next,
       size: 30,
       action: 'profile'
@@ -150,6 +152,8 @@ export const mainCategories = [
         imgSize: 90
     },
 ]
+
+export const dishTypes = ['Breakfast', 'Dinner', 'Salad', 'Snack', 'Dessert', 'Drink']
 
 export const searchCategories = [
     {

@@ -7,6 +7,7 @@ import ByDiet from './ByDiet'
 import ByCalories from './ByCalories'
 import Boxes from '../../Containers/Boxes'
 import Recipes from '../../Containers/Recipes'
+import Back from '../../Components/Back'
 import { Container, RowContainer } from '../../Components/Containers'
 import { Input } from '../../Components/Inputs'
 import { Icon, PressableIcon } from '../../Components/Images'
@@ -14,7 +15,6 @@ import { Title } from '../../Components/Texts'
 import { RecipesContext } from '../../Data/Context'
 import { searchCategories } from '../../Data/Database'
 import searchImg from '../../Data/images/search.png'
-import back from '../../Data/images/back.png'
 
 
 const Search = () => {
@@ -47,15 +47,7 @@ const Search = () => {
    return (
       <Container>
          {previous &&
-            <PressableIcon
-               back
-               onPress={() => history.goBack()}
-            >
-               <Icon
-                  source={back}
-                  size='25'
-               />
-            </PressableIcon>
+            <Back />
          }
          <Title> What to eat ?</Title>
          <RowContainer color='#eff7e1'>
