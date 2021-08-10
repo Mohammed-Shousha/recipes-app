@@ -2,24 +2,22 @@ import React, { useContext, useState, useRef } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Modal } from 'react-native'
-import { useHistory } from 'react-router-native'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { gql, useMutation } from '@apollo/client'
 import { Container, RowContainer, ModalContainer } from '../../Components/Containers'
-import { EditUserImage, Icon, UserImage, PressableIcon, Exit } from '../../Components/Images'
+import { EditUserImage, Icon, UserImage, Exit } from '../../Components/Images'
 import user from '../../Data/images/chef.png'
 import edit from '../../Data/images/edit.png'
-import { ErrorText, ProfileText, Text, Title } from '../../Components/Texts'
+import { ErrorText, ProfileText, Text } from '../../Components/Texts'
 import { ButtonText, StyledButton } from '../../Components/Buttons'
 import { FormInput } from '../../Components/Inputs'
 import { DataContext } from '../../Data/Context'
-import Back from '../../Components/Back'
 import xImg from '../../Data/images/x.png'
 import { passwordRegex } from '../../Data/Database'
 
 
-const EditProfile = () => {
+const EditProfile = ({ navigation }) => {
 
    const { userImage, setUserImage } = useContext(DataContext)
    const { userData, setUserData } = useContext(DataContext)
@@ -29,7 +27,6 @@ const EditProfile = () => {
    const [active, setActive] = useState(null)
    const [passwordError, setPasswordError] = useState(null)
 
-   const history = useHistory()
 
    const passwordRef = useRef()
    const newPasswordRef = useRef()
@@ -79,26 +76,29 @@ const EditProfile = () => {
    const HANDLE_CHANGING_DATA = gql`
       mutation ChangeData($email: String!, $name: String!){
          ChangeData(email: $email, name: $name){
-            data{
-               ... on User{
-                  name
-                  email
-               }
+            ... on User{
+               id
+               name
+               email
             }
-            result
+            ... on Error{
+               message
+            }
          }
       }
 	`
 
    const [ChangeData] = useMutation(HANDLE_CHANGING_DATA, {
       onCompleted({ ChangeData }) {
-         const { name, email } = ChangeData.data
-         if (ChangeData.result === 1) {
+         const { id, name, email } = ChangeData
+         if (id) {
             setUserData({
                name,
                email
             })
-            history.push('/user')
+            navigation.navigate('User')
+         }else{
+            alert(ChangeData.message)
          }
       }
    })
@@ -128,10 +128,10 @@ const EditProfile = () => {
          }
       }
    })
+
+   
    return (
       <Container>
-         <Back />
-         <Title>Edit Profile</Title>
          <RowContainer
             width='120px'
             noPadding

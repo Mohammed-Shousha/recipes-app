@@ -1,7 +1,10 @@
 import styled from 'styled-components/native'
 
+const foregroundColor = '#D6E5E3'
+const backgroundColor = '#4e8d7c'
+
 export const StyledButton = styled.Pressable`
-   background-color: ${props => props.rev ? '#eff7e1' : '#4e8d7c'};
+   background-color: ${props => props.rev ? foregroundColor  : backgroundColor};
    border-radius: 5px;
    justify-content: center;
    align-self: center;
@@ -11,7 +14,7 @@ export const StyledButton = styled.Pressable`
 `
 export const ButtonText = styled.Text`
    font-size: ${props => props.size || '18px'};
-   color: ${props => props.rev ? '#4e8d7c' : '#eff7e1'};
+   color: ${props => props.rev ? backgroundColor : foregroundColor};
    font-family:sans-serif-light;
    align-self: center;
 `

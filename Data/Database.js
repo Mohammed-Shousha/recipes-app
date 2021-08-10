@@ -32,6 +32,19 @@ import settings from './images/settings.png'
 
 export const passwordRegex = /^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{8,}$/
 
+export const NavIcons = {
+   Main: [tray, greyTray],
+   Search: [search, greySearch],
+   Favourite: [heart, greyHeart],
+   User: [user, greyUser],
+} 
+
+export const IconsSizes ={
+   Main: 40,
+   Search: 30,
+   Favourite: 32,
+   User: 31
+}
 
 export const userDetails = [
    {
@@ -92,28 +105,7 @@ export const dietCategories = [
       imgSize: 120
    },
 ]
-export const NavRoutes = [
-    {
-        name: '',
-        image: [tray, greyTray],
-        size: '40'
-    },
-    {
-        name: 'search',
-        image: [search, greySearch],
-        size: '30'
-    },
-    {
-        name: 'favourite',
-        image: [heart, greyHeart],
-        size: '32'
-    },
-    {
-        name: 'user',
-        image: [user, greyUser],
-        size: '31'
-    }
-]
+
 export const mainCategories = [
     {
         name: 'Breakfast',

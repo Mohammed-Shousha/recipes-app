@@ -21,7 +21,7 @@ export const DataProvider = ({ children }) => {
       name: '',
       email: '',
       image: '',
-      favRecipes: [],
+      favRecipes: null,
       recipes: []
    })
    const [userImage, setUserImage] = useState(null)

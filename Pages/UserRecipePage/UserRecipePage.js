@@ -1,20 +1,18 @@
 import React, { useContext, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { useParams } from 'react-router-native'
 import { RecipeDetailsContainer, RecipeDetail, RecipeInfo, RowContainer, Container } from '../../Components/Containers'
-import { RecipeImage, PressableIcon, Icon } from '../../Components/Images'
+import { RecipeImage, Icon } from '../../Components/Images'
 import { RecipeTitle, Text } from '../../Components/Texts'
-import Back from '../../Components/Back'
 import { DataContext } from '../../Data/Context'
 import recipeTypeImg from '../../Data/images/recipeType.png'
 import recipeTime from '../../Data/images/recipeTime.png'
 
 
-const UserRecipePage = () => {
+const UserRecipePage = ({ route }) => {
 
    const { userData } = useContext(DataContext)
    const { recipes } = userData
-   const { id } = useParams()
+   const { id } = route.params
    const recipe = recipes[id]
 
    const [activeDetail, setActiveDetail] = useState(0)
@@ -48,7 +46,6 @@ const UserRecipePage = () => {
 
    return (
       <Container>
-         <Back recipe />
          <RecipeImage
             source={{ uri: recipe.image ? recipe.image : 'https://source.unsplash.com/Mz__0nr1AM8' }}
          />

@@ -1,6 +1,4 @@
 import React, { useContext, useState } from 'react'
-import { useHistory } from 'react-router-native'
-import * as ImagePicker from 'expo-image-picker'
 import { Container, RowContainer } from '../../Components/Containers'
 import { Icon, PressableIcon, UserImage } from '../../Components/Images'
 import { Line, Text, Title } from '../../Components/Texts'
@@ -9,31 +7,25 @@ import { userDetails } from '../../Data/Database'
 import user from '../../Data/images/chef.png'
 
 
-const User = () => {
+const User = ({ navigation }) => {
 
    const { setIsSignedIn, userData } = useContext(DataContext)
    const { userImage } = useContext(DataContext)
-
-
-   const history = useHistory()
-
-   const url = 'https://res.cloudinary.com/dn8thrc9l/image/upload/v1619016794/t33h3i78tccef9uatq5h.png'
 
 
    const onPressAction = (action) => {
       if (action === 'logout') {
          setIsSignedIn(false)
       } else if ( action == 'profile'){
-         history.push('/editprofile')
+         navigation.navigate('Edit Profile')
       } else if ( action == 'recipes'){
-         history.push('/userrecipes')
+         navigation.navigate('My Recipes')
       }
    }
 
 
    return (
       <Container>
-         <Title>Hi, Chef</Title>
          <RowContainer
             width='120px'
             noPadding
@@ -41,7 +33,6 @@ const User = () => {
          >
             <UserImage
                source={userImage?  {uri: userImage }: user}
-               // source={{uri: url}}
             />
          </RowContainer>
          <Title>{userData.name}</Title>
@@ -63,7 +54,6 @@ const User = () => {
             </RowContainer>
          )}
       </Container>
-
    )
 }
 

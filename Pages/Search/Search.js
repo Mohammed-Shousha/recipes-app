@@ -1,31 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useLocation, useHistory, Switch, Route } from 'react-router-native'
+import React, { useContext, useState } from 'react'
 import { API_KEY } from '@env'
-import ByIngredients from './ByIngredients'
-import ByTime from './ByTime'
-import ByDiet from './ByDiet'
-import ByCalories from './ByCalories'
 import Boxes from '../../Containers/Boxes'
-import Recipes from '../../Containers/Recipes'
-import Back from '../../Components/Back'
 import { Container, RowContainer } from '../../Components/Containers'
 import { Input } from '../../Components/Inputs'
 import { Icon, PressableIcon } from '../../Components/Images'
-import { Title } from '../../Components/Texts'
 import { RecipesContext } from '../../Data/Context'
 import { searchCategories } from '../../Data/Database'
 import searchImg from '../../Data/images/search.png'
 
 
-const Search = () => {
+const Search = ({ navigation }) => {
 
    const [searchValue, setSearchValue] = useState('')
-   const [previous, setPrevious] = useState(false)
 
-   const { pathname } = useLocation()
-   const history = useHistory()
-   const pathArray = pathname.split('/')
-   
    const { setRecipes } = useContext(RecipesContext)
 
    const searchRecipes = async () => {
@@ -33,23 +20,16 @@ const Search = () => {
       const { results } = await response.json()
       if (!results.length) {
          setRecipes([null])
-      }else{
+      } else {
          setRecipes(results)
       }
-      history.push('/search/Results')
+      navigation.navigate('Recipes')
       setSearchValue('')
    }
 
-   useEffect(() => {
-      pathArray.length > 2 ? setPrevious(true) : setPrevious(false)
-   }, [pathArray])
 
    return (
       <Container>
-         {previous &&
-            <Back />
-         }
-         <Title> What to eat ?</Title>
          <RowContainer color='#eff7e1'>
             <Input
                placeholder='Search'
@@ -65,30 +45,10 @@ const Search = () => {
                />
             </PressableIcon>
          </RowContainer>
-         <Switch>
-            <Route path='/search' exact>
-               <Boxes
-                  array={searchCategories}
-               />
-            </Route>
-            <Route path='/search/Ingredients'>
-               <ByIngredients />
-            </Route>
-            <Route path='/search/Time'>
-               <ByTime />
-            </Route>
-            <Route path='/search/Diet'>
-               <ByDiet />
-            </Route>
-            <Route path='/search/Calories'>
-               <ByCalories />
-            </Route>
-            <Route path='/search/Results'>
-               <Recipes />
-            </Route>
-         </Switch>
+         <Boxes
+            array={searchCategories}
+         />
       </Container>
-
    )
 }
 

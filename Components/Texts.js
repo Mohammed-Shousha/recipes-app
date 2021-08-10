@@ -9,7 +9,6 @@ export const Text = styled.Text`
    font-weight: ${props => props.bold? 'bold' : 'normal'}
 `
 
-
 export const Title = styled.Text`
    color: #214151;
    align-self: center;

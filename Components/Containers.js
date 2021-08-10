@@ -1,29 +1,14 @@
 import { LinearGradient } from 'expo-linear-gradient'
 import styled from 'styled-components/native'
 
-export const Container = styled(LinearGradient).attrs(props => ({
-   colors: ['#96fbc4', '#eff7e1',],
-   locations: [0.1, 0.3]
-}))`
-   flex: 1;
-   align-items: stretch;
-   justify-content: ${props => props.center ? 'center' : 'flex-start'};
-   z-index: -1;
-`
-
-export const CenterContainer = styled.View `
-   flex: 1;
-   justify-content: center;
-`
-
 export const RowContainer = styled.Pressable`
    flex-direction: row;
    width: ${props => props.width || '100%'};
-   justify-content: ${props => props.flexStart ? 'flex-start' : props.between ? 'space-between' : props.center? 'center': 'space-around'};
+   justify-content: ${props => props.flexStart ? 'flex-start' : props.between ? 'space-between' : props.center ? 'center' : 'space-around'};
    align-items: center;
    align-self: center;
-   padding: ${props => props.Nav ? '7px 0' : props.noPadding ? '0' : props.user? '15px 10px' : '5px 0'};
-   background-color: ${props => props.Nav? '#eff7e1': 'transparent'};
+   padding: ${props => props.Nav ? '7px 0' : props.noPadding ? '0' : props.user ? '15px 10px' : '5px 0'};
+   background-color: ${props => props.Nav ? '#eff7e1' : 'transparent'};
 `
 
 export const Box = styled.Pressable`
@@ -54,9 +39,8 @@ export const RecipeInfo = styled.View`
    border-radius: 20px;
 `
 
-
 export const RecipeDetail = styled.Pressable`
-   width: ${props => props.user ? '50%': '33%'};
+   width: ${props => props.user ? '50%' : '33%'};
    align-items: center;
    justify-content: center;
    height: 40px;
@@ -84,8 +68,8 @@ export const ModalContainer = styled.View`
    border-radius: 10px;
    justify-content:${props => props.password ? 'space-evenly' : 'center'};
    align-self: center;
-   width: ${props => props.password? '90%' :'60%'};
-   height: ${props => props.password? '65%' :'55%'};
+   width: ${props => props.password ? '90%' : '60%'};
+   height: ${props => props.password ? '65%' : '55%'};
    margin: ${props => props.password ? '20%' : '30%'};;
    padding: 10px 0 0;
 `
@@ -101,7 +85,7 @@ export const ModalDetails = styled.Pressable`
    width: 97%;
 `
 
-export const AlertContainer = styled.View `
+export const AlertContainer = styled.View`
    background-color: #eff7e1;
    border-width: 2px;
    border-color: red;
@@ -112,4 +96,19 @@ export const AlertContainer = styled.View `
    width: 90%;
    height: 10%;
    margin: 15px 0;
+`
+export const CenterContainer = styled.View`
+   flex: 1;
+   justify-content: center;
+   align-items: stretch;
+`
+
+export const Container = styled(LinearGradient).attrs(props => ({
+   colors: ['#96fbc4', '#eff7e1'],
+   locations: [0.1, 0.2]
+}))`
+   flex: 1;
+   align-items: stretch;
+   justify-content: ${props => props.center ? 'center' : 'flex-start'};
+   z-index: 0;
 `

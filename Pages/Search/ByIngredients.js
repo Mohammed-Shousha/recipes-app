@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Ingredients from '../../Containers/Ingredients'
 import Recipes from '../../Containers/Recipes'
-import { CenterContainer, RowContainer } from '../../Components/Containers'
+import { Container, RowContainer, CenterContainer } from '../../Components/Containers'
 import { StyledButton, ButtonText } from '../../Components/Buttons'
 import { Input } from '../../Components/Inputs'
 import { Title } from '../../Components/Texts'
@@ -11,7 +11,7 @@ import { RecipesContext } from '../../Data/Context'
 const ByIngredients = () => {
 
    const { recipes, setRecipes } = useContext(RecipesContext)
-   
+
    const [ingredients, setIngredients] = useState([])
    const [ingredient, setIngredient] = useState('')
 
@@ -24,11 +24,11 @@ const ByIngredients = () => {
 
    useEffect(() => {
       setRecipes([])
-   },[setRecipes])
+   }, [setRecipes])
 
 
    return (
-      <>
+      <Container>
          <RowContainer>
             <Input
                placeholder="Ingredient"
@@ -45,14 +45,12 @@ const ByIngredients = () => {
                ingredients={ingredients}
                setIngredients={setIngredients}
             />
-            : recipes.length ?
-               <Recipes />
-               :
-               <CenterContainer>
-                  <Title > Add Ingredients </Title>
-               </CenterContainer>
+            :
+            <CenterContainer>
+               <Title > Add Ingredients </Title>
+            </CenterContainer>
          }
-      </>
+      </Container>
    )
 }
 

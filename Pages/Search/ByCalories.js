@@ -1,23 +1,16 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-native'
+import { Container } from '../../Components/Containers'
 import Boxes from '../../Containers/Boxes'
-import Recipes from '../../Containers/Recipes'
 import { caloriesCategories } from '../../Data/Database'
 
 const ByCalories = () => (
-   <Switch>
-      <Route path='/search/Calories' exact>
-         <Boxes
-            array={caloriesCategories}
-            calories={true}
-            styledText={true}
-         />
-      </Route>
-      <Route path='*'>
-         <Recipes />
-      </Route>
-   </Switch>
-
+   <Container>
+      <Boxes
+         array={caloriesCategories}
+         calories={true}
+         styledText={true}
+      />
+   </Container>
 )
 
 export default ByCalories

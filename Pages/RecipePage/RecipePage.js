@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { ScrollView, ActivityIndicator, Modal } from 'react-native'
+import { ScrollView, ActivityIndicator, Modal, Pressable } from 'react-native'
 import { API_KEY } from '@env'
-import { Link, useParams } from 'react-router-native'
 import { gql, useMutation } from '@apollo/client'
-import { RecipeDetailsContainer, RecipeDetail, RecipeInfo, RowContainer, Container, CenterContainer, AlertContainer } from '../../Components/Containers'
+import { RecipeDetailsContainer, RecipeDetail, RecipeInfo, RowContainer, Container, AlertContainer } from '../../Components/Containers'
 import { RecipeImage, PressableIcon, Icon, Exit } from '../../Components/Images'
 import { RecipeTitle, Text } from '../../Components/Texts'
-import Back from '../../Components/Back'
 import { DataContext } from '../../Data/Context'
 import heart from '../../Data/images/greyHeart.png'
 import redHeart from '../../Data/images/redHeart.png'
@@ -16,9 +14,9 @@ import recipeCalories from '../../Data/images/recipeCalories.png'
 import xImg from '../../Data/images/x.png'
 
 
-const RecipePage = () => {
+const RecipePage = ({ route, navigation }) => {
 
-   const { id } = useParams()
+   const { id } = route.params
 
    const { userData, setUserData, isSignedIn } = useContext(DataContext)
    const { favRecipes } = userData
@@ -35,7 +33,6 @@ const RecipePage = () => {
    const [instructions, setInstructions] = useState([])
    const [calories, setCalories] = useState('')
    const [recipeType, setRecipeType] = useState('')
-
 
 
    const recipesTypes = ['breakfast', 'dinner', 'salad', 'snack', 'drink', 'dessert']
@@ -185,9 +182,9 @@ const RecipePage = () => {
    return (
       <Container>
          {loading ?
-            <CenterContainer>
+            <Container center>
                <ActivityIndicator color='green' size='large' />
-            </CenterContainer>
+            </Container>
             :
             <>
                <Modal
@@ -206,20 +203,19 @@ const RecipePage = () => {
                         />
                      </Exit>
                      <RowContainer>
-                        <Link to='/signin'>
+                        <Pressable onPress={() => navigation.navigate('User', { screen: 'SignIn' })}>
                            <Text bold>Sign in</Text>
-                        </Link>
+                        </Pressable>
                         <Text>or</Text>
-                        <Link to='/signup'>
+                        <Pressable onPress={() => navigation.navigate('User', { screen: 'SignUp' })}>
                            <Text bold>Sign up</Text>
-                        </Link>
+                        </Pressable>
                         <Text>to</Text>
                         <Text>Like</Text>
                         <Text>Recipes</Text>
                      </RowContainer>
                   </AlertContainer>
                </Modal>
-               <Back recipe />
                <RecipeImage
                   source={{ uri: recipe.image }}
                />

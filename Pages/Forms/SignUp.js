@@ -1,19 +1,16 @@
 import React, { useContext, useRef, useState } from 'react'
-import { useHistory } from 'react-router-native'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { gql, useMutation } from '@apollo/client'
 import { Container } from '../../Components/Containers'
-import { ErrorText, Title } from '../../Components/Texts'
+import { ErrorText } from '../../Components/Texts'
 import { FormInput } from '../../Components/Inputs'
 import { ButtonText, FormButton } from '../../Components/Buttons'
-import { PressableIcon, Icon } from '../../Components/Images'
 import { DataContext } from '../../Data/Context'
-import xImg from '../../Data/images/x.png'
 import { passwordRegex } from '../../Data/Database'
 
 
-const SingUp = () => {
+const SingUp = ({ navigation }) => {
 
    const { setIsSignedIn, setUserData } = useContext(DataContext)
 
@@ -23,8 +20,6 @@ const SingUp = () => {
    const emailRef = useRef()
    const passwordRef = useRef()
    const confirmPasswordRef = useRef()
-
-   const history = useHistory()
 
 
    const HANDLE_SIGN_UP = gql`
@@ -47,7 +42,7 @@ const SingUp = () => {
          if (SignUp.id) {
             const { name, email } = SignUp
             setIsSignedIn(true)
-            history.push('/user')
+            navigation.navigate('User')
             setUserData({
                name,
                email
@@ -61,16 +56,6 @@ const SingUp = () => {
 
    return (
       <Container>
-         <PressableIcon
-            back
-            onPress={() => history.goBack()}
-         >
-            <Icon
-               source={xImg}
-               size='20'
-            />
-         </PressableIcon>
-         <Title>Sign Up</Title>
          <Formik
             initialValues={{
                name: '',

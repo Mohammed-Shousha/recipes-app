@@ -1,15 +1,13 @@
 import React, { useContext, useState } from 'react'
 import { ScrollView, Modal, Pressable } from 'react-native'
-import { useHistory } from 'react-router-native'
 import * as ImagePicker from 'expo-image-picker'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { gql, useMutation } from '@apollo/client'
 import { ButtonText, StyledButton } from '../../Components/Buttons'
-import { EditRecipeImage, Exit, Icon, PressableIcon, RecipeImage, SelectionIcon } from '../../Components/Images'
-import Back from '../../Components/Back'
+import { EditRecipeImage, Exit, Icon, RecipeImage, SelectionIcon } from '../../Components/Images'
 import { Container, ModalContainer, ModalDetails, RowContainer } from '../../Components/Containers'
-import { Title, ErrorText, Text } from '../../Components/Texts'
+import { ErrorText, Text } from '../../Components/Texts'
 import { FormInput } from '../../Components/Inputs'
 import { dishTypes } from '../../Data/Database'
 import { DataContext } from '../../Data/Context'
@@ -19,9 +17,7 @@ import gallery from '../../Data/images/gallery.png'
 import edit from '../../Data/images/edit.png'
 
 
-const AddRecipe = () => {
-
-   const history = useHistory()
+const AddRecipe = ({ navigation }) => {
 
    const { userData, setUserData } = useContext(DataContext)
    const { email } = userData
@@ -55,7 +51,7 @@ const AddRecipe = () => {
                ...userData,
                recipes: AddRecipe.data
             })
-            history.push('/userrecipes')
+            navigation.navigate('User Recipes')
          }
       }
    })
@@ -80,8 +76,6 @@ const AddRecipe = () => {
 
    return (
       <Container>
-         <Back />
-         <Title>Add Recipe</Title>
          <ScrollView>
             <Formik
                initialValues={{

@@ -1,78 +1,85 @@
 import React, { useContext, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { useHistory } from 'react-router-native'
-import { CenterContainer, RowContainer } from '../Components/Containers'
+import { Container, RowContainer, CenterContainer } from '../Components/Containers'
 import { Text, Title } from '../Components/Texts'
 import { RecipeMiniImage } from '../Components/Images'
 import { Icon } from '../Components/Images'
 import { RecipesContext, DataContext } from '../Data/Context'
 import emptyDish from '../Data/images/emptyDish.png'
 import { StyledButton, ButtonText } from '../Components/Buttons'
+import { useNavigation, useRoute } from '@react-navigation/core'
 
-const Recipes = ({ favourite }) => {
+const Recipes = ({ favourite = false }) => {
 
+   const navigation = useNavigation()
+   
+   const route = useRoute()
    const { recipes } = useContext(RecipesContext)
    const { userData } = useContext(DataContext)
+
    const { favRecipes } = userData
-   const history = useHistory()
-   const [recpicesNum, setRecipesNum] = useState(7)
+   const [recipesNum, setRecipesNum] = useState(20) //intial recipes number
 
    return (
       <>
-         {favourite && !favRecipes ?
-            <CenterContainer>
+         {favourite && (!favRecipes || favRecipes.length === 0) ?
+            <Container center>
                <Icon
                   source={emptyDish}
                   size='100'
                />
                <Title>You have no favourite recipes yet, Search and you will for sure find alot of tasteful recipes</Title>
-            </CenterContainer>
+            </Container>
             : favourite && favRecipes.length ?
-               <ScrollView>
-                  {favRecipes.map(recipe =>
-                     <RowContainer
-                        key={recipe.id}
-                        flexStart
-                        onPress={() => history.push(`/recipes/${recipe.id}`)}
-                     >
-                        <RecipeMiniImage
-                           source={{ uri: recipe.image }}
-                        />
-                        <Text style={{ width: 240 }}>{recipe.title}</Text>
-                     </RowContainer>
-                  )}
-               </ScrollView>
+               <Container>
+                  <ScrollView>
+                     {favRecipes.map(recipe =>
+                        <RowContainer
+                           key={recipe.id}
+                           flexStart
+                           onPress={() => navigation.navigate('FavRecipe', { id: recipe.id })}
+                        >
+                           <RecipeMiniImage
+                              source={{ uri: recipe.image }}
+                           />
+                           <Text style={{ width: 240 }}>{recipe.title}</Text>
+                        </RowContainer>
+                     )}
+                  </ScrollView>
+               </Container>
                : recipes[0] === null ?
-                  <CenterContainer>
+                  <Container center>
                      <Icon
                         source={emptyDish}
                         size='100'
                      />
                      <Title>Sorry We Couldn't Find Any Recipe</Title>
-                  </CenterContainer>
-                  : recipes.length ?
-                     <ScrollView>
-                        {recipes.slice(0, recpicesNum).map(recipe =>
-                           <RowContainer
-                              key={recipe.id}
-                              flexStart
-                              onPress={() => history.push(`/recipes/${recipe.id}`)}
-                           >
-                              <RecipeMiniImage
-                                 source={{ uri: recipe.image }}
-                              />
-                              <Text style={{ width: 240 }}>{recipe.title}</Text>
-                           </RowContainer>
-                        )}
-                        {recpicesNum < 8 &&
-                           <StyledButton
-                              width='80%'
-                              onPress={() => setRecipesNum(recipes.length)}
-                           >
-                              <ButtonText>Show More</ButtonText>
-                           </StyledButton>
-                        }
-                     </ScrollView>
+                  </Container>
+                  : !favourite && recipes.length ?
+                     <Container>
+                        <ScrollView>
+                           {recipes.slice(0, recipesNum).map(recipe =>
+                              <RowContainer
+                                 key={recipe.id}
+                                 flexStart
+                                 onPress={() => route.name === 'Recipes' ? navigation.navigate('Recipe', { id: recipe.id }) : navigation.navigate('Search Recipe', { id: recipe.id })}
+                              >
+                                 <RecipeMiniImage
+                                    source={{ uri: recipe.image }}
+                                 />
+                                 <Text style={{ width: 240 }}>{recipe.title}</Text>
+                              </RowContainer>
+                           )}
+                           {recipesNum < recipes.length &&
+                              <StyledButton
+                                 width='80%'
+                                 onPress={() => setRecipesNum(recipesNum + 10 )} //view more recipes
+                              >
+                                 <ButtonText>Show More</ButtonText>
+                              </StyledButton>
+                           }
+                        </ScrollView>
+                     </Container>
                      : null}
       </>
    )

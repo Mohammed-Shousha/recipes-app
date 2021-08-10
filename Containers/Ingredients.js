@@ -7,15 +7,17 @@ import { Text, Title } from '../Components/Texts'
 import { RecipesContext } from '../Data/Context'
 import searchImg from '../Data/images/search.png'
 import xImg from '../Data/images/x.png'
+import { useNavigation } from '@react-navigation/native'
 
 
 const Ingredients = ({ ingredients, setIngredients }) => {
+   const navigation = useNavigation()
 
    const { setRecipes } = useContext(RecipesContext)
 
    const searchRecipesByIngredients = async () => {
       const query = ingredients.map(i => i + ',').join('+')
-      let recipesNumber = 7
+      let recipesNumber = 20
       const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&number=${recipesNumber}&ranking=2&ingredients=${query}`)
       const data = await response.json()
       if (!data.length) {
@@ -23,6 +25,7 @@ const Ingredients = ({ ingredients, setIngredients }) => {
       } else {
          setRecipes(data)
       }
+      navigation.navigate('Recipes')
       setIngredients([])
    }
 
