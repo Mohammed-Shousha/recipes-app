@@ -15,6 +15,7 @@ import Favourite from './Pages/Favourite/Favourite'
 import User from './Pages/User/User'
 import UserRecipes from './Pages/User/UserRecipes'
 import EditProfile from './Pages/User/EditProfile'
+import ChangePassword from './Pages/User/ChangePassword'
 import AddRecipe from './Pages/User/AddRecipe'
 import Profile from './Pages/Profile/Profile'
 import SignIn from './Pages/Forms/SignIn'
@@ -51,7 +52,7 @@ const screenOptions = {
       borderBottomColor: '#96fbc4',
    },
    headerTitleStyle: {
-      fontSize: 30,
+      fontSize: 28,
       color: '#214151',
       fontFamily: 'sans-serif-light',
    },
@@ -118,6 +119,7 @@ const UserStackScreen = () => {
             <>
                <UserStack.Screen name='User' component={User} />
                <UserStack.Screen name='Edit Profile' component={EditProfile} />
+               <UserStack.Screen name='Change Password' component={ChangePassword} />
                <UserStack.Screen name='My Recipes' component={UserRecipes} />
                <UserStack.Screen name='Add Recipe' component={AddRecipe} />
                <UserStack.Screen name="User Recipes" component={UserRecipes} />
@@ -139,13 +141,12 @@ const App = () => (
       <RecipesProvider>
          <DataProvider>
             <NavigationContainer>
-               <Tab.Navigator initialRouteName="Main" tabBarOptions={{ showLabel: false, style: { backgroundColor: '#eff7e1', justifyContent: 'space-between' } }}
+               <Tab.Navigator initialRouteName="Main" tabBarOptions={{ showLabel: false, keyboardHidesTabBar: true, style: { backgroundColor: '#eff7e1', justifyContent: 'space-between'} }}
                   screenOptions={({ route }) => ({
                      tabBarIcon: ({ focused }) => {
-
                         const iconName = focused ? NavIcons[route.name][0] : NavIcons[route.name][1]
                         const size = IconsSizes[route.name]
-                        return <Icon source={iconName} size={size}/>
+                        return <Icon source={iconName} size={size} />
                      }
                   })}
                >

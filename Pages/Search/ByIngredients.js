@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Ingredients from '../../Containers/Ingredients'
-import Recipes from '../../Containers/Recipes'
 import { Container, RowContainer, CenterContainer } from '../../Components/Containers'
 import { StyledButton, ButtonText } from '../../Components/Buttons'
 import { Input } from '../../Components/Inputs'
@@ -10,7 +9,7 @@ import { RecipesContext } from '../../Data/Context'
 
 const ByIngredients = () => {
 
-   const { recipes, setRecipes } = useContext(RecipesContext)
+   const { setRecipes } = useContext(RecipesContext)
 
    const [ingredients, setIngredients] = useState([])
    const [ingredient, setIngredient] = useState('')
@@ -18,8 +17,10 @@ const ByIngredients = () => {
 
    const addIngredient = () => {
       setRecipes([])
-      setIngredients([...ingredients, ingredient])
-      setIngredient('')
+      if(ingredient.trim()){
+         setIngredients([...ingredients, ingredient.trim()])
+         setIngredient('')
+      }
    }
 
    useEffect(() => {

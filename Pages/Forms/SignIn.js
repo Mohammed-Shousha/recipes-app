@@ -11,7 +11,7 @@ import { DataContext } from '../../Data/Context'
 
 const SignIn = ({ navigation }) => {
 
-   const { setIsSignedIn, setUserData } = useContext(DataContext)
+   const { setIsSignedIn, setUserData, setUserImage } = useContext(DataContext)
 
    const [active, setActive] = useState(null)
    const [signInError, setSignInError] = useState(null)
@@ -51,7 +51,7 @@ const SignIn = ({ navigation }) => {
    const [SignIn] = useMutation(HANDLE_SIGN_IN, {
       onCompleted({ SignIn }) {
          if (SignIn.id) {
-            const { name, email, fav_recipes, recipes } = SignIn
+            const { name, email, fav_recipes, recipes, image } = SignIn
             setIsSignedIn(true)
             navigation.navigate('User')
             setUserData({
@@ -60,6 +60,7 @@ const SignIn = ({ navigation }) => {
                favRecipes: fav_recipes,
                recipes
             })
+            setUserImage(image)
 
          } else if (SignIn.message) {
             setSignInError(SignIn.message)

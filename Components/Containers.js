@@ -66,11 +66,12 @@ export const ModalContainer = styled.View`
    border-width: 2px;
    border-color: #d3d3d3;
    border-radius: 10px;
+   flex: ${props => props.password ? 0.7 : 0.7 };
    justify-content:${props => props.password ? 'space-evenly' : 'center'};
+   /* justify-content: center; */
    align-self: center;
    width: ${props => props.password ? '90%' : '60%'};
-   height: ${props => props.password ? '65%' : '55%'};
-   margin: ${props => props.password ? '20%' : '30%'};;
+   margin: ${props => props.password ? '20% 0 0' : '30%'};
    padding: 10px 0 0;
 `
 

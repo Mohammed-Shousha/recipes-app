@@ -9,13 +9,20 @@ import user from '../../Data/images/chef.png'
 
 const User = ({ navigation }) => {
 
-   const { setIsSignedIn, userData } = useContext(DataContext)
-   const { userImage } = useContext(DataContext)
+   const { setIsSignedIn, userData, userImage, setUserData, setUserImage } = useContext(DataContext)
 
 
    const onPressAction = (action) => {
       if (action === 'logout') {
          setIsSignedIn(false)
+         setUserData({
+            name: '',
+            email: '',
+            image: '',
+            favRecipes: null,
+            recipes: []
+         })
+         setUserImage('')
       } else if ( action == 'profile'){
          navigation.navigate('Edit Profile')
       } else if ( action == 'recipes'){

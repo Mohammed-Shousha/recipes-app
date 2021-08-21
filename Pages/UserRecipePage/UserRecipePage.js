@@ -23,13 +23,13 @@ const UserRecipePage = ({ route }) => {
          name: recipe.type,
          color: '#ccf2f4',
          image: recipeTypeImg,
-         size: 17
+         size: 21
       },
       {
          name: recipe.time + ' m',
          color: '#e8e9a1',
          image: recipeTime,
-         size: 18
+         size: 20
       },
    ]
 

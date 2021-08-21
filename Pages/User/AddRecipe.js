@@ -22,7 +22,7 @@ const AddRecipe = ({ navigation }) => {
    const { userData, setUserData } = useContext(DataContext)
    const { email } = userData
 
-   const [image, setImage] = useState(null)
+   const [image, setImage] = useState('')
    const [modal, setModal] = useState(false)
    const [type, setType] = useState('')
 
@@ -51,13 +51,13 @@ const AddRecipe = ({ navigation }) => {
                ...userData,
                recipes: AddRecipe.data
             })
-            navigation.navigate('User Recipes')
+            navigation.goBack()
          }
       }
    })
 
 
-   const openImagePickerAsync = async () => {
+   let openImagePickerAsync = async () => {
       let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
       if (permissionResult.granted === false) {
@@ -65,9 +65,27 @@ const AddRecipe = ({ navigation }) => {
          return
       }
 
-      let pickerResult = await ImagePicker.launchImageLibraryAsync()
-      setImage(pickerResult.uri)
+      let pickerResult = await ImagePicker.launchImageLibraryAsync({ base64: true })
+
+      let base64Img = `data:image/jpg;base64,${pickerResult.base64}`
+
+      let data = {
+         file: base64Img,
+         upload_preset: 'recipes_preset'
+      }
+
+      const response = await fetch("https://api.cloudinary.com/v1_1/dn8thrc9l/image/upload", {
+         method: "POST",
+         body: JSON.stringify(data),
+         headers: {
+            'content-type': 'application/json'
+         }
+      })
+
+      const { secure_url } = await response.json()
+      setImage(secure_url)
    }
+
 
    const selectDishType = (type) => {
       setType(type)
@@ -89,8 +107,7 @@ const AddRecipe = ({ navigation }) => {
                   title: Yup.string()
                      .required('Required')
                      .min(2, 'Too Short'),
-                  time: Yup.string()
-                     .matches('^[0-9]+$', 'Must Be a Number')
+                  time: Yup.number()
                      .required('Required'),
                   ingredients: Yup.string()
                      .required('Required'),
@@ -154,6 +171,7 @@ const AddRecipe = ({ navigation }) => {
                      <FormInput
                         placeholder='Minutes to Be Ready'
                         value={values.time}
+                        keyboardType='numeric'
                         onChangeText={handleChange('time')}
                      />
                      {errors.time && touched.time && <ErrorText>{errors.time}</ErrorText>}
