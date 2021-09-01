@@ -66,12 +66,11 @@ export const ModalContainer = styled.View`
    border-width: 2px;
    border-color: #d3d3d3;
    border-radius: 10px;
-   flex: ${props => props.password ? 0.7 : 0.7 };
-   justify-content:${props => props.password ? 'space-evenly' : 'center'};
-   /* justify-content: center; */
+   flex: 0.7;
+   justify-content: center;
    align-self: center;
-   width: ${props => props.password ? '90%' : '60%'};
-   margin: ${props => props.password ? '20% 0 0' : '30%'};
+   width: 60%;
+   margin: 30%;
    padding: 10px 0 0;
 `
 
@@ -98,6 +97,21 @@ export const AlertContainer = styled.View`
    height: 10%;
    margin: 15px 0;
 `
+
+export const ConfirmContainer = styled.View`
+   background-color: #eff7e1;
+   align-self: center;
+   justify-content: center;
+   align-items: center;
+   width: 95%;
+   height: 20%;
+   border-radius: 10px;
+   border-width: 1px;
+   border-color: #4e8d7c;
+   padding: 10px;
+   margin: 80%;
+`
+
 export const CenterContainer = styled.View`
    flex: 1;
    justify-content: center;

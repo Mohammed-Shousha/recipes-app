@@ -58,20 +58,7 @@ const RecipePage = ({ route, navigation }) => {
       },
    ]
 
-   const recipeDetails = [
-      {
-         name: 'Ingredients',
-         data: ingredients
-      },
-      {
-         name: 'Directions',
-         data: instructions
-      },
-      {
-         name: 'Nutrients',
-         data: nutrients
-      },
-   ]
+   const recipeDetails = ['Ingredients', 'Directions', 'Nutrients']
 
 
    const HANDLE_LIKING_RECIPE = gql`
@@ -154,6 +141,11 @@ const RecipePage = ({ route, navigation }) => {
       })
    }
 
+   const redirect = (route) => {
+      navigation.navigate(route)
+      setAlert(false)
+   }
+
 
    useEffect(() => {
       const fetchData = async () => {
@@ -203,11 +195,11 @@ const RecipePage = ({ route, navigation }) => {
                         />
                      </Exit>
                      <RowContainer>
-                        <Pressable onPress={() => navigation.navigate('User', { screen: 'SignIn' })}>
+                        <Pressable onPress={() => redirect('SignIn')}>
                            <Text bold>Sign in</Text>
                         </Pressable>
                         <Text>or</Text>
-                        <Pressable onPress={() => navigation.navigate('User', { screen: 'SignUp' })}>
+                        <Pressable onPress={() => redirect('SignUp')}>
                            <Text bold>Sign up</Text>
                         </Pressable>
                         <Text>to</Text>
@@ -254,7 +246,7 @@ const RecipePage = ({ route, navigation }) => {
                            active={activeDetail === i}
                            key={i}
                         >
-                           <Text color='#214151'>{detail.name}</Text>
+                           <Text color='#214151'>{detail}</Text>
                         </RecipeDetail>
                      )}
                   </RowContainer>

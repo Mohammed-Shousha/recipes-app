@@ -14,13 +14,15 @@ const Boxes = ({ array, text = true, time = false, diet = false, calories = fals
 
    const { setRecipes } = useContext(RecipesContext)
 
+   //to have two boxes in each row
    const copy = [...array]
    const finalArray = []
    while (copy.length) {
-      finalArray.push(copy.splice(0, 2)) //to have two boxes in each row
+      finalArray.push(copy.splice(0, 2)) 
    }
-
-   const recipesNumber = 50 // number of recipes to be fetched
+   
+   // number of recipes to be fetched
+   const recipesNumber = 50 
 
    const searchRecipesByTime = async (name) => {
       let time = Number(name.split(' ')[0])

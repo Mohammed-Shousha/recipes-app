@@ -1,45 +1,26 @@
-import React, { useContext, useState, useRef } from 'react'
+import React, { useContext, useState } from 'react'
 import * as ImagePicker from 'expo-image-picker'
-import { launchImageLibrary } from 'react-native-image-picker'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { gql, useMutation } from '@apollo/client'
-import { Container, RowContainer, ModalContainer } from '../../Components/Containers'
-import { EditUserImage, Icon, UserImage, Exit } from '../../Components/Images'
+import { ActivityIndicator } from 'react-native'
+import { Container, RowContainer } from '../../Components/Containers'
+import { EditUserImage, Icon, LoadingContainer, UserImage } from '../../Components/Images'
 import user from '../../Data/images/chef.png'
 import edit from '../../Data/images/edit.png'
 import { ErrorText, ProfileText, Text } from '../../Components/Texts'
 import { ButtonText, StyledButton } from '../../Components/Buttons'
 import { FormInput } from '../../Components/Inputs'
 import { DataContext } from '../../Data/Context'
-import xImg from '../../Data/images/x.png'
-import { passwordRegex } from '../../Data/Database'
 
 
 const EditProfile = ({ navigation }) => {
 
-   const { userImage, setUserImage } = useContext(DataContext)
    const { userData, setUserData } = useContext(DataContext)
-   const { email } = userData
+   const { image } = userData
 
-
-   const HANDLE_UPLOADING_IMAGE = gql`
-      mutation UploadImage($email: String!, $image: String!){
-         UploadImage(email: $email, image: $image){
-            id
-            email
-            image
-         }
-      }
-	`
-
-   const [UploadImage] = useMutation(HANDLE_UPLOADING_IMAGE, {
-      onCompleted({ UploadImage }) {
-         if (UploadImage.id) {
-            //edit image entry in userData
-         }
-      }
-   })
+   const [userImage, setUserImage] = useState(image)
+   const [loading, setLoading] = useState(false)
 
 
    let openImagePickerAsync = async () => {
@@ -59,6 +40,7 @@ const EditProfile = ({ navigation }) => {
          upload_preset: 'recipes_preset'
       }
 
+      setLoading(true)
       const response = await fetch("https://api.cloudinary.com/v1_1/dn8thrc9l/image/upload", {
          method: "POST",
          body: JSON.stringify(data),
@@ -69,16 +51,18 @@ const EditProfile = ({ navigation }) => {
 
       const { secure_url } = await response.json()
       setUserImage(secure_url)
+      setLoading(false)
    }
 
 
    const HANDLE_CHANGING_DATA = gql`
-      mutation ChangeData($email: String!, $name: String!){
-         ChangeData(email: $email, name: $name){
+      mutation ChangeData($email: String!, $name: String!, $image:String!){
+         ChangeData(email: $email, name: $name, image: $image){
             ... on User{
                id
                name
                email
+               image
             }
             ... on Error{
                message
@@ -89,11 +73,13 @@ const EditProfile = ({ navigation }) => {
 
    const [ChangeData] = useMutation(HANDLE_CHANGING_DATA, {
       onCompleted({ ChangeData }) {
-         const { id, name, email } = ChangeData
-         if (id) {
+         if (ChangeData.id) {
+            const { name, email, image } = ChangeData
             setUserData({
+               ...userData,
+               email,
                name,
-               email
+               image
             })
             navigation.navigate('User')
          } else {
@@ -110,9 +96,15 @@ const EditProfile = ({ navigation }) => {
             noPadding
             center
          >
-            <UserImage
-               source={userImage ? { uri: userImage } : user}
-            />
+            {loading ?
+               <LoadingContainer>
+                  <ActivityIndicator color='green' size='small' />
+               </LoadingContainer>
+               :
+               <UserImage
+                  source={userImage ? { uri: userImage } : image ? { uri: image } : user}
+               />
+            }
             <EditUserImage onPress={openImagePickerAsync}>
                <Icon
                   source={edit}
@@ -133,13 +125,8 @@ const EditProfile = ({ navigation }) => {
             onSubmit={({ name, email }) => {
                ChangeData({
                   variables: {
-                     name,
-                     email: userData.email
-                  }
-               })
-               UploadImage({
-                  variables: {
                      email,
+                     name,
                      image: userImage
                   }
                })

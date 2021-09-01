@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { Container, RowContainer } from '../../Components/Containers'
 import { Icon, PressableIcon, UserImage } from '../../Components/Images'
 import { Line, Text, Title } from '../../Components/Texts'
@@ -9,7 +9,8 @@ import user from '../../Data/images/chef.png'
 
 const User = ({ navigation }) => {
 
-   const { setIsSignedIn, userData, userImage, setUserData, setUserImage } = useContext(DataContext)
+   const { setIsSignedIn, userData, setUserData } = useContext(DataContext)
+   const { image } = userData
 
 
    const onPressAction = (action) => {
@@ -22,11 +23,12 @@ const User = ({ navigation }) => {
             favRecipes: null,
             recipes: []
          })
-         setUserImage('')
-      } else if ( action == 'profile'){
+      } else if (action === 'profile') {
          navigation.navigate('Edit Profile')
-      } else if ( action == 'recipes'){
-         navigation.navigate('My Recipes')
+      } else if (action === 'recipes') {
+         navigation.navigate('User Recipes')
+      } else if (action == 'rate') {
+         console.log(userData)
       }
    }
 
@@ -39,7 +41,7 @@ const User = ({ navigation }) => {
             center
          >
             <UserImage
-               source={userImage?  {uri: userImage }: user}
+               source={image ? { uri: image } : user}
             />
          </RowContainer>
          <Title>{userData.name}</Title>

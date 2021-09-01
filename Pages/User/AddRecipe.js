@@ -31,6 +31,7 @@ const AddRecipe = ({ navigation }) => {
          AddRecipe(email: $email, title: $title, time: $time, type: $type, ingredients: $ingredients, directions: $directions,  image: $image){
             data {
                ... on Recipe{
+                  id
                   title
                   time
                   type
@@ -92,6 +93,10 @@ const AddRecipe = ({ navigation }) => {
       setModal(false)
    }
 
+   // from multiline input to an array then to a string sperated by '-'
+   const splitLines = str => str.split(/\r?\n/).join('-')
+
+
    return (
       <Container>
          <ScrollView>
@@ -116,15 +121,15 @@ const AddRecipe = ({ navigation }) => {
                })}
                onSubmit={({ title, time, ingredients, directions }) => {
                   AddRecipe({
-                     variables:{
+                     variables: {
                         email,
                         title,
                         time,
                         type,
-                        ingredients,
-                        directions,
+                        ingredients: splitLines(ingredients),
+                        directions: splitLines(directions),
                         image
-                     } 
+                     }
                   })
                }}
             >
@@ -227,7 +232,7 @@ const AddRecipe = ({ navigation }) => {
                            <EditRecipeImage
                               onPress={openImagePickerAsync}
                            >
-                              <Icon 
+                              <Icon
                                  source={edit}
                                  size='20'
                               />

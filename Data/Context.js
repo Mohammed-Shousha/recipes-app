@@ -24,11 +24,11 @@ export const DataProvider = ({ children }) => {
       favRecipes: null,
       recipes: []
    })
-   const [userImage, setUserImage] = useState(null)
+   const [loading, setLoading] = useState(false)
 
 
    return (
-      <DataContext.Provider value={{ isSignedIn, setIsSignedIn, userData, setUserData, userImage, setUserImage }}>
+      <DataContext.Provider value={{ isSignedIn, setIsSignedIn, userData, setUserData, loading, setLoading }}>
          {children}
       </DataContext.Provider>
    )

@@ -2,7 +2,6 @@ import React, { useContext, useState, useRef } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { gql, useMutation } from '@apollo/client'
-import { useNavigation } from '@react-navigation/native'
 import { Container } from '../../Components/Containers'
 import { DataContext } from '../../Data/Context'
 import { passwordRegex } from '../../Data/Database'
@@ -12,7 +11,7 @@ import { FormInput } from '../../Components/Inputs'
 
 
 
-const ChangePassword = ({navigation}) => {
+const ChangePassword = ({ navigation }) => {
 
 
    const { userData } = useContext(DataContext)

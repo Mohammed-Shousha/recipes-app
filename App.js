@@ -72,6 +72,8 @@ const MainStackScreen = () => (
       <MainStack.Screen name="Main" component={Main} />
       <MainStack.Screen name="Recipes" component={Recipes} />
       <MainStack.Screen name="Recipe" component={RecipePage} options={recipeOptions} />
+      <MainStack.Screen name="SignIn" component={SignIn} />
+      <MainStack.Screen name="SignUp" component={SignUp} />
    </MainStack.Navigator>
 )
 
@@ -97,7 +99,7 @@ const FavouriteStackScreen = () => {
          {isSignedIn ?
          <>
             <FavouriteStack.Screen name='Favorite Recipes' component={Favourite} />
-               <FavouriteStack.Screen name="FavRecipe" component={RecipePage} options={recipeOptions} />
+            <FavouriteStack.Screen name="FavRecipe" component={RecipePage} options={recipeOptions} />
          </>
             :
             <>
@@ -120,7 +122,6 @@ const UserStackScreen = () => {
                <UserStack.Screen name='User' component={User} />
                <UserStack.Screen name='Edit Profile' component={EditProfile} />
                <UserStack.Screen name='Change Password' component={ChangePassword} />
-               <UserStack.Screen name='My Recipes' component={UserRecipes} />
                <UserStack.Screen name='Add Recipe' component={AddRecipe} />
                <UserStack.Screen name="User Recipes" component={UserRecipes} />
                <UserStack.Screen name="User Recipe" component={UserRecipePage} options={recipeOptions} />

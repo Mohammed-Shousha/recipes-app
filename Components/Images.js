@@ -52,6 +52,14 @@ export const UserImage = styled.Image `
    margin-top: 25px;
 `
 
+export const LoadingContainer = styled.View `
+   width: 100px;
+   height: 100px;
+   margin-top: 25px;
+   align-self: center;
+   justify-content: center;
+`
+
 export const EditUserImage = styled.Pressable `
    position: absolute;
    bottom: 5px;

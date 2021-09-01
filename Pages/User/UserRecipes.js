@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
-import { ScrollView } from 'react-native'
+import { ActivityIndicator, ScrollView } from 'react-native'
 import { AddButton } from '../../Components/Buttons'
-import { Container, RowContainer, CenterContainer } from '../../Components/Containers'
+import { Container, RowContainer } from '../../Components/Containers'
 import { Icon, RecipeMiniImage } from '../../Components/Images'
 import { Title, Text } from '../../Components/Texts'
 import { DataContext } from '../../Data/Context'
@@ -11,47 +11,56 @@ import plus from '../../Data/images/plus.png'
 
 const UserRecipes = ({ navigation }) => {
 
-   const { userData } = useContext(DataContext)
+   const { userData, loading } = useContext(DataContext)
    const { recipes } = userData
 
+
    return (
-      <Container>
-         {!recipes ?
-            <CenterContainer>
-               <Icon
-                  source={cookbook}
-                  size='110'
-               />
-               <Title>
-                  Your Recipes Book is Empty,
-                  Add Your Own Recipes to Get Started!
-               </Title>
-            </CenterContainer>
+      <>
+         {loading ?
+            <Container center>
+               <ActivityIndicator color='green' size='large' />
+            </Container>
             :
-            <ScrollView>
-               {recipes.map((recipe, i) =>
-                  <RowContainer
-                     key={i}
-                     flexStart
-                     onPress={() => navigation.navigate('User Recipe', { id: i })}
-                  >
-                     <RecipeMiniImage
-                        source={{ uri: recipe.image ? recipe.image : 'https://source.unsplash.com/Mz__0nr1AM8' }}
+            <Container>
+               {!recipes || recipes.length === 0 ?
+                  <Container center>
+                     <Icon
+                        source={cookbook}
+                        size='110'
                      />
-                     <Text style={{ width: 240 }}>{recipe.title}</Text>
-                  </RowContainer>
-               )}
-            </ScrollView>
+                     <Title>
+                        Your Recipes Book is Empty,
+                        Add Your Own Recipes to Get Started!
+                     </Title>
+                  </Container>
+                  :
+                  <ScrollView>
+                     {recipes.map(recipe =>
+                        <RowContainer
+                           key={recipe.id}
+                           flexStart
+                           onPress={() => navigation.navigate('User Recipe', { id: recipe.id })}
+                        >
+                           <RecipeMiniImage
+                              source={{ uri: recipe.image ? recipe.image : 'https://source.unsplash.com/Mz__0nr1AM8' }}
+                           />
+                           <Text style={{ width: 240 }}>{recipe.title}</Text>
+                        </RowContainer>
+                     )}
+                  </ScrollView>
+               }
+               <AddButton
+                  onPress={() => navigation.navigate('Add Recipe')}
+               >
+                  <Icon
+                     source={plus}
+                     size='25'
+                  />
+               </AddButton>
+            </Container>
          }
-         <AddButton
-            onPress={() => navigation.navigate('Add Recipe')}
-         >
-            <Icon
-               source={plus}
-               size='25'
-            />
-         </AddButton>
-      </Container>
+      </>
    )
 }
 

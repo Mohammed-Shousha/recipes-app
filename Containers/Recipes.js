@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { Container, RowContainer, CenterContainer } from '../Components/Containers'
+import { Container, RowContainer } from '../Components/Containers'
 import { Text, Title } from '../Components/Texts'
 import { RecipeMiniImage } from '../Components/Images'
 import { Icon } from '../Components/Images'

@@ -11,7 +11,7 @@ import { DataContext } from '../../Data/Context'
 
 const SignIn = ({ navigation }) => {
 
-   const { setIsSignedIn, setUserData, setUserImage } = useContext(DataContext)
+   const { setIsSignedIn, setUserData } = useContext(DataContext)
 
    const [active, setActive] = useState(null)
    const [signInError, setSignInError] = useState(null)
@@ -32,6 +32,7 @@ const SignIn = ({ navigation }) => {
                   image
                }
                recipes{
+                  id
                   title
                   time
                   type
@@ -57,11 +58,10 @@ const SignIn = ({ navigation }) => {
             setUserData({
                name,
                email,
+               image,
                favRecipes: fav_recipes,
                recipes
             })
-            setUserImage(image)
-
          } else if (SignIn.message) {
             setSignInError(SignIn.message)
             setTimeout(() => setSignInError(null), 3000)
