@@ -17,9 +17,10 @@ import UserRecipes from './Pages/User/UserRecipes'
 import EditProfile from './Pages/User/EditProfile'
 import ChangePassword from './Pages/User/ChangePassword'
 import AddRecipe from './Pages/User/AddRecipe'
+import EditRecipe from './Pages/User/EditRecipe'
 import Profile from './Pages/Profile/Profile'
 import SignIn from './Pages/Forms/SignIn'
-import SignUp from './Pages/Forms/SignUp'
+import Register from './Pages/Forms/Register'
 import { Icon } from './Components/Images'
 import Recipes from './Containers/Recipes'
 import { DataProvider, RecipesProvider, DataContext } from './Data/Context'
@@ -39,7 +40,7 @@ import Back from './Components/Back';
    // })
    
 const client = new ApolloClient({
-   uri: "http://192.168.1.19:5000/graphql",
+   uri: "http://192.168.1.2:5000/graphql",
    cache: new InMemoryCache(),
 })
 
@@ -72,8 +73,8 @@ const MainStackScreen = () => (
       <MainStack.Screen name="Main" component={Main} />
       <MainStack.Screen name="Recipes" component={Recipes} />
       <MainStack.Screen name="Recipe" component={RecipePage} options={recipeOptions} />
-      <MainStack.Screen name="SignIn" component={SignIn} />
-      <MainStack.Screen name="SignUp" component={SignUp} />
+      <MainStack.Screen name="Sign In" component={SignIn} />
+      <MainStack.Screen name="Register" component={Register} />
    </MainStack.Navigator>
 )
 
@@ -88,6 +89,7 @@ const SearchStackScreen = () => (
       <SearchStack.Screen name='Calories' component={ByCalories} />
       <SearchStack.Screen name='Search Recipes' component={Recipes} options={{ headerTitle: 'Recipes'}}/>
       <SearchStack.Screen name='Search Recipe' component={RecipePage} options={recipeOptions}/>
+      <SearchStack.Screen name="Recipe" component={RecipePage} options={recipeOptions} />
    </SearchStack.Navigator>
 )
 
@@ -104,8 +106,8 @@ const FavouriteStackScreen = () => {
             :
             <>
                <FavouriteStack.Screen name="Profile" component={Profile} />
-               <FavouriteStack.Screen name="SignIn" component={SignIn} />
-               <FavouriteStack.Screen name="SignUp" component={SignUp} />
+               <FavouriteStack.Screen name="Sign In" component={SignIn} />
+               <FavouriteStack.Screen name="Register" component={Register} />
             </>
          }
       </FavouriteStack.Navigator>
@@ -123,14 +125,15 @@ const UserStackScreen = () => {
                <UserStack.Screen name='Edit Profile' component={EditProfile} />
                <UserStack.Screen name='Change Password' component={ChangePassword} />
                <UserStack.Screen name='Add Recipe' component={AddRecipe} />
+               <UserStack.Screen name='Edit Recipe' component={EditRecipe} />
                <UserStack.Screen name="User Recipes" component={UserRecipes} />
                <UserStack.Screen name="User Recipe" component={UserRecipePage} options={recipeOptions} />
             </>
             :
             <>
                <UserStack.Screen name='Profile' component={Profile} />
-               <UserStack.Screen name="SignIn" component={SignIn} />
-               <UserStack.Screen name="SignUp" component={SignUp} />
+               <UserStack.Screen name="Sign In" component={SignIn} />
+               <UserStack.Screen name="Register" component={Register} />
             </>
          }
       </UserStack.Navigator>

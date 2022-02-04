@@ -10,21 +10,21 @@ import { DataContext } from '../../Data/Context'
 import { passwordRegex } from '../../Data/Database'
 
 
-const SingUp = ({ navigation }) => {
+const Register = ({ navigation }) => {
 
    const { setIsSignedIn, setUserData } = useContext(DataContext)
 
    const [active, setActive] = useState(null)
-   const [signUpError, setSignUpError] = useState(null)
+   const [registerError, setRegisterError] = useState(null)
 
    const emailRef = useRef()
    const passwordRef = useRef()
    const confirmPasswordRef = useRef()
 
 
-   const HANDLE_SIGN_UP = gql`
-      mutation SignUp($name: String! ,$email: String!, $password: String!){
-         SignUp(name: $name, email: $email, password: $password){
+   const HANDLE_REGISTER = gql`
+      mutation Register($name: String! ,$email: String!, $password: String!){
+         Register(name: $name, email: $email, password: $password){
             ... on User{
                id
                name
@@ -37,19 +37,20 @@ const SingUp = ({ navigation }) => {
       }
 	`
 
-   const [SignUp] = useMutation(HANDLE_SIGN_UP, {
-      onCompleted({ SignUp }) {
-         if (SignUp.id) {
-            const { name, email } = SignUp
+   const [Register] = useMutation(HANDLE_REGISTER, {
+      onCompleted({ Register }) {
+         if (Register.id) {
+            const { name, email } = Register
             setIsSignedIn(true)
             navigation.navigate('User')
             setUserData({
                name,
                email
             })
-         } else if (SignUp.message) {
-            setSignUpError(SignUp.message)
-            setTimeout(() => setSignUpError(null), 3000)
+         } else if (Register.message) {
+            console.log('error')
+            setRegisterError(Register.message)
+            setTimeout(() => setRegisterError(null), 3000)
          }
       }
    })
@@ -67,7 +68,7 @@ const SingUp = ({ navigation }) => {
                name: Yup.string()
                   .min(2, 'Too Short')
                   .required('Required'),
-               email: Yup.string()
+               email: Yup.string().trim()
                   .email('Wrong Email')
                   .required('Required'),
                password: Yup.string()
@@ -77,11 +78,11 @@ const SingUp = ({ navigation }) => {
                   .required('Required')
                   .oneOf([Yup.ref('password'), null], 'Passwords must match')
             })}
-            onSubmit={({ name, email, password, confirmPassword }) => {
-               SignUp({
+            onSubmit={({ name, email, password }) => {
+               Register({
                   variables: {
                      name,
-                     email,
+                     email: email.trim(),
                      password,
                   }
                })
@@ -92,7 +93,7 @@ const SingUp = ({ navigation }) => {
                   <FormInput
                      placeholder='Name'
                      value={values.name}
-                     autoFocus={true}
+                     autoFocus={false}
                      onChangeText={handleChange('name')}
                      onFocus={() => setActive('name')}
                      onBlur={() => setActive(false)}
@@ -142,13 +143,13 @@ const SingUp = ({ navigation }) => {
                      ref={confirmPasswordRef}
                   />
                   {errors.confirmPassword && touched.confirmPassword && <ErrorText>{errors.confirmPassword}</ErrorText>}
-                  {signUpError && <ErrorText>{signUpError}</ErrorText>}
+                  {registerError && <ErrorText>{registerError}</ErrorText>}
                   <FormButton
                      onPress={handleSubmit}
                      width='70%'
                   >
                      <ButtonText size='25px'>
-                        Sign Up
+                        Register
                      </ButtonText>
                   </FormButton>
                </>
@@ -158,4 +159,4 @@ const SingUp = ({ navigation }) => {
    )
 }
 
-export default SingUp
+export default Register

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { ScrollView, Modal, Pressable, ActivityIndicator } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { Formik } from 'formik'
@@ -17,21 +17,27 @@ import gallery from '../../Data/images/gallery.png'
 import edit from '../../Data/images/edit.png'
 
 
-const AddRecipe = ({ navigation }) => {
-
+const EditRecipe = ({ route, navigation }) => {
+   
+   const { id } = route.params
+   
+   
    const { userData, setUserData } = useContext(DataContext)
-   const { email } = userData
+   const { email, recipes } = userData
+   
+   const recipe = recipes.find(recipe => recipe.id === id)
+   const { title, time, type, directions, ingredients, image } = recipe
 
-   const [image, setImage] = useState('')
+   const [recipeImage, setRecipeImage] = useState(image)
+   const [recipeType, setRecipeType] = useState(type)
    const [modal, setModal] = useState(false)
-   const [type, setType] = useState('')
    const [active, setActive] = useState(false)
    const [loading, setLoading] = useState(false)
 
 
-   const HANDLE_ADDING_RECIPE = gql`
-      mutation AddRecipe($email: String!, $title: String!, $time: String!, $type: String!, $ingredients: String!, $directions: String!, $image: String){
-         AddRecipe(email: $email, title: $title, time: $time, type: $type, ingredients: $ingredients, directions: $directions,  image: $image){
+   const HANDLE_EDITING_RECIPE = gql`
+      mutation EditRecipe($email: String!, $id: ID!, $title: String!, $time: String!, $type: String!, $ingredients: String!, $directions: String!, $image: String){
+         EditRecipe(email: $email, id: $id, title: $title, time: $time, type: $type, ingredients: $ingredients, directions: $directions,  image: $image){
             data {
                ... on Recipe{
                   id
@@ -48,12 +54,12 @@ const AddRecipe = ({ navigation }) => {
       }
 	`
 
-   const [AddRecipe] = useMutation(HANDLE_ADDING_RECIPE, {
-      onCompleted({ AddRecipe }) {
-         if (AddRecipe.result === 1) {
+   const [EditRecipe] = useMutation(HANDLE_EDITING_RECIPE, {
+      onCompleted({ EditRecipe }) {
+         if (EditRecipe.result === 1) {
             setUserData({
                ...userData,
-               recipes: AddRecipe.data
+               recipes: EditRecipe.data
             })
             navigation.goBack()
          }
@@ -88,30 +94,32 @@ const AddRecipe = ({ navigation }) => {
       })
 
       const { secure_url } = await response.json()
-      setImage(secure_url)
+      setRecipeImage(secure_url)
       setLoading(false)
    }
 
 
    const selectDishType = (type) => {
-      setType(type)
+      setRecipeType(type)
       setModal(false)
    }
 
    // from multiline input to an array then to a string sperated by '-'
    const splitLines = str => str.split(/\r?\n/).join('-')
 
+   // string separated by '-' to an array to a multiline string
+   const separateLines = str => str.split('-').join("\n")
 
    return (
       <Container>
          <ScrollView>
             <Formik
                initialValues={{
-                  title: '',
-                  time: '',
-                  type: '',
-                  ingredients: '',
-                  directions: '',
+                  title: title,
+                  time: '' + time,
+                  type: recipeType,
+                  ingredients: separateLines(ingredients),
+                  directions: separateLines(directions),
                }}
                validationSchema={Yup.object({
                   title: Yup.string()
@@ -125,15 +133,16 @@ const AddRecipe = ({ navigation }) => {
                      .required('Required'),
                })}
                onSubmit={({ title, time, ingredients, directions }) => {
-                  AddRecipe({
+                  EditRecipe({
                      variables: {
                         email,
+                        id,
                         title,
                         time,
-                        type,
+                        type: recipeType,
                         ingredients: splitLines(ingredients),
                         directions: splitLines(directions),
-                        image
+                        image: recipeImage
                      }
                   })
                }}
@@ -154,7 +163,7 @@ const AddRecipe = ({ navigation }) => {
                         <FormInput
                            placeholder='Dish Type'
                            editable={false}
-                           value={type}
+                           value={recipeType}
                            active={modal}
                         />
                         <SelectionIcon
@@ -166,7 +175,7 @@ const AddRecipe = ({ navigation }) => {
                            />
                         </SelectionIcon>
                      </Pressable>
-                     {!type && touched.type && <ErrorText>Required</ErrorText>}
+                     {!recipeType && touched.type && <ErrorText>Required</ErrorText>}
                      <FormInput
                         placeholder='Ingredients'
                         value={values.ingredients}
@@ -226,30 +235,30 @@ const AddRecipe = ({ navigation }) => {
                         </ModalContainer>
                      </Modal>
                      {loading ?
-                           <ActivityIndicator color='green' size='large' />
-                        :!image ?
-                        <StyledButton
-                           width='45%'
-                        >
-                           <RowContainer
-                              onPress={openImagePickerAsync}
+                        <ActivityIndicator color='green' size='large' />
+                        : !recipeImage ?
+                           <StyledButton
+                              width='45%'
                            >
-                              <Icon
-                                 source={gallery}
-                                 size='23'
-                              />
-                              <ButtonText
-                                 size='20px'
+                              <RowContainer
+                                 onPress={openImagePickerAsync}
                               >
-                                 Upload Image
-                              </ButtonText>
-                           </RowContainer>
-                        </StyledButton>
+                                 <Icon
+                                    source={gallery}
+                                    size='23'
+                                 />
+                                 <ButtonText
+                                    size='20px'
+                                 >
+                                    Upload Image
+                                 </ButtonText>
+                              </RowContainer>
+                           </StyledButton>
                            :
                            <RowContainer>
                               <RecipeImage
                                  added
-                                 source={{ uri: image }}
+                                 source={{ uri: recipeImage }}
                               />
                               <EditRecipeImage
                                  onPress={openImagePickerAsync}
@@ -266,7 +275,7 @@ const AddRecipe = ({ navigation }) => {
                         onPress={handleSubmit}
                      >
                         <ButtonText size='28px'>
-                           Add Recipe
+                           Confirm Recipe
                         </ButtonText>
                      </StyledButton>
                   </>
@@ -277,4 +286,5 @@ const AddRecipe = ({ navigation }) => {
    )
 }
 
-export default AddRecipe
+export default EditRecipe
+

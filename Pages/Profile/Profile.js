@@ -7,11 +7,11 @@ import { Text } from '../../Components/Texts'
 const Profile = ({ navigation }) => (
    <Container center>
       <Text center>
-         To access your profile and your favourite recipes, Please sign in or sign up.
+         To access your profile and your favourite recipes, Please sign in or register.
       </Text>
       <FormButton
          width='50%'
-         onPress={() => navigation.navigate('SignIn')}
+         onPress={() => navigation.navigate('Sign In')}
       >
          <ButtonText size='20px'>
             Sign In
@@ -19,14 +19,14 @@ const Profile = ({ navigation }) => (
       </FormButton>
       <FormButton
          width='50%'
-         onPress={() => navigation.navigate('SignUp')}
+         onPress={() => navigation.navigate('Register')}
          rev
       >
          <ButtonText
             rev
             size='20px'
          >
-            Sign Up
+            Register
          </ButtonText>
       </FormButton>
    </Container>

@@ -18,7 +18,7 @@ const Recipes = ({ favourite = false }) => {
    const { userData } = useContext(DataContext)
 
    const { favRecipes } = userData
-   const [recipesNum, setRecipesNum] = useState(20) //intial recipes number
+   const [recipesNum, setRecipesNum] = useState(20) //initial recipes number
 
    return (
       <>

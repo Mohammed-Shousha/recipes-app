@@ -156,7 +156,11 @@ const RecipePage = ({ route, navigation }) => {
          setNutrients(nutrition.nutrients)
          setCalories(nutrition.nutrients[0].amount)
          setIngredients(extendedIngredients)
-         setInstructions(analyzedInstructions[0].steps)
+         if(analyzedInstructions.length){ // 0 'false'
+            setInstructions(analyzedInstructions[0].steps)
+         }else{
+            setInstructions([{ step: 'No Directions Available'}])
+         }  
          const filteredTypes = dishTypes.filter(type => recipesTypes.some(t => t === type))
             .map(t => t.charAt(0).toUpperCase() + t.slice(1)) // Capitalize First Letter
          setRecipeType(filteredTypes[0])
@@ -195,12 +199,12 @@ const RecipePage = ({ route, navigation }) => {
                         />
                      </Exit>
                      <RowContainer>
-                        <Pressable onPress={() => redirect('SignIn')}>
+                        <Pressable onPress={() => redirect('Sign In')}>
                            <Text bold>Sign in</Text>
                         </Pressable>
                         <Text>or</Text>
-                        <Pressable onPress={() => redirect('SignUp')}>
-                           <Text bold>Sign up</Text>
+                        <Pressable onPress={() => redirect('Register')}>
+                           <Text bold>Register</Text>
                         </Pressable>
                         <Text>to</Text>
                         <Text>Like</Text>

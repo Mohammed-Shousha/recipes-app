@@ -15,8 +15,10 @@ const Search = ({ navigation }) => {
 
    const { setRecipes } = useContext(RecipesContext)
 
+   const recipesNumber = 50
+
    const searchRecipes = async () => {
-      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&query=${searchValue}&number=20`)
+      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&query=${searchValue}&number=${recipesNumber}`)
       const { results } = await response.json()
       if (!results.length) {
          setRecipes([null])

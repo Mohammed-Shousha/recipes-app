@@ -22,6 +22,8 @@ export const ButtonText = styled.Text`
 export const FormButton = styled(StyledButton)`
    padding: 7px 0;
    margin: 7px 0;
+   justify-content: space-around;
+   flex-direction: row;
 `
 
 export const AddButton = styled.Pressable `

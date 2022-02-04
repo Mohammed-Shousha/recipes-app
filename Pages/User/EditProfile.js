@@ -21,6 +21,7 @@ const EditProfile = ({ navigation }) => {
 
    const [userImage, setUserImage] = useState(image)
    const [loading, setLoading] = useState(false)
+   const [active, setActive] = useState(false)
 
 
    let openImagePickerAsync = async () => {
@@ -101,16 +102,18 @@ const EditProfile = ({ navigation }) => {
                   <ActivityIndicator color='green' size='small' />
                </LoadingContainer>
                :
-               <UserImage
-                  source={userImage ? { uri: userImage } : image ? { uri: image } : user}
-               />
+               <>
+                  <UserImage
+                     source={userImage ? { uri: userImage } : image ? { uri: image } : user}
+                  />
+                  <EditUserImage onPress={openImagePickerAsync}>
+                     <Icon
+                        source={edit}
+                        size='15'
+                     />
+                  </EditUserImage>
+               </>
             }
-            <EditUserImage onPress={openImagePickerAsync}>
-               <Icon
-                  source={edit}
-                  size='15'
-               />
-            </EditUserImage>
          </RowContainer>
          <Formik
             initialValues={{
@@ -140,6 +143,9 @@ const EditProfile = ({ navigation }) => {
                   <FormInput
                      value={values.name}
                      onChangeText={handleChange('name')}
+                     onFocus={() => setActive(true)}
+                     onBlur={() => setActive(false)}
+                     active={active}
                   />
                   {errors.name && touched.name && <ErrorText>{errors.name}</ErrorText>}
                   <ProfileText size='28'>

@@ -9,6 +9,7 @@ import { DataContext } from '../../Data/Context'
 import recipeTypeImg from '../../Data/images/recipeType.png'
 import recipeTime from '../../Data/images/recipeTime.png'
 import bin from '../../Data/images/bin.png'
+import edit from '../../Data/images/edit_2.png'
 
 
 const UserRecipePage = ({ route, navigation }) => {
@@ -22,7 +23,7 @@ const UserRecipePage = ({ route, navigation }) => {
    const [activeDetail, setActiveDetail] = useState(0)
    const [confirm, setConfirm] = useState(false)
 
-   // string separated by '-' to an array to a multiline string
+   // string separated by '-' to an array
    const separateLines = str => str.split('-')
    const ingredients = separateLines(recipe.ingredients)
    const directions = separateLines(recipe.directions)
@@ -128,14 +129,22 @@ const UserRecipePage = ({ route, navigation }) => {
             source={{ uri: recipe.image ? recipe.image : 'https://source.unsplash.com/Mz__0nr1AM8' }}
          />
          <ScrollView>
-            <RowContainer>
+            <RowContainer width='95%'>
                <RecipeTitle>{recipe.title}</RecipeTitle>
-               <PressableIcon onPress={() => setConfirm(true)}>
-                  <Icon
-                     source={bin}
-                     size='30'
-                  />
-               </PressableIcon>
+               <RowContainer width='20%'>
+                  <PressableIcon onPress={() => navigation.navigate('Edit Recipe', { id: recipe.id })}>
+                     <Icon
+                        source={edit}
+                        size='30'
+                     />
+                  </PressableIcon>
+                  <PressableIcon onPress={() => setConfirm(true)}>
+                     <Icon
+                        source={bin}
+                        size='30'
+                     />
+                  </PressableIcon>
+               </RowContainer>
             </RowContainer>
             <RowContainer>
                {recipeInfo.map((r, i) => (

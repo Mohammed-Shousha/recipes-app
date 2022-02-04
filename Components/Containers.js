@@ -9,6 +9,7 @@ export const RowContainer = styled.Pressable`
    align-self: center;
    padding: ${props => props.Nav ? '7px 0' : props.noPadding ? '0' : props.user ? '15px 10px' : '5px 0'};
    background-color: ${props => props.Nav ? '#eff7e1' : 'transparent'};
+   z-index: 0;
 `
 
 export const Box = styled.Pressable`

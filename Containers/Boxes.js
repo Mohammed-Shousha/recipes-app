@@ -26,14 +26,14 @@ const Boxes = ({ array, text = true, time = false, diet = false, calories = fals
 
    const searchRecipesByTime = async (name) => {
       let time = Number(name.split(' ')[0])
-      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&number=${recipesNumber}&maxReadyTime=${time}&minReadyTime=${time - 15}`)
+      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&number=${recipesNumber}&maxReadyTime=${time}&minReadyTime=${time - 15}&instructionsRequired=true`)
       const { results } = await response.json()
       setRecipes(results)
       navigation.navigate('Search Recipes')
    }
 
    const searchRecipesByDiet = async (diet) => {
-      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&number=${recipesNumber}&diet=${diet}`)
+      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&number=${recipesNumber}&diet=${diet}&instructionsRequired=true`)
       const { results } = await response.json()
       setRecipes(results)
       navigation.navigate('Search Recipes')
@@ -47,14 +47,14 @@ const Boxes = ({ array, text = true, time = false, diet = false, calories = fals
       } else { // '250 to 500' (3)
          calories = nameArray[2]
       }
-      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&number=${recipesNumber}&maxCalories=${calories}&minCalories=${calories - 250}`)
+      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&number=${recipesNumber}&maxCalories=${calories}&minCalories=${calories - 250}&instructionsRequired=true`)
       const { results } = await response.json()
       setRecipes(results)
       navigation.navigate('Search Recipes')
    }
 
    const redirect = async (name) => {
-      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&number=${recipesNumber}&type=${name}`)
+      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&number=${recipesNumber}&type=${name}&instructionsRequired=true`)
       const { results } = await response.json()
       setRecipes(results)
       if (route.name === 'Main') {
