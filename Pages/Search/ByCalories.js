@@ -1,6 +1,6 @@
 import React from 'react'
-import { Container } from '../../Components/Containers'
 import Boxes from '../../Containers/Boxes'
+import { Container } from '../../Components/Containers'
 import { caloriesCategories } from '../../Data/Database'
 
 const ByCalories = () => (

@@ -1,18 +1,18 @@
 import React, { useContext, useState } from 'react'
 import { ScrollView } from 'react-native'
+import { useNavigation, useRoute } from '@react-navigation/core'
 import { Container, RowContainer } from '../Components/Containers'
-import { Text, Title } from '../Components/Texts'
+import { StyledButton, ButtonText } from '../Components/Buttons'
 import { RecipeMiniImage } from '../Components/Images'
+import { Text, Title } from '../Components/Texts'
 import { Icon } from '../Components/Images'
 import { RecipesContext, DataContext } from '../Data/Context'
 import emptyDish from '../Data/images/emptyDish.png'
-import { StyledButton, ButtonText } from '../Components/Buttons'
-import { useNavigation, useRoute } from '@react-navigation/core'
 
 const Recipes = ({ favourite = false }) => {
 
    const navigation = useNavigation()
-   
+
    const route = useRoute()
    const { recipes } = useContext(RecipesContext)
    const { userData } = useContext(DataContext)
@@ -28,7 +28,7 @@ const Recipes = ({ favourite = false }) => {
                   source={emptyDish}
                   size='100'
                />
-               <Title>You have no favourite recipes yet, Search and you will for sure find alot of tasteful recipes</Title>
+               <Title>You have no favourite recipes yet, search and you will find many tasteful recipes!</Title>
             </Container>
             : favourite && favRecipes.length ?
                <Container>
@@ -73,7 +73,7 @@ const Recipes = ({ favourite = false }) => {
                            {recipesNum < recipes.length &&
                               <StyledButton
                                  width='80%'
-                                 onPress={() => setRecipesNum(recipesNum + 10 )} //view more recipes
+                                 onPress={() => setRecipesNum(recipesNum + 10)} //view more recipes
                               >
                                  <ButtonText>Show More</ButtonText>
                               </StyledButton>

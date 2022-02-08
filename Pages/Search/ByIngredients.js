@@ -14,10 +14,9 @@ const ByIngredients = () => {
    const [ingredients, setIngredients] = useState([])
    const [ingredient, setIngredient] = useState('')
 
-
    const addIngredient = () => {
       setRecipes([])
-      if(ingredient.trim()){
+      if (ingredient.trim()) {
          setIngredients([...ingredients, ingredient.trim()])
          setIngredient('')
       }
@@ -36,7 +35,9 @@ const ByIngredients = () => {
                onChangeText={text => setIngredient(text)}
                value={ingredient}
             />
-            <StyledButton onPress={addIngredient}>
+            <StyledButton
+               onPress={addIngredient}
+            >
                <ButtonText> Add </ButtonText>
             </StyledButton>
          </RowContainer>
@@ -48,7 +49,7 @@ const ByIngredients = () => {
             />
             :
             <CenterContainer>
-               <Title > Add Ingredients </Title>
+               <Title> Add Ingredients </Title>
             </CenterContainer>
          }
       </Container>

@@ -6,18 +6,18 @@ import { gql, useMutation } from '@apollo/client'
 import { ActivityIndicator } from 'react-native'
 import { Container, RowContainer } from '../../Components/Containers'
 import { EditUserImage, Icon, LoadingContainer, UserImage } from '../../Components/Images'
-import user from '../../Data/images/chef.png'
-import edit from '../../Data/images/edit.png'
 import { ErrorText, ProfileText, Text } from '../../Components/Texts'
 import { ButtonText, StyledButton } from '../../Components/Buttons'
 import { FormInput } from '../../Components/Inputs'
 import { DataContext } from '../../Data/Context'
+import user from '../../Data/images/chef.png'
+import edit from '../../Data/images/edit.png'
 
 
 const EditProfile = ({ navigation }) => {
 
    const { userData, setUserData } = useContext(DataContext)
-   const { image } = userData
+   const { image, password } = userData
 
    const [userImage, setUserImage] = useState(image)
    const [loading, setLoading] = useState(false)
@@ -64,6 +64,7 @@ const EditProfile = ({ navigation }) => {
                name
                email
                image
+               password
             }
             ... on Error{
                message
@@ -75,12 +76,13 @@ const EditProfile = ({ navigation }) => {
    const [ChangeData] = useMutation(HANDLE_CHANGING_DATA, {
       onCompleted({ ChangeData }) {
          if (ChangeData.id) {
-            const { name, email, image } = ChangeData
+            const { name, email, image, password } = ChangeData
             setUserData({
                ...userData,
                email,
                name,
-               image
+               image,
+               password
             })
             navigation.navigate('User')
          } else {
@@ -135,7 +137,7 @@ const EditProfile = ({ navigation }) => {
                })
             }}
          >
-            {({ handleChange, handleSubmit, values, errors, touched }) => (
+            {({ handleChange, handleSubmit, values, errors, touched, isSubmitting }) => (
                <>
                   <ProfileText size='28'>
                      Name
@@ -158,20 +160,26 @@ const EditProfile = ({ navigation }) => {
                   <Text center size='15'>
                      you can't change your email
                   </Text>
-
-                  <StyledButton
-                     width='65%'
-                     onPress={() => navigation.navigate('Change Password')}
-                  >
-                     <ButtonText size='28px' >
-                        Change Password
-                     </ButtonText>
-                  </StyledButton>
+                  {password &&
+                     <StyledButton
+                        width='65%'
+                        onPress={() => navigation.navigate('Change Password')}
+                     >
+                        <ButtonText size='28px' >
+                           Change Password
+                        </ButtonText>
+                     </StyledButton>
+                  }
                   <StyledButton
                      width='80%'
                      onPress={handleSubmit}
+                     disabled={isSubmitting}
+                     rev={isSubmitting}
                   >
-                     <ButtonText size='28px' >
+                     <ButtonText
+                        size='28px'
+                        rev={isSubmitting}
+                     >
                         Save
                      </ButtonText>
                   </StyledButton>

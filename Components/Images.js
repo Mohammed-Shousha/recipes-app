@@ -1,19 +1,19 @@
 import styled from 'styled-components/native'
 
-export const Icon = styled.Image `
+export const Icon = styled.Image`
    width: ${props => props.size}px;
    height:  ${props => props.size}px;
    align-self: center;
 `
-export const PressableIcon = styled.Pressable `
-   position: ${props => props.back  || props.multi ? 'absolute': 'relative'};
-   top: ${props => props.back ? '20px' : '0'};
-   left: ${props => props.back ? '15px' : '0'};
+export const PressableIcon = styled.Pressable`
+   position: relative;
+   top: 0;
+   left: 0;
    justify-content: center;
    z-index: 50;
 `
 
-export const Exit = styled.Pressable `
+export const Exit = styled.Pressable`
    position: absolute;
    top: 10px;
    right: 10px;
@@ -21,14 +21,14 @@ export const Exit = styled.Pressable `
    z-index: 50;
 `
 
-export const SelectionIcon = styled.Pressable `
+export const SelectionIcon = styled.Pressable`
    position: absolute;
    bottom: 9px;
    right: 7px;
    justify-content: center;
 `
 
-export const RecipeMiniImage = styled.Image `
+export const RecipeMiniImage = styled.Image`
    width: 100px;
    height: 100px;
    align-self: center;
@@ -36,7 +36,7 @@ export const RecipeMiniImage = styled.Image `
    margin: 0 7px;
 `
 
-export const RecipeImage = styled.Image `
+export const RecipeImage = styled.Image`
    width: 98%;
    height:${props => props.added ? '250px' : '40%'};
    align-self: center;
@@ -44,7 +44,7 @@ export const RecipeImage = styled.Image `
    margin: 1%;
 `
 
-export const UserImage = styled.Image `
+export const UserImage = styled.Image`
    width: 100px;
    height: 100px;
    border-radius: 50px;
@@ -52,7 +52,7 @@ export const UserImage = styled.Image `
    margin-top: 25px;
 `
 
-export const LoadingContainer = styled.View `
+export const LoadingContainer = styled.View`
    width: 100px;
    height: 100px;
    margin-top: 25px;
@@ -60,7 +60,7 @@ export const LoadingContainer = styled.View `
    justify-content: center;
 `
 
-export const EditUserImage = styled.Pressable `
+export const EditUserImage = styled.Pressable`
    position: absolute;
    bottom: 5px;
    right: 15px;

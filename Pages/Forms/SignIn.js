@@ -24,7 +24,6 @@ const SignIn = ({ navigation }) => {
 
    const passwordRef = useRef()
 
-
    const HANDLE_SIGN_IN = gql`
       mutation SignIn($email: String!, $password: String!){
          SignIn(email: $email, password: $password){
@@ -32,6 +31,7 @@ const SignIn = ({ navigation }) => {
                id
                name
                email
+               password
                image
                fav_recipes{
                   id
@@ -58,12 +58,13 @@ const SignIn = ({ navigation }) => {
    const [SignIn] = useMutation(HANDLE_SIGN_IN, {
       onCompleted({ SignIn }) {
          if (SignIn.id) {
-            const { name, email, fav_recipes, recipes, image } = SignIn
+            const { name, email, fav_recipes, recipes, image, password } = SignIn
             setIsSignedIn(true)
             navigation.navigate('User')
             setUserData({
                name,
                email,
+               password,
                image,
                favRecipes: fav_recipes,
                recipes
@@ -82,6 +83,7 @@ const SignIn = ({ navigation }) => {
             name
             email
             image
+            password
             fav_recipes{
                id
                title
@@ -103,10 +105,11 @@ const SignIn = ({ navigation }) => {
    const [GoogleSignIn] = useMutation(HANDLE_GOOGLE_SIGN_IN, {
       onCompleted({ GoogleSignIn }) {
          if (GoogleSignIn.id) {
-            const { name, email, fav_recipes, recipes, image } = GoogleSignIn
+            const { name, email, fav_recipes, recipes, image, password } = GoogleSignIn
             setUserData({
                name,
                email,
+               password,
                image,
                favRecipes: fav_recipes,
                recipes
@@ -120,7 +123,6 @@ const SignIn = ({ navigation }) => {
    const signInWithGoogle = async () => {
       try {
          const result = await Google.logInAsync({
-            // iosClientId: `<YOUR_IOS_CLIENT_ID>`,
             androidClientId: ANDROID_CLIENT_ID,
          })
          setLoading(true)
@@ -132,10 +134,9 @@ const SignIn = ({ navigation }) => {
                   email,
                   name,
                   image: photoUrl,
-                  password: id,
                }
             })
-            
+
          }
       } catch (error) {
          setLoading(false)
@@ -172,7 +173,7 @@ const SignIn = ({ navigation }) => {
                   })
                }}
             >
-               {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+               {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
                   <>
                      <FormInput
                         placeholder='Email'
@@ -204,8 +205,13 @@ const SignIn = ({ navigation }) => {
                      <FormButton
                         onPress={handleSubmit}
                         width='70%'
+                        disabled={isSubmitting}
+                        rev={isSubmitting}
                      >
-                        <ButtonText size='25px'>
+                        <ButtonText
+                           size='25px'
+                           rev={isSubmitting}
+                        >
                            Sign in
                         </ButtonText>
                      </FormButton>

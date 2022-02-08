@@ -20,6 +20,7 @@ export const DataProvider = ({ children }) => {
    const [userData, setUserData] = useState({
       name: '',
       email: '',
+      password:'',
       image: '',
       favRecipes: null,
       recipes: []

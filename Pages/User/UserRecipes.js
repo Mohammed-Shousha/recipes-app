@@ -30,8 +30,8 @@ const UserRecipes = ({ navigation }) => {
                         size='110'
                      />
                      <Title>
-                        Your Recipes Book is Empty,
-                        Add Your Own Recipes to Get Started!
+                        Your recipes book is empty,
+                        add your own recipes to get started!
                      </Title>
                   </Container>
                   :

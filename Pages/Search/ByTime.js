@@ -1,6 +1,6 @@
 import React from 'react'
-import { Container } from '../../Components/Containers'
 import Boxes from '../../Containers/Boxes'
+import { Container } from '../../Components/Containers'
 import { timeCategories } from '../../Data/Database'
 
 const ByTime = () => (

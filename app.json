@@ -4,11 +4,11 @@
     "slug": "Recipes-App",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./Data/images/tray.png",
+    "icon": "./Data/images/icon.png",
     "splash": {
-      "image": "./Data/images/tray.png",
+      "image": "./Data/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#eff7e1"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,8 +21,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./Data/images/tray.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./Data/images/adaptive-icon.png",
+        "backgroundColor": "#96fbc4"
       }
     },
     "web": {

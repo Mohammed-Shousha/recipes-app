@@ -6,7 +6,7 @@ export const Text = styled.Text`
    color: ${props => props.color || '#222831'};
    text-align: ${props => props.center ? 'center' : 'auto'};
    align-self: ${props => props.center ? 'center' : 'auto'};
-   font-weight: ${props => props.bold? 'bold' : 'normal'}
+   font-weight: ${props => props.bold ? 'bold' : 'normal'}
 `
 
 export const Title = styled.Text`

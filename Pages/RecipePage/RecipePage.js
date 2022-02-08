@@ -6,6 +6,7 @@ import { RecipeDetailsContainer, RecipeDetail, RecipeInfo, RowContainer, Contain
 import { RecipeImage, PressableIcon, Icon, Exit } from '../../Components/Images'
 import { RecipeTitle, Text } from '../../Components/Texts'
 import { DataContext } from '../../Data/Context'
+import { recipeDetails, recipesTypes } from '../../Data/Database'
 import heart from '../../Data/images/greyHeart.png'
 import redHeart from '../../Data/images/redHeart.png'
 import recipeTypeImg from '../../Data/images/recipeType.png'
@@ -19,8 +20,7 @@ const RecipePage = ({ route, navigation }) => {
    const { id } = route.params
 
    const { userData, setUserData, isSignedIn } = useContext(DataContext)
-   const { favRecipes } = userData
-   const { email } = userData
+   const { email, favRecipes } = userData
 
    const [loading, setLoading] = useState(false)
    const [activeDetail, setActiveDetail] = useState(0)
@@ -33,9 +33,6 @@ const RecipePage = ({ route, navigation }) => {
    const [instructions, setInstructions] = useState([])
    const [calories, setCalories] = useState('')
    const [recipeType, setRecipeType] = useState('')
-
-
-   const recipesTypes = ['breakfast', 'dinner', 'salad', 'snack', 'drink', 'dessert']
 
    const recipeInfo = [
       {
@@ -57,8 +54,6 @@ const RecipePage = ({ route, navigation }) => {
          size: 18
       },
    ]
-
-   const recipeDetails = ['Ingredients', 'Directions', 'Nutrients']
 
 
    const HANDLE_LIKING_RECIPE = gql`
@@ -103,7 +98,6 @@ const RecipePage = ({ route, navigation }) => {
          setAlert(true)
       }
    }
-
 
    const HANDLE_UNLIKING_RECIPE = gql`
       mutation UnlikeRecipe($email: String!, $id: ID!){
@@ -156,11 +150,11 @@ const RecipePage = ({ route, navigation }) => {
          setNutrients(nutrition.nutrients)
          setCalories(nutrition.nutrients[0].amount)
          setIngredients(extendedIngredients)
-         if(analyzedInstructions.length){ // 0 'false'
+         if (analyzedInstructions.length) {
             setInstructions(analyzedInstructions[0].steps)
-         }else{
-            setInstructions([{ step: 'No Directions Available'}])
-         }  
+         } else {
+            setInstructions([{ step: 'No Directions Available' }])
+         }
          const filteredTypes = dishTypes.filter(type => recipesTypes.some(t => t === type))
             .map(t => t.charAt(0).toUpperCase() + t.slice(1)) // Capitalize First Letter
          setRecipeType(filteredTypes[0])
@@ -199,11 +193,15 @@ const RecipePage = ({ route, navigation }) => {
                         />
                      </Exit>
                      <RowContainer>
-                        <Pressable onPress={() => redirect('Sign In')}>
+                        <Pressable 
+                           onPress={() => redirect('Sign In')}
+                        >
                            <Text bold>Sign in</Text>
                         </Pressable>
                         <Text>or</Text>
-                        <Pressable onPress={() => redirect('Register')}>
+                        <Pressable
+                           onPress={() => redirect('Register')}
+                        >
                            <Text bold>Register</Text>
                         </Pressable>
                         <Text>to</Text>
@@ -218,7 +216,9 @@ const RecipePage = ({ route, navigation }) => {
                <ScrollView>
                   <RowContainer >
                      <RecipeTitle>{recipe.title}</RecipeTitle>
-                     <PressableIcon onPress={!like ? () => likeRecipe(recipe) : unlikeRecipe}>
+                     <PressableIcon
+                        onPress={!like ? () => likeRecipe(recipe) : unlikeRecipe}
+                     >
                         <Icon
                            source={like ? redHeart : heart}
                            size='30'
@@ -257,7 +257,7 @@ const RecipePage = ({ route, navigation }) => {
                   {activeDetail === 0 ?
                      <RecipeDetailsContainer>
                         {ingredients.map((ingredient, i) =>
-                           <Text key={i} color='#393e46'>• {ingredient.originalString}</Text>
+                           <Text key={i} color='#393e46'>• {ingredient.original}</Text>
                         )}
                      </RecipeDetailsContainer>
                      : activeDetail === 1 ?

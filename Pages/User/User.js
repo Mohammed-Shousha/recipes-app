@@ -1,5 +1,8 @@
-import React, { useContext } from 'react'
-import { Container, RowContainer } from '../../Components/Containers'
+import React, { useContext, useState } from 'react'
+import { Modal } from 'react-native'
+import * as WebBrowser from 'expo-web-browser';
+import { Container, RowContainer, ConfirmContainer } from '../../Components/Containers'
+import { StyledButton, ButtonText } from '../../Components/Buttons'
 import { Icon, PressableIcon, UserImage } from '../../Components/Images'
 import { Line, Text, Title } from '../../Components/Texts'
 import { DataContext } from '../../Data/Context'
@@ -12,29 +15,67 @@ const User = ({ navigation }) => {
    const { setIsSignedIn, userData, setUserData } = useContext(DataContext)
    const { image } = userData
 
+   const [confirm, setConfirm] = useState(false)
 
    const onPressAction = (action) => {
       if (action === 'logout') {
-         setIsSignedIn(false)
-         setUserData({
-            name: '',
-            email: '',
-            image: '',
-            favRecipes: null,
-            recipes: []
-         })
+         setConfirm(true)
       } else if (action === 'profile') {
          navigation.navigate('Edit Profile')
       } else if (action === 'recipes') {
          navigation.navigate('User Recipes')
       } else if (action == 'rate') {
-         console.log(userData)
+         WebBrowser.openBrowserAsync('https://expo.dev')
       }
+   }
+
+   const logOut = () => {
+      setConfirm(false)
+      setIsSignedIn(false)
+      setUserData({
+         name: '',
+         email: '',
+         image: '',
+         favRecipes: null,
+         recipes: []
+      })
    }
 
 
    return (
       <Container>
+         <Modal
+            animationType='fade'
+            visible={confirm}
+            transparent={true}
+            onRequestClose={() => setConfirm(false)}
+         >
+            <ConfirmContainer>
+               <Text>Are you sure you want to log out?</Text>
+               <RowContainer>
+                  <StyledButton
+                     width='45%'
+                     onPress={logOut}
+                  >
+                     <ButtonText size='20px'>
+                        Confirm
+                     </ButtonText>
+                  </StyledButton>
+                  <StyledButton
+                     width='45%'
+                     onPress={() => setConfirm(false)}
+                     rev
+                  >
+                     <ButtonText
+                        rev
+                        size='20px'
+                     >
+                        Cancel
+                     </ButtonText>
+                  </StyledButton>
+               </RowContainer>
+            </ConfirmContainer>
+         </Modal>
          <RowContainer
             width='120px'
             noPadding
@@ -46,6 +87,7 @@ const User = ({ navigation }) => {
          </RowContainer>
          <Title>{userData.name}</Title>
          <Line />
+
          {userDetails.map((detail, i) =>
             <RowContainer
                key={i}

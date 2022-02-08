@@ -3,16 +3,14 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { gql, useMutation } from '@apollo/client'
 import { Container } from '../../Components/Containers'
-import { DataContext } from '../../Data/Context'
-import { passwordRegex } from '../../Data/Database'
 import { ErrorText } from '../../Components/Texts'
 import { ButtonText, StyledButton } from '../../Components/Buttons'
 import { FormInput } from '../../Components/Inputs'
-
+import { passwordRegex } from '../../Data/Database'
+import { DataContext } from '../../Data/Context'
 
 
 const ChangePassword = ({ navigation }) => {
-
 
    const { userData } = useContext(DataContext)
    const { email } = userData
@@ -70,7 +68,7 @@ const ChangePassword = ({ navigation }) => {
                   .required('Required')
                   .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
             })}
-            onSubmit={({ password, newPassword, confirmPassword }) => {
+            onSubmit={({ password, newPassword }) => {
                ChangePassword({
                   variables: {
                      email,
@@ -80,7 +78,7 @@ const ChangePassword = ({ navigation }) => {
                })
             }}
          >
-            {({ handleChange, handleSubmit, handleBlur, values, errors, touched }) => (
+            {({ handleChange, handleSubmit, handleBlur, values, errors, touched, isSubmitting }) => (
                <>
                   <FormInput
                      placeholder='Current Password'
@@ -127,8 +125,13 @@ const ChangePassword = ({ navigation }) => {
                   <StyledButton
                      width='70%'
                      onPress={handleSubmit}
+                     disabled={isSubmitting}
+                     rev={isSubmitting}
                   >
-                     <ButtonText size='28px' >
+                     <ButtonText
+                        size='28px'
+                        rev={isSubmitting}
+                     >
                         Save
                      </ButtonText>
                   </StyledButton>

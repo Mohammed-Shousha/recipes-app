@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState } from 'react'
 import { ScrollView, Modal, Pressable, ActivityIndicator } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { Formik } from 'formik'
@@ -18,13 +18,12 @@ import edit from '../../Data/images/edit.png'
 
 
 const EditRecipe = ({ route, navigation }) => {
-   
+
    const { id } = route.params
-   
-   
+
    const { userData, setUserData } = useContext(DataContext)
    const { email, recipes } = userData
-   
+
    const recipe = recipes.find(recipe => recipe.id === id)
    const { title, time, type, directions, ingredients, image } = recipe
 
@@ -33,7 +32,6 @@ const EditRecipe = ({ route, navigation }) => {
    const [modal, setModal] = useState(false)
    const [active, setActive] = useState(false)
    const [loading, setLoading] = useState(false)
-
 
    const HANDLE_EDITING_RECIPE = gql`
       mutation EditRecipe($email: String!, $id: ID!, $title: String!, $time: String!, $type: String!, $ingredients: String!, $directions: String!, $image: String){
@@ -98,7 +96,6 @@ const EditRecipe = ({ route, navigation }) => {
       setLoading(false)
    }
 
-
    const selectDishType = (type) => {
       setRecipeType(type)
       setModal(false)
@@ -147,7 +144,7 @@ const EditRecipe = ({ route, navigation }) => {
                   })
                }}
             >
-               {({ handleChange, handleSubmit, values, errors, touched }) => (
+               {({ handleChange, handleSubmit, values, errors, touched, isSubmitting }) => (
                   <>
                      <FormInput
                         placeholder='Recipe Name'
@@ -272,9 +269,14 @@ const EditRecipe = ({ route, navigation }) => {
                      }
                      <StyledButton
                         width='80%'
+                        disabled={isSubmitting}
                         onPress={handleSubmit}
+                        rev={isSubmitting}
                      >
-                        <ButtonText size='28px'>
+                        <ButtonText
+                           size='28px'
+                           rev={isSubmitting}
+                        >
                            Confirm Recipe
                         </ButtonText>
                      </StyledButton>

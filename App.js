@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
 import { StatusBar } from 'react-native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client"
 import Main from './Pages/Main/Main'
 import Search from './Pages/Search/Search'
 import ByIngredients from './Pages/Search/ByIngredients'
@@ -21,27 +22,16 @@ import EditRecipe from './Pages/User/EditRecipe'
 import Profile from './Pages/Profile/Profile'
 import SignIn from './Pages/Forms/SignIn'
 import Register from './Pages/Forms/Register'
-import { Icon } from './Components/Images'
 import Recipes from './Containers/Recipes'
+import { Icon } from './Components/Images'
+import Back from './Components/Back'
 import { DataProvider, RecipesProvider, DataContext } from './Data/Context'
-import {
-   ApolloClient,
-   InMemoryCache,
-   ApolloProvider,
-   createHttpLink
-} from "@apollo/client"
 import { NavIcons, IconsSizes } from './Data/Database'
-import Back from './Components/Back';
 
 
-// const link = createHttpLink({
-   //    uri: "http://192.168.1.2:5000/graphql",
-   //    credentials: 'include'
-   // })
-   
 const client = new ApolloClient({
-   uri: "http://192.168.1.2:5000/graphql",
-   cache: new InMemoryCache(),
+   uri: "https://recipes-app-apollo-server.herokuapp.com/graphql",
+   cache: new InMemoryCache()
 })
 
 const Tab = createBottomTabNavigator()
@@ -58,13 +48,13 @@ const screenOptions = {
       fontFamily: 'sans-serif-light',
    },
    headerTitleAlign: 'center',
-   headerBackImage: ()=> <Back/> ,
+   headerBackImage: () => <Back />,
 }
 
 const recipeOptions = {
    headerTitle: '',
    headerTransparent: true,
-   headerBackImage: () => <Back recipe /> 
+   headerBackImage: () => <Back recipe />
 }
 
 const MainStack = createStackNavigator()
@@ -87,8 +77,8 @@ const SearchStackScreen = () => (
       <SearchStack.Screen name='Time' component={ByTime} />
       <SearchStack.Screen name='Diet' component={ByDiet} />
       <SearchStack.Screen name='Calories' component={ByCalories} />
-      <SearchStack.Screen name='Search Recipes' component={Recipes} options={{ headerTitle: 'Recipes'}}/>
-      <SearchStack.Screen name='Search Recipe' component={RecipePage} options={recipeOptions}/>
+      <SearchStack.Screen name='Search Recipes' component={Recipes} options={{ headerTitle: 'Recipes' }} />
+      <SearchStack.Screen name='Search Recipe' component={RecipePage} options={recipeOptions} />
       <SearchStack.Screen name="Recipe" component={RecipePage} options={recipeOptions} />
    </SearchStack.Navigator>
 )
@@ -99,10 +89,10 @@ const FavouriteStackScreen = () => {
    return (
       <FavouriteStack.Navigator screenOptions={screenOptions}>
          {isSignedIn ?
-         <>
-            <FavouriteStack.Screen name='Favorite Recipes' component={Favourite} />
-            <FavouriteStack.Screen name="FavRecipe" component={RecipePage} options={recipeOptions} />
-         </>
+            <>
+               <FavouriteStack.Screen name='Favorite Recipes' component={Favourite} />
+               <FavouriteStack.Screen name="FavRecipe" component={RecipePage} options={recipeOptions} />
+            </>
             :
             <>
                <FavouriteStack.Screen name="Profile" component={Profile} />
@@ -145,7 +135,7 @@ const App = () => (
       <RecipesProvider>
          <DataProvider>
             <NavigationContainer>
-               <Tab.Navigator initialRouteName="Main" tabBarOptions={{ showLabel: false, keyboardHidesTabBar: true, style: { backgroundColor: '#eff7e1', justifyContent: 'space-between'} }}
+               <Tab.Navigator initialRouteName="Main" tabBarOptions={{ showLabel: false, keyboardHidesTabBar: true, style: { backgroundColor: '#eff7e1', justifyContent: 'space-between' } }}
                   screenOptions={({ route }) => ({
                      tabBarIcon: ({ focused }) => {
                         const iconName = focused ? NavIcons[route.name][0] : NavIcons[route.name][1]

@@ -28,7 +28,6 @@ const UserRecipePage = ({ route, navigation }) => {
    const ingredients = separateLines(recipe.ingredients)
    const directions = separateLines(recipe.directions)
 
-
    const recipeInfo = [
       {
          name: recipe.type,
@@ -41,7 +40,7 @@ const UserRecipePage = ({ route, navigation }) => {
          color: '#e8e9a1',
          image: recipeTime,
          size: 20
-      },
+      }
    ]
 
    const recipeDetails = ['Ingredients', 'Directions']

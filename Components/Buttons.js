@@ -4,7 +4,7 @@ const foregroundColor = '#D6E5E3'
 const backgroundColor = '#4e8d7c'
 
 export const StyledButton = styled.Pressable`
-   background-color: ${props => props.rev ? foregroundColor  : backgroundColor};
+   background-color: ${props => props.rev ? foregroundColor : backgroundColor}; /* reverse colors */
    border-radius: 5px;
    justify-content: center;
    align-self: center;
@@ -13,7 +13,7 @@ export const StyledButton = styled.Pressable`
    width: ${props => props.width || 'auto'}
 `
 export const ButtonText = styled.Text`
-   font-size: ${props => props.size || '18px'};
+   font-size: ${props => props.size || '18px'}; /*defult size 18px */
    color: ${props => props.rev ? backgroundColor : foregroundColor};
    font-family:sans-serif-light;
    align-self: center;
@@ -26,7 +26,7 @@ export const FormButton = styled(StyledButton)`
    flex-direction: row;
 `
 
-export const AddButton = styled.Pressable `
+export const AddButton = styled.Pressable`
    border-radius: 25px;
    width: 50px;
    height: 50px;

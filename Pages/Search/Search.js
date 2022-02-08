@@ -5,7 +5,7 @@ import { Container, RowContainer } from '../../Components/Containers'
 import { Input } from '../../Components/Inputs'
 import { Icon, PressableIcon } from '../../Components/Images'
 import { RecipesContext } from '../../Data/Context'
-import { searchCategories } from '../../Data/Database'
+import { searchCategories, recipesNumber } from '../../Data/Database'
 import searchImg from '../../Data/images/search.png'
 
 
@@ -14,8 +14,6 @@ const Search = ({ navigation }) => {
    const [searchValue, setSearchValue] = useState('')
 
    const { setRecipes } = useContext(RecipesContext)
-
-   const recipesNumber = 50
 
    const searchRecipes = async () => {
       const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&query=${searchValue}&number=${recipesNumber}`)

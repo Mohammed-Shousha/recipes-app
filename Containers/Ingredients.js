@@ -1,27 +1,26 @@
 import React, { useContext } from 'react'
 import { View } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { API_KEY } from '@env'
 import { RowContainer } from '../Components/Containers'
 import { Icon, PressableIcon } from '../Components/Images'
 import { Text, Title } from '../Components/Texts'
 import { RecipesContext } from '../Data/Context'
+import { recipesNumber } from '../Data/Database'
 import searchImg from '../Data/images/search.png'
 import xImg from '../Data/images/x.png'
-import { useNavigation } from '@react-navigation/native'
 
 
 const Ingredients = ({ ingredients, setIngredients }) => {
+
    const navigation = useNavigation()
 
    const { setRecipes } = useContext(RecipesContext)
 
-   let recipesNumber = 50
-   
    const searchRecipesByIngredients = async () => {
       const query = ingredients.map(i => i + ',').join('+')
       const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&number=${recipesNumber}&ranking=2&ingredients=${query}`)
       const data = await response.json()
-      console.log(data)
       if (!data.length) {
          setRecipes([null])
       } else {
@@ -43,7 +42,9 @@ const Ingredients = ({ ingredients, setIngredients }) => {
             <Title>
                Ingredients
             </Title>
-            <PressableIcon onPress={searchRecipesByIngredients}>
+            <PressableIcon
+               onPress={searchRecipesByIngredients}
+            >
                <Icon
                   source={searchImg}
                   size='25'
@@ -54,7 +55,9 @@ const Ingredients = ({ ingredients, setIngredients }) => {
             {ingredients.map((ingredient, i) =>
                <RowContainer key={i}>
                   <Text> {ingredient} </Text>
-                  <PressableIcon onPress={() => removeIngredient(i)}>
+                  <PressableIcon 
+                     onPress={() => removeIngredient(i)}
+                  >
                      <Icon
                         source={xImg}
                         size='20'

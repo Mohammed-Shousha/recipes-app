@@ -30,16 +30,19 @@ import star from './images/star.png'
 import myRecipes from './images/myRecipes.png'
 import settings from './images/settings.png'
 
-export const passwordRegex = /^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{8,}$/
+export const passwordRegex = /^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[A-Za-z\d@$!%*#?&]{8,}$/
+
+// number of recipes to be fetched
+export const recipesNumber = 50
 
 export const NavIcons = {
-   Main: [tray, greyTray],
+   Main: [tray, greyTray], //active , non-active
    Search: [search, greySearch],
    Favourite: [heart, greyHeart],
    User: [user, greyUser],
-} 
+}
 
-export const IconsSizes ={
+export const IconsSizes = {
    Main: 40,
    Search: 30,
    Favourite: 32,
@@ -49,13 +52,13 @@ export const IconsSizes ={
 export const userDetails = [
    {
       name: 'Edit Profile',
-      img:  next,
+      img: next,
       size: 30,
       action: 'profile'
    },
    {
       name: 'My Recipes',
-      img:  myRecipes,
+      img: myRecipes,
       size: 35,
       action: 'recipes'
    },
@@ -64,12 +67,6 @@ export const userDetails = [
       img: star,
       size: 32,
       action: 'rate'
-   },
-   {
-      name: 'App Settings',
-      img: settings,
-      size: 33,
-      action: 'settings'
    },
    {
       name: 'Log Out',
@@ -107,123 +104,128 @@ export const dietCategories = [
 ]
 
 export const mainCategories = [
-    {
-        name: 'Breakfast',
-        color: '#a3ddcb',
-        image: breakfastPhoto,
-        imgSize: 90
-    },
-    {
-        name: 'Dinner',
-        color: '#e6b566',
-        image: dinnerPhoto,
-        imgSize: 90
-    },
-    {
-        name: 'Salads',
-        color: '#e8e9a1',
-        image: saladPhoto,
-        imgSize: 95
-    },
-    {
-        name: 'Snacks',
-        color: '#bbbfca',
-        image: snacksPhoto,
-        imgSize: 90
-    },
-    {
-        name: 'Desserts',
-        color: '#e5707e',
-        image: dessertsPhoto,
-        imgSize: 90
-    },
-    {
-        name: 'Drinks',
-        color: '#e4e978',
-        image: drinksPhoto,
-        imgSize: 90
-    },
+   {
+      name: 'Breakfast',
+      color: '#a3ddcb',
+      image: breakfastPhoto,
+      imgSize: 90
+   },
+   {
+      name: 'Dinner',
+      color: '#e6b566',
+      image: dinnerPhoto,
+      imgSize: 90
+   },
+   {
+      name: 'Salads',
+      color: '#e8e9a1',
+      image: saladPhoto,
+      imgSize: 95
+   },
+   {
+      name: 'Snacks',
+      color: '#bbbfca',
+      image: snacksPhoto,
+      imgSize: 90
+   },
+   {
+      name: 'Desserts',
+      color: '#e5707e',
+      image: dessertsPhoto,
+      imgSize: 90
+   },
+   {
+      name: 'Drinks',
+      color: '#e4e978',
+      image: drinksPhoto,
+      imgSize: 90
+   },
 ]
 
 export const dishTypes = ['Breakfast', 'Dinner', 'Salad', 'Snack', 'Dessert', 'Drink']
 
+export const recipeDetails = ['Ingredients', 'Directions', 'Nutrients']
+
+export const recipesTypes = ['breakfast', 'dinner', 'salad', 'snack', 'drink', 'dessert']
+
+
 export const searchCategories = [
-    {
-        name: 'Ingredients',
-        color: '#8bcdcd',
-        image: ingredientsPhoto,
-        imgSize: 120,
-    },
-    {
-        name: 'Diet',
-        color: '#cee397',
-        image: dietPhoto,
-        imgSize: 120,
-    },
-    {
-        name: 'Calories',
-        color: '#fcf876',
-        image: caloriesPhoto,
-        imgSize: 120,
-    },
-    {
-        name: 'Time',
-        color: '#fa7f72',
-        image: timePhoto,
-        imgSize: 120,
-    },
+   {
+      name: 'Ingredients',
+      color: '#8bcdcd',
+      image: ingredientsPhoto,
+      imgSize: 120,
+   },
+   {
+      name: 'Diet',
+      color: '#cee397',
+      image: dietPhoto,
+      imgSize: 120,
+   },
+   {
+      name: 'Calories',
+      color: '#fcf876',
+      image: caloriesPhoto,
+      imgSize: 120,
+   },
+   {
+      name: 'Time',
+      color: '#fa7f72',
+      image: timePhoto,
+      imgSize: 120,
+   },
 ]
 
 export const timeCategories = [
-    {
-        name: '15 Minutes',
-        color: '#e5707e',
-        image: quarter,
-        imgSize: 100
-    },
-    {
-        name: '30 Minutes',
-        color: '#70af85',
-        image: half,
-        imgSize: 100
-    },
-    {
-        name: '45 Minutes',
-        color: '#e6b566',
-        image: threeQuarters,
-        imgSize: 90
-    },
-    {
-        name: '60 Minutes',
-        color: '#aee1e1 ',
-        image: hour,
-        imgSize: 100
-    }
+   {
+      name: '15 Minutes',
+      color: '#e5707e',
+      image: quarter,
+      imgSize: 100
+   },
+   {
+      name: '30 Minutes',
+      color: '#70af85',
+      image: half,
+      imgSize: 100
+   },
+   {
+      name: '45 Minutes',
+      color: '#e6b566',
+      image: threeQuarters,
+      imgSize: 90
+   },
+   {
+      name: '60 Minutes',
+      color: '#aee1e1 ',
+      image: hour,
+      imgSize: 100
+   }
 ]
 
 export const caloriesCategories = [
-    {
-        name: 'Under 250',
+   {
+      name: 'Under 250',
       color: '#6a2c70',
-        image: quarter,
-        imgSize: 0
-    },
-    {
-        name: '250 to 500',
-       color: '#f08a5d',
-        image: half,
-        imgSize: 0
-    },
-    {
-        name: '500 to 750',
-       color: '#007965',
-        image: threeQuarters,
-        imgSize: 0
-    },
-    {
-        name: '750 to 1000',
-       color: '#b83b5e',
-        image: hour,
-        imgSize: 0
-    }
+      image: quarter,
+      imgSize: 0
+   },
+   {
+      name: '250 to 500',
+      color: '#f08a5d',
+      image: half,
+      imgSize: 0
+   },
+   {
+      name: '500 to 750',
+      color: '#007965',
+      image: threeQuarters,
+      imgSize: 0
+   },
+   {
+      name: '750 to 1000',
+      color: '#b83b5e',
+      image: hour,
+      imgSize: 0
+   }
 ]

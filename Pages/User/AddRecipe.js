@@ -28,7 +28,6 @@ const AddRecipe = ({ navigation }) => {
    const [active, setActive] = useState(false)
    const [loading, setLoading] = useState(false)
 
-
    const HANDLE_ADDING_RECIPE = gql`
       mutation AddRecipe($email: String!, $title: String!, $time: String!, $type: String!, $ingredients: String!, $directions: String!, $image: String){
          AddRecipe(email: $email, title: $title, time: $time, type: $type, ingredients: $ingredients, directions: $directions,  image: $image){
@@ -138,7 +137,7 @@ const AddRecipe = ({ navigation }) => {
                   })
                }}
             >
-               {({ handleChange, handleSubmit, values, errors, touched }) => (
+               {({ handleChange, handleSubmit, values, errors, touched, isSubmitting }) => (
                   <>
                      <FormInput
                         placeholder='Recipe Name'
@@ -226,25 +225,25 @@ const AddRecipe = ({ navigation }) => {
                         </ModalContainer>
                      </Modal>
                      {loading ?
-                           <ActivityIndicator color='green' size='large' />
-                        :!image ?
-                        <StyledButton
-                           width='45%'
-                        >
-                           <RowContainer
-                              onPress={openImagePickerAsync}
+                        <ActivityIndicator color='green' size='large' />
+                        : !image ?
+                           <StyledButton
+                              width='45%'
                            >
-                              <Icon
-                                 source={gallery}
-                                 size='23'
-                              />
-                              <ButtonText
-                                 size='20px'
+                              <RowContainer
+                                 onPress={openImagePickerAsync}
                               >
-                                 Upload Image
-                              </ButtonText>
-                           </RowContainer>
-                        </StyledButton>
+                                 <Icon
+                                    source={gallery}
+                                    size='23'
+                                 />
+                                 <ButtonText
+                                    size='20px'
+                                 >
+                                    Upload Image
+                                 </ButtonText>
+                              </RowContainer>
+                           </StyledButton>
                            :
                            <RowContainer>
                               <RecipeImage
@@ -264,8 +263,13 @@ const AddRecipe = ({ navigation }) => {
                      <StyledButton
                         width='80%'
                         onPress={handleSubmit}
+                        disabled={isSubmitting}
+                        rev={isSubmitting}
                      >
-                        <ButtonText size='28px'>
+                        <ButtonText
+                           size='28px'
+                           rev={isSubmitting}
+                        >
                            Add Recipe
                         </ButtonText>
                      </StyledButton>
