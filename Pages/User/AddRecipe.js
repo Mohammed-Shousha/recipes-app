@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { ScrollView, Modal, Pressable, ActivityIndicator } from 'react-native'
-import * as ImagePicker from 'expo-image-picker'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { gql, useMutation } from '@apollo/client'
+import { uploadImage } from '../../Data/Functions'
 import { ButtonText, StyledButton } from '../../Components/Buttons'
 import { EditRecipeImage, Exit, Icon, RecipeImage, SelectionIcon } from '../../Components/Images'
 import { Container, ModalContainer, ModalDetails, RowContainer } from '../../Components/Containers'
@@ -58,39 +58,6 @@ const AddRecipe = ({ navigation }) => {
          }
       }
    })
-
-
-   let openImagePickerAsync = async () => {
-      let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
-
-      if (permissionResult.granted === false) {
-         alert("Permission to access camera roll is required!")
-         return
-      }
-
-      let pickerResult = await ImagePicker.launchImageLibraryAsync({ base64: true })
-
-      let base64Img = `data:image/jpg;base64,${pickerResult.base64}`
-
-      let data = {
-         file: base64Img,
-         upload_preset: 'recipes_preset'
-      }
-
-      setLoading(true)
-      const response = await fetch("https://api.cloudinary.com/v1_1/dn8thrc9l/image/upload", {
-         method: "POST",
-         body: JSON.stringify(data),
-         headers: {
-            'content-type': 'application/json'
-         }
-      })
-
-      const { secure_url } = await response.json()
-      setImage(secure_url)
-      setLoading(false)
-   }
-
 
    const selectDishType = (type) => {
       setType(type)
@@ -231,7 +198,7 @@ const AddRecipe = ({ navigation }) => {
                               width='45%'
                            >
                               <RowContainer
-                                 onPress={openImagePickerAsync}
+                                 onPress={()=> uploadImage(setLoading, setImage)}
                               >
                                  <Icon
                                     source={gallery}
@@ -251,7 +218,7 @@ const AddRecipe = ({ navigation }) => {
                                  source={{ uri: image }}
                               />
                               <EditRecipeImage
-                                 onPress={openImagePickerAsync}
+                                 onPress={()=> uploadImage(setLoading, setImage)}
                               >
                                  <Icon
                                     source={edit}

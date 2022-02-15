@@ -17,12 +17,11 @@ const ChangePassword = ({ navigation }) => {
 
    const [passwordError, setPasswordError] = useState(null)
    const [active, setActive] = useState(null)
-
+   const [disabled, setDisabled] = useState(false)
 
    const passwordRef = useRef()
    const newPasswordRef = useRef()
    const confirmPasswordRef = useRef()
-
 
    const HANDLE_CHANGING_PASSWORD = gql`
       mutation ChangePassword($email: String!, $password: String!, $newPassword: String!){
@@ -44,6 +43,7 @@ const ChangePassword = ({ navigation }) => {
          if (ChangePassword.name) {
             navigation.navigate('Edit Profile')
          } else if (ChangePassword.message) {
+            setDisabled(false)
             setPasswordError(ChangePassword.message)
             setTimeout(() => setPasswordError(null), 3000)
          }
@@ -69,6 +69,7 @@ const ChangePassword = ({ navigation }) => {
                   .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
             })}
             onSubmit={({ password, newPassword }) => {
+               setDisabled(true)
                ChangePassword({
                   variables: {
                      email,
@@ -78,7 +79,7 @@ const ChangePassword = ({ navigation }) => {
                })
             }}
          >
-            {({ handleChange, handleSubmit, handleBlur, values, errors, touched, isSubmitting }) => (
+            {({ handleChange, handleSubmit, handleBlur, values, errors, touched }) => (
                <>
                   <FormInput
                      placeholder='Current Password'
@@ -125,12 +126,12 @@ const ChangePassword = ({ navigation }) => {
                   <StyledButton
                      width='70%'
                      onPress={handleSubmit}
-                     disabled={isSubmitting}
-                     rev={isSubmitting}
+                     disabled={disabled}
+                     rev={disabled}
                   >
                      <ButtonText
                         size='28px'
-                        rev={isSubmitting}
+                        rev={disabled}
                      >
                         Save
                      </ButtonText>

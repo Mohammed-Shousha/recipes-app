@@ -10,6 +10,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#eff7e1"
     },
+    "scheme":"myscheme",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -22,8 +23,16 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./Data/images/adaptive-icon.png",
-        "backgroundColor": "#96fbc4"
+        "backgroundColor": "#eff7e1"
+      },
+      "package": "com.mshousha.RecipesApp",
+      "config": {
+         "googleSignIn": {
+            "apiKey":"AIzaSyB75OSQ1Ryeg9o8SLvdn06NYAsoMI2ntbc",
+            "certificateHash":"21:B1:AF:37:A4:65:3F:FE:B1:38:84:C0:7B:B7:4D:A0:AA:CE:7C:6F"
+         }
       }
+
     },
     "web": {
       "build": {

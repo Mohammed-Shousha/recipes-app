@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react'
-import * as ImagePicker from 'expo-image-picker'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { gql, useMutation } from '@apollo/client'
 import { ActivityIndicator } from 'react-native'
+import { uploadImage } from '../../Data/Functions'
 import { Container, RowContainer } from '../../Components/Containers'
 import { EditUserImage, Icon, LoadingContainer, UserImage } from '../../Components/Images'
 import { ErrorText, ProfileText, Text } from '../../Components/Texts'
@@ -24,40 +24,8 @@ const EditProfile = ({ navigation }) => {
    const [active, setActive] = useState(false)
 
 
-   let openImagePickerAsync = async () => {
-      let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
-
-      if (permissionResult.granted === false) {
-         alert("Permission to access camera roll is required!")
-         return
-      }
-
-      let pickerResult = await ImagePicker.launchImageLibraryAsync({ base64: true })
-
-      let base64Img = `data:image/jpg;base64,${pickerResult.base64}`
-
-      let data = {
-         file: base64Img,
-         upload_preset: 'recipes_preset'
-      }
-
-      setLoading(true)
-      const response = await fetch("https://api.cloudinary.com/v1_1/dn8thrc9l/image/upload", {
-         method: "POST",
-         body: JSON.stringify(data),
-         headers: {
-            'content-type': 'application/json'
-         }
-      })
-
-      const { secure_url } = await response.json()
-      setUserImage(secure_url)
-      setLoading(false)
-   }
-
-
    const HANDLE_CHANGING_DATA = gql`
-      mutation ChangeData($email: String!, $name: String!, $image:String!){
+      mutation ChangeData($email: String!, $name: String!, $image:String){
          ChangeData(email: $email, name: $name, image: $image){
             ... on User{
                id
@@ -108,7 +76,7 @@ const EditProfile = ({ navigation }) => {
                   <UserImage
                      source={userImage ? { uri: userImage } : image ? { uri: image } : user}
                   />
-                  <EditUserImage onPress={openImagePickerAsync}>
+                  <EditUserImage onPress={()=> uploadImage(setLoading, setUserImage)}>
                      <Icon
                         source={edit}
                         size='15'

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ScrollView, ActivityIndicator, Modal, Pressable } from 'react-native'
-import { API_KEY } from '@env'
 import { gql, useMutation } from '@apollo/client'
+import { API_KEY } from '@env'
 import { RecipeDetailsContainer, RecipeDetail, RecipeInfo, RowContainer, Container, AlertContainer } from '../../Components/Containers'
 import { RecipeImage, PressableIcon, Icon, Exit } from '../../Components/Images'
 import { RecipeTitle, Text } from '../../Components/Texts'
@@ -21,7 +21,7 @@ const RecipePage = ({ route, navigation }) => {
 
    const { userData, setUserData, isSignedIn } = useContext(DataContext)
    const { email, favRecipes } = userData
-
+  
    const [loading, setLoading] = useState(false)
    const [activeDetail, setActiveDetail] = useState(0)
    const [like, setLike] = useState(false)
@@ -159,8 +159,10 @@ const RecipePage = ({ route, navigation }) => {
             .map(t => t.charAt(0).toUpperCase() + t.slice(1)) // Capitalize First Letter
          setRecipeType(filteredTypes[0])
          if (favRecipes) {
-            const liked = favRecipes.some(recipe => recipe.id === id)
-            liked && setLike(true)
+            let liked = favRecipes.some(recipe => recipe.id == id)
+            if(liked){
+               setLike(true)
+            }
          }
          setLoading(false)
       }

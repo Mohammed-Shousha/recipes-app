@@ -88,15 +88,16 @@ export const ModalDetails = styled.Pressable`
 
 export const AlertContainer = styled.View`
    background-color: #eff7e1;
-   border-width: 2px;
-   border-color: red;
-   border-radius: 10px;
    align-self: center;
    justify-content: center;
    align-items: center;
    width: 90%;
-   height: 10%;
+   height: 8%;
+   border-radius: 10px;
+   border-width: 1px;
+   border-color: red;
    margin: 15px 0;
+   padding: 10px;
 `
 
 export const ConfirmContainer = styled.View`

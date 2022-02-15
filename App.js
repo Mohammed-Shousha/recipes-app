@@ -1,9 +1,10 @@
-import React, { useContext } from 'react'
-import { StatusBar } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { StatusBar, I18nManager } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client"
+import * as Network from 'expo-network'
 import Main from './Pages/Main/Main'
 import Search from './Pages/Search/Search'
 import ByIngredients from './Pages/Search/ByIngredients'
@@ -25,12 +26,18 @@ import Register from './Pages/Forms/Register'
 import Recipes from './Containers/Recipes'
 import { Icon } from './Components/Images'
 import Back from './Components/Back'
+import { Container } from './Components/Containers'
+import { Title } from './Components/Texts'
 import { DataProvider, RecipesProvider, DataContext } from './Data/Context'
 import { NavIcons, IconsSizes } from './Data/Database'
+import noConnection from './Data/images/noConnection.png'
 
+I18nManager.forceRTL(false)
+I18nManager.allowRTL(false)
 
 const client = new ApolloClient({
    uri: "https://recipes-app-apollo-server.herokuapp.com/graphql",
+   // uri: "http://192.168.1.19:5000/graphql",
    cache: new InMemoryCache()
 })
 
@@ -130,30 +137,55 @@ const UserStackScreen = () => {
    )
 }
 
-const App = () => (
-   <ApolloProvider client={client}>
-      <RecipesProvider>
-         <DataProvider>
-            <NavigationContainer>
-               <Tab.Navigator initialRouteName="Main" tabBarOptions={{ showLabel: false, keyboardHidesTabBar: true, style: { backgroundColor: '#eff7e1', justifyContent: 'space-between' } }}
-                  screenOptions={({ route }) => ({
-                     tabBarIcon: ({ focused }) => {
-                        const iconName = focused ? NavIcons[route.name][0] : NavIcons[route.name][1]
-                        const size = IconsSizes[route.name]
-                        return <Icon source={iconName} size={size} />
-                     }
-                  })}
-               >
-                  <Tab.Screen name="Main" component={MainStackScreen} />
-                  <Tab.Screen name="Search" component={SearchStackScreen} />
-                  <Tab.Screen name='Favourite' component={FavouriteStackScreen} />
-                  <Tab.Screen name="User" component={UserStackScreen} />
-               </Tab.Navigator>
-               <StatusBar hidden={true} />
-            </NavigationContainer>
-         </DataProvider>
-      </RecipesProvider>
-   </ApolloProvider>
-)
+const App = () => {
 
+   const [connected, setConnected] = useState(true)
+
+   useEffect(() => {
+      const getConnectionStatus = async () => {
+         const result = await Network.getNetworkStateAsync()
+         if (!result.isInternetReachable) {
+            setConnected(false)
+         }
+      }
+      getConnectionStatus()
+   })
+
+   return (
+      <>
+         {connected ?
+            <ApolloProvider client={client}>
+               <RecipesProvider>
+                  <DataProvider>
+                     <NavigationContainer>
+                        <Tab.Navigator initialRouteName="Main" tabBarOptions={{ showLabel: false, keyboardHidesTabBar: true, style: { backgroundColor: '#eff7e1', justifyContent: 'space-between' } }}
+                           screenOptions={({ route }) => ({
+                              tabBarIcon: ({ focused }) => {
+                                 const iconName = focused ? NavIcons[route.name][0] : NavIcons[route.name][1]
+                                 const size = IconsSizes[route.name]
+                                 return <Icon source={iconName} size={size} />
+                              }
+                           })}
+                        >
+                           <Tab.Screen name="Main" component={MainStackScreen} />
+                           <Tab.Screen name="Search" component={SearchStackScreen} />
+                           <Tab.Screen name='Favourite' component={FavouriteStackScreen} />
+                           <Tab.Screen name="User" component={UserStackScreen} />
+                        </Tab.Navigator>
+                        <StatusBar hidden={true} />
+                     </NavigationContainer>
+                  </DataProvider>
+               </RecipesProvider>
+            </ApolloProvider>
+            :
+            <Container center>
+               <Icon
+                  source={noConnection}
+                  size='100'
+               />
+               <Title>You are not connected to the internet, check your connection and try again.</Title>
+            </Container>}
+      </>
+   )
+}
 export default App

@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react'
 import { Modal } from 'react-native'
-import * as WebBrowser from 'expo-web-browser';
+import * as WebBrowser from 'expo-web-browser'
 import { Container, RowContainer, ConfirmContainer } from '../../Components/Containers'
 import { StyledButton, ButtonText } from '../../Components/Buttons'
 import { Icon, PressableIcon, UserImage } from '../../Components/Images'
 import { Line, Text, Title } from '../../Components/Texts'
-import { DataContext } from '../../Data/Context'
+import { DataContext, initData } from '../../Data/Context'
 import { userDetails } from '../../Data/Database'
 import user from '../../Data/images/chef.png'
 
@@ -25,20 +25,14 @@ const User = ({ navigation }) => {
       } else if (action === 'recipes') {
          navigation.navigate('User Recipes')
       } else if (action == 'rate') {
-         WebBrowser.openBrowserAsync('https://expo.dev')
+         WebBrowser.openBrowserAsync('https://forms.gle/JrtqqiygVRPgsgxn9')
       }
    }
 
    const logOut = () => {
       setConfirm(false)
       setIsSignedIn(false)
-      setUserData({
-         name: '',
-         email: '',
-         image: '',
-         favRecipes: null,
-         recipes: []
-      })
+      setUserData(initData)
    }
 
 
@@ -87,7 +81,6 @@ const User = ({ navigation }) => {
          </RowContainer>
          <Title>{userData.name}</Title>
          <Line />
-
          {userDetails.map((detail, i) =>
             <RowContainer
                key={i}

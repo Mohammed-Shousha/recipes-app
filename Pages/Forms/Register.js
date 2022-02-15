@@ -1,10 +1,9 @@
 import React, { useContext, useRef, useState } from 'react'
 import { ActivityIndicator } from 'react-native'
+import { gql, useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { gql, useMutation } from '@apollo/client'
-import { ANDROID_CLIENT_ID } from '@env'
-import * as Google from "expo-google-app-auth"
+import { googleAuth } from '../../Data/Functions'
 import { Container } from '../../Components/Containers'
 import { ErrorText } from '../../Components/Texts'
 import { FormInput } from '../../Components/Inputs'
@@ -22,6 +21,7 @@ const Register = ({ navigation }) => {
    const [active, setActive] = useState(null)
    const [registerError, setRegisterError] = useState(null)
    const [loading, setLoading] = useState(false)
+   const [disabled, setDisabled] = useState(false)
 
    const emailRef = useRef()
    const passwordRef = useRef()
@@ -55,15 +55,16 @@ const Register = ({ navigation }) => {
                password
             })
          } else if (Register.message) {
+            setDisabled(false)
             setRegisterError(Register.message)
             setTimeout(() => setRegisterError(null), 3000)
          }
       }
    })
 
-   const HANDLE_GOOGLE_SIGN_IN = gql`
-      mutation GoogleSignIn($email: String!, $name: String!, $image: String){
-         GoogleSignIn(email: $email, name: $name, image: $image){
+   const HANDLE_GOOGLE_AUTH = gql`
+      mutation GoogleAuth($email: String!, $name: String!, $image: String){
+         GoogleAuth(email: $email, name: $name, image: $image){
             id
             name
             email
@@ -87,10 +88,10 @@ const Register = ({ navigation }) => {
       }
    `
 
-   const [GoogleSignIn] = useMutation(HANDLE_GOOGLE_SIGN_IN, {
-      onCompleted({ GoogleSignIn }) {
-         if (GoogleSignIn.id) {
-            const { name, email, fav_recipes, recipes, image, password } = GoogleSignIn
+   const [GoogleAuth] = useMutation(HANDLE_GOOGLE_AUTH, {
+      onCompleted({ GoogleAuth }) {
+         if (GoogleAuth.id) {
+            const { name, email, fav_recipes, recipes, image, password } = GoogleAuth
             setUserData({
                name,
                email,
@@ -105,29 +106,6 @@ const Register = ({ navigation }) => {
       }
    })
 
-   const signInWithGoogle = async () => {
-      try {
-         const result = await Google.logInAsync({
-            androidClientId: ANDROID_CLIENT_ID,
-         })
-         setLoading(true)
-
-         if (result.type === "success") {
-            const { email, name, photoUrl, id } = result.user
-            GoogleSignIn({
-               variables: {
-                  email,
-                  name,
-                  image: photoUrl,
-               }
-            })
-
-         }
-      } catch (error) {
-         setLoading(false)
-         console.log(error)
-      }
-   }
 
    return (
       <Container>
@@ -158,6 +136,7 @@ const Register = ({ navigation }) => {
                      .oneOf([Yup.ref('password'), null], 'Passwords must match')
                })}
                onSubmit={({ name, email, password }) => {
+                  setDisabled(true)
                   Register({
                      variables: {
                         name,
@@ -167,7 +146,7 @@ const Register = ({ navigation }) => {
                   })
                }}
             >
-               {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
+               {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                   <>
                      <FormInput
                         placeholder='Name'
@@ -226,18 +205,18 @@ const Register = ({ navigation }) => {
                      <FormButton
                         onPress={handleSubmit}
                         width='70%'
-                        disabled={isSubmitting}
-                        rev={isSubmitting}
+                        disabled={disabled}
+                        rev={disabled}
                      >
                         <ButtonText
                            size='25px'
-                           rev={isSubmitting}
+                           rev={disabled}
                         >
                            Register
                         </ButtonText>
                      </FormButton>
                      <FormButton
-                        onPress={signInWithGoogle}
+                        onPress={() => googleAuth(setLoading, GoogleAuth)}
                         width='70%'
                         rev
                      >
