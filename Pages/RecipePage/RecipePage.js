@@ -159,7 +159,7 @@ const RecipePage = ({ route, navigation }) => {
             .map(t => t.charAt(0).toUpperCase() + t.slice(1)) // Capitalize First Letter
          setRecipeType(filteredTypes[0])
          if (favRecipes) {
-            let liked = favRecipes.some(recipe => recipe.id == id)
+            let liked = favRecipes.some(recipe => recipe.id == id) // id 'string', recipe.id 'int'
             if(liked){
                setLike(true)
             }
@@ -200,15 +200,13 @@ const RecipePage = ({ route, navigation }) => {
                         >
                            <Text bold>Sign in</Text>
                         </Pressable>
-                        <Text>or</Text>
+                        <Text> or </Text>
                         <Pressable
                            onPress={() => redirect('Register')}
                         >
                            <Text bold>Register</Text>
                         </Pressable>
-                        <Text>to</Text>
-                        <Text>Like</Text>
-                        <Text>Recipes</Text>
+                        <Text> to Like Recipes</Text>
                      </RowContainer>
                   </AlertContainer>
                </Modal>

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { useNavigation, useRoute } from '@react-navigation/core'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { Container, RowContainer } from '../Components/Containers'
 import { StyledButton, ButtonText } from '../Components/Buttons'
 import { RecipeMiniImage } from '../Components/Images'
@@ -8,6 +8,7 @@ import { Text, Title } from '../Components/Texts'
 import { Icon } from '../Components/Images'
 import { RecipesContext, DataContext } from '../Data/Context'
 import emptyDish from '../Data/images/emptyDish.png'
+
 
 const Recipes = ({ favourite = false }) => {
 
@@ -28,7 +29,7 @@ const Recipes = ({ favourite = false }) => {
                   source={emptyDish}
                   size='100'
                />
-               <Title>You have no favourite recipes yet, search and you will find many tasteful recipes!</Title>
+               <Title>You have no favourite recipes, search and you will find many tasteful recipes!</Title>
             </Container>
             : favourite && favRecipes.length ?
                <Container>

@@ -6,7 +6,7 @@ import backArrow from '../Data/images/backArrow.png'
 
 const Back = ({ recipe }) => (
    <Icon
-      source={recipe ? backArrow : back}
+      source={recipe ? backArrow : back} // if in recipe page backarrow with background
       size={recipe ? '35' : '25'}
    />
 )

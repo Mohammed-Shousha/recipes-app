@@ -23,7 +23,7 @@ const User = ({ navigation }) => {
       } else if (action === 'profile') {
          navigation.navigate('Edit Profile')
       } else if (action === 'recipes') {
-         navigation.navigate('User Recipes')
+         navigation.navigate('My Recipes')
       } else if (action == 'rate') {
          WebBrowser.openBrowserAsync('https://forms.gle/JrtqqiygVRPgsgxn9')
       }

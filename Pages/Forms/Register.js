@@ -1,9 +1,11 @@
-import React, { useContext, useRef, useState } from 'react'
-import { ActivityIndicator } from 'react-native'
+import React, { useContext, useRef, useState, useEffect } from 'react'
+import { ActivityIndicator, Platform } from 'react-native'
 import { gql, useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { googleAuth } from '../../Data/Functions'
+import * as WebBrowser from 'expo-web-browser'
+import * as Google from 'expo-auth-session/providers/google'
+import { ANDROID_CLIENT_ID } from '@env'
 import { Container } from '../../Components/Containers'
 import { ErrorText } from '../../Components/Texts'
 import { FormInput } from '../../Components/Inputs'
@@ -12,6 +14,10 @@ import { Icon } from '../../Components/Images'
 import { DataContext } from '../../Data/Context'
 import { passwordRegex } from '../../Data/Database'
 import googleIcon from '../../Data/images/google-icon.png'
+
+
+WebBrowser.maybeCompleteAuthSession()
+const useProxy = Platform.select({ web: false, default: false })
 
 
 const Register = ({ navigation }) => {
@@ -105,6 +111,37 @@ const Register = ({ navigation }) => {
          }
       }
    })
+
+   const [request, response, promptAsync] = Google.useAuthRequest({
+      androidClientId: ANDROID_CLIENT_ID,
+      expoClientId: '280822769053-o0obomf15lktb238kleva6nf0holb3be.apps.googleusercontent.com'
+   })
+
+   const getUserData = async (accessToken) => {
+      const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`)
+      const result = await response.json()
+      const { email, name, picture } = result
+      GoogleAuth({
+         variables: {
+            email,
+            name,
+            image: picture,
+         }
+      })
+   }
+
+   useEffect(() => {
+      let isMounted = true
+      if (isMounted) {
+         if (response?.type === "success") {
+            const { authentication } = response
+            getUserData(authentication.accessToken)
+         }
+      }
+      return () => {
+         isMounted = false
+      }
+   }, [response])
 
 
    return (
@@ -216,7 +253,11 @@ const Register = ({ navigation }) => {
                         </ButtonText>
                      </FormButton>
                      <FormButton
-                        onPress={() => googleAuth(setLoading, GoogleAuth)}
+                        onPress={() => {
+                           promptAsync({ useProxy, showInRecents: true })
+                           setLoading(true)
+                        }}
+                        disabled={!request}
                         width='70%'
                         rev
                      >

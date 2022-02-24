@@ -2,7 +2,7 @@ import styled from 'styled-components/native'
 
 export const Icon = styled.Image`
    width: ${props => props.size}px;
-   height:  ${props => props.size}px;
+   height: ${props => props.size}px;
    align-self: center;
 `
 export const PressableIcon = styled.Pressable`

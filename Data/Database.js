@@ -28,7 +28,6 @@ import logOut from './images/logout.png'
 import next from './images/next.png'
 import star from './images/star.png'
 import myRecipes from './images/myRecipes.png'
-import settings from './images/settings.png'
 
 export const passwordRegex = /^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[A-Za-z\d@$!%*#?&]{8,}$/
 

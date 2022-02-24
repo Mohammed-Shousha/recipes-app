@@ -24,6 +24,7 @@ export const RecipeTitle = styled.Text`
    width: 85%;
    font-size: 25px;
    font-family: sans-serif-light;
+   text-align: left;
 `
 
 export const Line = styled.View`

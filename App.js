@@ -123,7 +123,7 @@ const UserStackScreen = () => {
                <UserStack.Screen name='Change Password' component={ChangePassword} />
                <UserStack.Screen name='Add Recipe' component={AddRecipe} />
                <UserStack.Screen name='Edit Recipe' component={EditRecipe} />
-               <UserStack.Screen name="User Recipes" component={UserRecipes} />
+               <UserStack.Screen name="My Recipes" component={UserRecipes} />
                <UserStack.Screen name="User Recipe" component={UserRecipePage} options={recipeOptions} />
             </>
             :

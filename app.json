@@ -4,13 +4,13 @@
     "slug": "Recipes-App",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./Data/images/icon.png",
+    "icon": "./Data/images/icons/icon.png",
     "splash": {
-      "image": "./Data/images/splash.png",
+      "image": "./Data/images/icons/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#eff7e1"
     },
-    "scheme":"myscheme",
+    "scheme":"recipesapp",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -22,14 +22,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./Data/images/adaptive-icon.png",
+        "foregroundImage": "./Data/images/icons/adaptive-icon.png",
         "backgroundColor": "#eff7e1"
       },
-      "package": "com.mshousha.RecipesApp",
+      "package": "com.mshousha.recipesapp",
       "config": {
          "googleSignIn": {
             "apiKey":"AIzaSyB75OSQ1Ryeg9o8SLvdn06NYAsoMI2ntbc",
-            "certificateHash":"21:B1:AF:37:A4:65:3F:FE:B1:38:84:C0:7B:B7:4D:A0:AA:CE:7C:6F"
+            "certificateHash":"21B1AF37A4653FFEB13884C07BB74DA0AACE7C6F"
          }
       }
 

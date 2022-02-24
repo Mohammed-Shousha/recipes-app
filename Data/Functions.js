@@ -1,6 +1,7 @@
 import * as ImagePicker from 'expo-image-picker'
-import { ANDROID_CLIENT_ID, ANDROID_CLIENT_ID_PRODUCTION } from '@env'
-import * as Google from "expo-google-app-auth"
+// import { ANDROID_CLIENT_ID } from '@env'
+// import * as Google from "expo-google-app-auth"
+// import * as GoogleSignIn from 'expo-google-sign-in'
 
 
 export const uploadImage = async (setLoading, setImage) => {
@@ -36,27 +37,62 @@ export const uploadImage = async (setLoading, setImage) => {
    }
 }
 
-export const googleAuth = async (setLoading, GoogleAuth) => {
-   try {
-      const result = await Google.logInAsync({
-         androidClientId: ANDROID_CLIENT_ID,
-         androidStandaloneAppClientId: ANDROID_CLIENT_ID_PRODUCTION
-      })
-      setLoading(true)
+// export const googleAuth = async (setLoading, GoogleAuth) => {
+//    try {
+//       const { user, type } = await Google.logInAsync({
+//          androidClientId: '280822769053-ej7fl7piqqav380rggbkdbdc52pvmsvq.apps.googleusercontent.com',
+//          androidStandaloneAppClientId: ANDROID_CLIENT_ID,
+//          clientId: ANDROID_CLIENT_ID
+//       })
+//       setLoading(true)
 
-      if (result.type === "success") {
-         const { email, name, photoUrl } = result.user
-         GoogleAuth({
-            variables: {
-               email,
-               name,
-               image: photoUrl,
-            }
-         })
-      } else {
-         setLoading(false)
-      }
-   } catch (error) {
-      setLoading(false)
-   }
-}
+//       if (type === "success") {
+//          const { email, name, photoUrl } = user
+//          GoogleAuth({
+//             variables: {
+//                email,
+//                name,
+//                image: photoUrl,
+//             }
+//          })
+//       } else {
+//          setLoading(false)
+//       }
+//    } catch (error) {
+//       setLoading(false)
+//       alert(error)
+//    }
+// }
+
+// export const googleInit = async () => {
+//    try {
+//       await GoogleSignIn.initAsync({
+//          clientId: ANDROID_CLIENT_ID
+//       })
+//    } catch ({ message }) {
+//       alert('GoogleSignIn.initAsync(): ' + message)
+//    }
+// }
+
+// export const handleGoogleSignIn = async () => {
+//    try {
+//       await GoogleSignIn.askForPlayServicesAsync()
+//       const { type, user } = await GoogleSignIn.signInAsync()
+//       const { email, displayName, photoURL } = user
+
+//       if (type === 'success') {
+//          alert('success')
+//          GoogleAuth({
+//             variables: {
+//                email,
+//                name: displayName,
+//                image: photoURL,
+//             }
+//          })
+//       } else {
+//          alert('failed')
+//       }
+//    } catch (error) {
+//       alert(error)
+//    }
+// }

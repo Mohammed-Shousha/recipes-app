@@ -22,7 +22,7 @@ const Ingredients = ({ ingredients, setIngredients }) => {
       const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&number=${recipesNumber}&ranking=2&ingredients=${query}`)
       const data = await response.json()
       if (!data.length) {
-         setRecipes([null])
+         setRecipes([null]) // to show no result
       } else {
          setRecipes(data)
       }

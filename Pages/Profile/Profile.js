@@ -7,7 +7,7 @@ import { Text } from '../../Components/Texts'
 const Profile = ({ navigation }) => (
    <Container center>
       <Text center>
-         To access your profile and your favourite recipes, Please sign in or register.
+         Sign In or Register to access your profile and your favourite recipes.
       </Text>
       <FormButton
          width='50%'
