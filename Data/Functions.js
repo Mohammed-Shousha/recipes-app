@@ -37,6 +37,16 @@ export const uploadImage = async (setLoading, setImage) => {
    }
 }
 
+
+// from multiline input to an array then to a string sperated by '‖'
+export const joinLines = str => str.split(/\r?\n/).join('‖')
+
+// from string separated by '‖' to an array to a multiline string
+export const separateLines = str => str.split('‖').join("\n")
+
+// string separated by '‖' to an array
+export const splitLines = str => str.split('‖')
+
 // export const googleAuth = async (setLoading, GoogleAuth) => {
 //    try {
 //       const { user, type } = await Google.logInAsync({

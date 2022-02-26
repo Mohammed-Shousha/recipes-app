@@ -11,6 +11,7 @@ import { ErrorText, Text } from '../../Components/Texts'
 import { FormInput } from '../../Components/Inputs'
 import { dishTypes } from '../../Data/Database'
 import { DataContext } from '../../Data/Context'
+import { joinLines, separateLines } from '../../Data/Functions'
 import xImg from '../../Data/images/x.png'
 import down from '../../Data/images/down.png'
 import gallery from '../../Data/images/gallery.png'
@@ -71,11 +72,6 @@ const EditRecipe = ({ route, navigation }) => {
       setModal(false)
    }
 
-   // from multiline input to an array then to a string sperated by '-'
-   const splitLines = str => str.split(/\r?\n/).join('-')
-
-   // string separated by '-' to an array to a multiline string
-   const separateLines = str => str.split('-').join("\n")
 
    return (
       <Container>
@@ -107,8 +103,8 @@ const EditRecipe = ({ route, navigation }) => {
                         title,
                         time,
                         type: recipeType,
-                        ingredients: splitLines(ingredients),
-                        directions: splitLines(directions),
+                        ingredients: joinLines(ingredients),
+                        directions: joinLines(directions),
                         image: recipeImage
                      }
                   })
@@ -209,7 +205,7 @@ const EditRecipe = ({ route, navigation }) => {
                               width='45%'
                            >
                               <RowContainer
-                                 onPress={()=> uploadImage(setLoading, setRecipeImage)}
+                                 onPress={() => uploadImage(setLoading, setRecipeImage)}
                               >
                                  <Icon
                                     source={gallery}
@@ -229,7 +225,7 @@ const EditRecipe = ({ route, navigation }) => {
                                  source={{ uri: recipeImage }}
                               />
                               <EditRecipeImage
-                                 onPress={()=> uploadImage(setLoading, setRecipeImage)}
+                                 onPress={() => uploadImage(setLoading, setRecipeImage)}
                               >
                                  <Icon
                                     source={edit}

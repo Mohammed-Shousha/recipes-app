@@ -11,6 +11,7 @@ import { ErrorText, Text } from '../../Components/Texts'
 import { FormInput } from '../../Components/Inputs'
 import { dishTypes } from '../../Data/Database'
 import { DataContext } from '../../Data/Context'
+import { joinLines } from '../../Data/Functions'
 import xImg from '../../Data/images/x.png'
 import down from '../../Data/images/down.png'
 import gallery from '../../Data/images/gallery.png'
@@ -64,9 +65,6 @@ const AddRecipe = ({ navigation }) => {
       setModal(false)
    }
 
-   // from multiline input to an array then to a string sperated by '-'
-   const splitLines = str => str.split(/\r?\n/).join('-')
-
 
    return (
       <Container>
@@ -97,8 +95,8 @@ const AddRecipe = ({ navigation }) => {
                         title,
                         time,
                         type,
-                        ingredients: splitLines(ingredients),
-                        directions: splitLines(directions),
+                        ingredients: joinLines(ingredients),
+                        directions: joinLines(directions),
                         image
                      }
                   })

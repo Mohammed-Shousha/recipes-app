@@ -6,6 +6,7 @@ import { RecipeImage, Icon, PressableIcon } from '../../Components/Images'
 import { RecipeTitle, Text } from '../../Components/Texts'
 import { StyledButton, ButtonText } from '../../Components/Buttons'
 import { DataContext } from '../../Data/Context'
+import { splitLines } from '../../Data/Functions'
 import recipeTypeImg from '../../Data/images/recipeType.png'
 import recipeTime from '../../Data/images/recipeTime.png'
 import bin from '../../Data/images/bin.png'
@@ -23,10 +24,8 @@ const UserRecipePage = ({ route, navigation }) => {
    const [activeDetail, setActiveDetail] = useState(0)
    const [confirm, setConfirm] = useState(false)
 
-   // string separated by '-' to an array
-   const separateLines = str => str.split('-')
-   const ingredients = separateLines(recipe.ingredients)
-   const directions = separateLines(recipe.directions)
+   const ingredients = splitLines(recipe.ingredients)
+   const directions = splitLines(recipe.directions)
 
    const recipeInfo = [
       {
