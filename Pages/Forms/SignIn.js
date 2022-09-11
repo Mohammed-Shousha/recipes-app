@@ -196,8 +196,10 @@ const SignIn = ({ navigation }) => {
                         autoFocus={false}
                         onChangeText={handleChange('email')}
                         onFocus={() => setActive('email')}
-                        onBlur={() => setActive(false)}
-                        onBlur={handleBlur('email')}
+                        onBlur={() => {
+                           setActive(false)
+                           handleBlur('email')
+                        }}
                         active={active === 'email' ? true : false}
                         returnKeyType='next'
                         onSubmitEditing={() => passwordRef.current.focus()}
@@ -209,8 +211,10 @@ const SignIn = ({ navigation }) => {
                         secureTextEntry={true}
                         onChangeText={handleChange('password')}
                         onFocus={() => setActive('password')}
-                        onBlur={() => setActive(false)}
-                        onBlur={handleBlur('password')}
+                        onBlur={() => {
+                           setActive(false)
+                           handleBlur('password')
+                        }}
                         active={active === 'password' ? true : false}
                         returnKeyType='done'
                         ref={passwordRef}

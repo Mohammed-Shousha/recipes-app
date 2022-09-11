@@ -87,8 +87,10 @@ const ChangePassword = ({ navigation }) => {
                      onChangeText={handleChange('password')}
                      secureTextEntry={true}
                      onFocus={() => setActive('password')}
-                     onBlur={() => setActive(false)}
-                     onBlur={handleBlur('password')}
+                     onBlur={() => {
+                        setActive(false)
+                        handleBlur('password')
+                     }}
                      active={active === 'password' ? true : false}
                      returnKeyType='next'
                      onSubmitEditing={() => newPasswordRef.current.focus()}
@@ -101,8 +103,10 @@ const ChangePassword = ({ navigation }) => {
                      onChangeText={handleChange('newPassword')}
                      secureTextEntry={true}
                      onFocus={() => setActive('newPassword')}
-                     onBlur={() => setActive(false)}
-                     onBlur={handleBlur('newPassword')}
+                     onBlur={() => {
+                        setActive(false)
+                        handleBlur('newPassword')
+                     }}
                      active={active === 'newPassword' ? true : false}
                      returnKeyType='next'
                      onSubmitEditing={() => confirmPasswordRef.current.focus()}
@@ -115,8 +119,10 @@ const ChangePassword = ({ navigation }) => {
                      onChangeText={handleChange('confirmPassword')}
                      secureTextEntry={true}
                      onFocus={() => setActive('confirmPassword')}
-                     onBlur={() => setActive(false)}
-                     onBlur={handleBlur('confirmPassword')}
+                     onBlur={() => {
+                        setActive(false)
+                        handleBlur('confirmPassword')
+                     }}
                      active={active === 'confirmPassword' ? true : false}
                      returnKeyType='done'
                      ref={confirmPasswordRef}

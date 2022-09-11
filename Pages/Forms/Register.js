@@ -191,8 +191,10 @@ const Register = ({ navigation }) => {
                         autoFocus={false}
                         onChangeText={handleChange('name')}
                         onFocus={() => setActive('name')}
-                        onBlur={() => setActive(false)}
-                        onBlur={handleBlur('name')}
+                        onBlur={() => {
+                           setActive(false)
+                           handleBlur('name')
+                        }}
                         active={active === 'name' ? true : false}
                         returnKeyType='next'
                         onSubmitEditing={() => emailRef.current.focus()}
@@ -203,8 +205,10 @@ const Register = ({ navigation }) => {
                         value={values.email}
                         onChangeText={handleChange('email')}
                         onFocus={() => setActive('email')}
-                        onBlur={() => setActive(false)}
-                        onBlur={handleBlur('email')}
+                        onBlur={() => {
+                           setActive(false)
+                           handleBlur('email')
+                        }}
                         active={active === 'email' ? true : false}
                         returnKeyType='next'
                         onSubmitEditing={() => passwordRef.current.focus()}
@@ -217,8 +221,10 @@ const Register = ({ navigation }) => {
                         secureTextEntry={true}
                         onChangeText={handleChange('password')}
                         onFocus={() => setActive('password')}
-                        onBlur={() => setActive(false)}
-                        onBlur={handleBlur('password')}
+                        onBlur={() => {
+                           setActive(false)
+                           handleBlur('password')
+                        }}
                         active={active === 'password' ? true : false}
                         returnKeyType='next'
                         onSubmitEditing={() => confirmPasswordRef.current.focus()}
@@ -231,8 +237,10 @@ const Register = ({ navigation }) => {
                         secureTextEntry={true}
                         onChangeText={handleChange('confirmPassword')}
                         onFocus={() => setActive('confirmPassword')}
-                        onBlur={() => setActive(false)}
-                        onBlur={handleBlur('confirmPassword')}
+                        onBlur={() => {
+                           setActive(false)
+                           handleBlur('confirmPassword')
+                        }}
                         active={active === 'confirmPassword' ? true : false}
                         returnKeyType='done'
                         ref={confirmPasswordRef}
