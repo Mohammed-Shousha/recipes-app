@@ -5,7 +5,7 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
-import { ANDROID_CLIENT_ID } from '@env'
+import { ANDROID_CLIENT_ID, EXPO_CLIENT_ID } from '@env'
 import { Container } from '../../Components/Containers'
 import { ErrorText } from '../../Components/Texts'
 import { FormInput } from '../../Components/Inputs'
@@ -114,7 +114,7 @@ const Register = ({ navigation }) => {
 
    const [request, response, promptAsync] = Google.useAuthRequest({
       androidClientId: ANDROID_CLIENT_ID,
-      expoClientId: '280822769053-o0obomf15lktb238kleva6nf0holb3be.apps.googleusercontent.com'
+      expoClientId: EXPO_CLIENT_ID,
    })
 
    const getUserData = async (accessToken) => {

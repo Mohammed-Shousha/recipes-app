@@ -40,7 +40,7 @@ const Boxes = ({ array, text = true, time = false, diet = false, calories = fals
    }
 
    const searchRecipesByCalories = async (name) => {
-      // step size 250 calorie
+      // step size 250 calories
       const nameArray = name.split(' ')
       let calories = ''
       if (nameArray.length === 2) { // 'under 250'

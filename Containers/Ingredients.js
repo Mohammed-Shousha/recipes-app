@@ -19,6 +19,7 @@ const Ingredients = ({ ingredients, setIngredients }) => {
 
    const searchRecipesByIngredients = async () => {
       const query = ingredients.map(i => i + ',').join('+')
+      // ranking 2 to minimize missing ingredients
       const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&number=${recipesNumber}&ranking=2&ingredients=${query}`)
       const data = await response.json()
       if (!data.length) {

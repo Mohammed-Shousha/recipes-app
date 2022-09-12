@@ -23,7 +23,7 @@ const Recipes = ({ favourite = false }) => {
 
    return (
       <>
-         {favourite && (!favRecipes || favRecipes.length === 0) ?
+         {favourite && (!favRecipes || !favRecipes.length) ?
             <Container center>
                <Icon
                   source={emptyDish}
