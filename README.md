@@ -19,18 +19,18 @@ _**An easy-to-use recipes app that offers the user a variety of delicious recipe
 - Sign in and register with google.
 
 ## App Screenshots:
-<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1663027620/1_fhzanl.jpg" 
+<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1663027620/recipes-app/1_fhzanl.jpg" 
 width='220px'>
-<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1663028227/2_nk00ws.jpg" 
+<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1663028227/recipes-app/2_nk00ws.jpg" 
 width='220px'>
-<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1663028298/9_tg2hbr.jpg" 
+<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1663028298/recipes-app/9_tg2hbr.jpg" 
 width='220px'>
 
-<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1663028302/10_srkmmf.jpg" 
+<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1663028302/recipes-app/10_srkmmf.jpg" 
 width='220px'>
-<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1676721425/6_j8nul0.jpg" 
+<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1676721425/recipes-app/6_j8nul0.jpg" 
 width='220px'>
-<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1676721425/12_fcmpgi.jpg" 
+<img src="https://res.cloudinary.com/dn8thrc9l/image/upload/v1676721425/recipes-app/12_fcmpgi.jpg" 
 width='220px'>
 
 ## Video Demo:
