@@ -1,0 +1,57 @@
+import * as ImagePicker from 'expo-image-picker'
+
+export const uploadImage = async (setLoading, setImage) => {
+  const permissionResult =
+    await ImagePicker.requestMediaLibraryPermissionsAsync()
+
+  if (permissionResult.granted === false) {
+    alert('Permission to access camera roll is required!')
+    return
+  }
+
+  const pickerResult = await ImagePicker.launchImageLibraryAsync({
+    base64: true,
+  })
+
+  if (!pickerResult.canceled) {
+    // if not cancelled upload image to cloudinary
+    console.log(pickerResult.assets)
+    const base64Img = `data:image/jpg;base64,${pickerResult.assets.base64}`
+
+    const data = {
+      file: base64Img,
+      upload_preset: 'recipes_preset',
+    }
+
+    setLoading(true)
+    const response = await fetch(
+      'https://api.cloudinary.com/v1_1/dn8thrc9l/image/upload',
+      {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'content-type': 'application/json',
+        },
+      }
+    )
+
+    const { secure_url } = await response.json()
+    setImage(secure_url)
+    setLoading(false)
+  }
+}
+
+// from multiline input to an array then to a string sperated by '‖'
+export const joinLines = (str) => str.split(/\r?\n/).join('‖')
+
+// from string separated by '‖' to an array to a multiline string
+export const separateLines = (str) => str.split('‖').join('\n')
+
+// string separated by '‖' to an array
+export const splitLines = (str) => str.split('‖')
+
+export const fetchData = async (url) => {
+  const response = await fetch(url)
+  const data = await response.json()
+  return data
+}

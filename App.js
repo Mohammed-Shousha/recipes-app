@@ -1,41 +1,46 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { StatusBar, I18nManager } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import * as Network from 'expo-network'
-import Main from './Pages/Main/Main'
-import Search from './Pages/Search/Search'
-import ByIngredients from './Pages/Search/ByIngredients'
-import ByDiet from './Pages/Search/ByDiet'
-import ByTime from './Pages/Search/ByTime'
-import ByCalories from './Pages/Search/ByCalories'
-import RecipePage from './Pages/RecipePage/RecipePage'
-import UserRecipePage from './Pages/UserRecipePage/UserRecipePage'
-import Favourite from './Pages/Favourite/Favourite'
-import User from './Pages/User/User'
-import UserRecipes from './Pages/User/UserRecipes'
-import EditProfile from './Pages/User/EditProfile'
-import ChangePassword from './Pages/User/ChangePassword'
-import AddRecipe from './Pages/User/AddRecipe'
-import EditRecipe from './Pages/User/EditRecipe'
-import Profile from './Pages/Profile/Profile'
-import SignIn from './Pages/Forms/SignIn'
-import Register from './Pages/Forms/Register'
-import Recipes from './Containers/Recipes'
-import { Icon } from './Components/Images'
-import { Container } from './Components/Containers'
-import { Title } from './Components/Texts'
-import { DataProvider, RecipesProvider, DataContext } from './Data/Context'
 import {
-  NavIcons,
-  IconsSizes,
+  Main,
+  Search,
+  IngredientsSearch,
+  DietSearch,
+  TimeSearch,
+  CaloriesSearch,
+  Recipe,
+  UserRecipe,
+  Favourite,
+  User,
+  UserRecipes,
+  EditProfile,
+  ChangePassword,
+  AddRecipe,
+  EditRecipe,
+  Profile,
+  SignIn,
+  Register,
+} from '@screens'
+
+import Recipes from '@root/screens/Recipes/Recipes'
+import { Icon } from '@components/styles/Images.styles'
+
+import { DataProvider, RecipesProvider, DataContext } from '@root/Context'
+
+import {
+  navIcons,
+  iconsSizes,
   tabOptions,
   stackScreenOptions,
   recipeScreenOptions,
-} from './Data/Database'
-import noConnection from './Data/images/noConnection.png'
+} from '@root/utils/database'
+
+import noConnection from '@assets/images/noConnection.png'
+import { ErrorDisplay } from '@components'
 
 I18nManager.forceRTL(false)
 I18nManager.allowRTL(false)
@@ -55,7 +60,7 @@ const MainStackScreen = () => (
     <MainStack.Screen name="Recipes" component={Recipes} />
     <MainStack.Screen
       name="Recipe"
-      component={RecipePage}
+      component={Recipe}
       options={recipeScreenOptions}
     />
     <MainStack.Screen
@@ -71,24 +76,19 @@ const SearchStack = createStackNavigator()
 const SearchStackScreen = () => (
   <SearchStack.Navigator screenOptions={stackScreenOptions}>
     <SearchStack.Screen name="Search" component={Search} />
-    <SearchStack.Screen name="Ingredients" component={ByIngredients} />
+    <SearchStack.Screen name="Ingredients" component={IngredientsSearch} />
     <SearchStack.Screen name="Recipes" component={Recipes} />
-    <SearchStack.Screen name="Time" component={ByTime} />
-    <SearchStack.Screen name="Diet" component={ByDiet} />
-    <SearchStack.Screen name="Calories" component={ByCalories} />
-    <SearchStack.Screen
-      name="Search Recipes"
-      component={Recipes}
-      options={{ headerTitle: 'Recipes' }}
-    />
+    <SearchStack.Screen name="Time" component={TimeSearch} />
+    <SearchStack.Screen name="Diet" component={DietSearch} />
+    <SearchStack.Screen name="Calories" component={CaloriesSearch} />
     <SearchStack.Screen
       name="Search Recipe"
-      component={RecipePage}
+      component={Recipe}
       options={recipeScreenOptions}
     />
     <SearchStack.Screen
       name="Recipe"
-      component={RecipePage}
+      component={Recipe}
       options={recipeScreenOptions}
     />
   </SearchStack.Navigator>
@@ -102,12 +102,12 @@ const FavouriteStackScreen = () => {
       {isSignedIn ? (
         <>
           <FavouriteStack.Screen
-            name="Favorite Recipes"
+            name="Favourite Recipes"
             component={Favourite}
           />
           <FavouriteStack.Screen
-            name="FavRecipe"
-            component={RecipePage}
+            name="Recipe"
+            component={Recipe}
             options={recipeScreenOptions}
           />
         </>
@@ -137,7 +137,7 @@ const UserStackScreen = () => {
           <UserStack.Screen name="My Recipes" component={UserRecipes} />
           <UserStack.Screen
             name="User Recipe"
-            component={UserRecipePage}
+            component={UserRecipe}
             options={recipeScreenOptions}
           />
         </>
@@ -165,50 +165,43 @@ const App = () => {
     getConnectionStatus()
   })
 
-  return (
-    <>
-      {connected ? (
-        <ApolloProvider client={client}>
-          <RecipesProvider>
-            <DataProvider>
-              <NavigationContainer>
-                <Tab.Navigator
-                  initialRouteName="Main-Tab"
-                  screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused }) => {
-                      const routeName = route.name.split('-')[0]
-                      const iconName = focused
-                        ? NavIcons[routeName][0]
-                        : NavIcons[routeName][1]
-                      const size = IconsSizes[routeName]
-                      return <Icon source={iconName} size={size} />
-                    },
-                    ...tabOptions,
-                  })}
-                >
-                  <Tab.Screen name="Main-Tab" component={MainStackScreen} />
-                  <Tab.Screen name="Search-Tab" component={SearchStackScreen} />
-                  <Tab.Screen
-                    name="Favourite-Tab"
-                    component={FavouriteStackScreen}
-                  />
-                  <Tab.Screen name="User-Tab" component={UserStackScreen} />
-                </Tab.Navigator>
-                <StatusBar hidden={true} />
-              </NavigationContainer>
-            </DataProvider>
-          </RecipesProvider>
-        </ApolloProvider>
-      ) : (
-        <Container center>
-          <Icon source={noConnection} size="100" />
-          <Title>
-            You are not connected to the internet, check your connection and try
-            again.
-          </Title>
-        </Container>
-      )}
-    </>
+  return connected ? (
+    <ApolloProvider client={client}>
+      <RecipesProvider>
+        <DataProvider>
+          <NavigationContainer>
+            <Tab.Navigator
+              initialRouteName="Main-Tab"
+              screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused }) => {
+                  const routeName = route.name.split('-')[0]
+                  const iconName = focused
+                    ? navIcons[routeName][0]
+                    : navIcons[routeName][1]
+                  const size = iconsSizes[routeName]
+                  return <Icon source={iconName} size={size} />
+                },
+                ...tabOptions,
+              })}
+            >
+              <Tab.Screen name="Main-Tab" component={MainStackScreen} />
+              <Tab.Screen name="Search-Tab" component={SearchStackScreen} />
+              <Tab.Screen
+                name="Favourite-Tab"
+                component={FavouriteStackScreen}
+              />
+              <Tab.Screen name="User-Tab" component={UserStackScreen} />
+            </Tab.Navigator>
+            <StatusBar hidden />
+          </NavigationContainer>
+        </DataProvider>
+      </RecipesProvider>
+    </ApolloProvider>
+  ) : (
+    <ErrorDisplay
+      message="You are not connected to the internet, check your connection and try again."
+      icon={noConnection}
+    />
   )
 }
 export default App
