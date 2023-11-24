@@ -34,3 +34,16 @@ export const INGREDIENTS_SEARCH = (ingredients) =>
   `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&number=${RECIPES_NUMBER}&ranking=2&ingredients=${ingredients.join(
     ','
   )}`
+
+export const DEFAULT_RECIPE_IMAGE = 'https://source.unsplash.com/Mz__0nr1AM8'
+
+export const GOOGLE_API_URL = (accessToken) =>
+  `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`
+
+export const BACKEND_URL =
+  'https://recipes-app-backend-plxd.onrender.com/graphql'
+
+export const RATE_FORM_URL = 'https://forms.gle/JrtqqiygVRPgsgxn9'
+
+export const CLOUDINARY_URL =
+  'https://api.cloudinary.com/v1_1/dn8thrc9l/image/upload'
