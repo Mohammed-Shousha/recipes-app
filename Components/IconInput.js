@@ -8,6 +8,7 @@ export const IconInput = ({
   handlePress,
   inputValue,
   setInputValue,
+  returnKeyType,
 }) => {
   return (
     <RowContainer>
@@ -16,6 +17,7 @@ export const IconInput = ({
         value={inputValue}
         onChangeText={setInputValue}
         onSubmitEditing={handlePress}
+        returnKeyType={returnKeyType || 'done'}
       />
       <PressableIcon onPress={handlePress}>
         <Icon source={icon} size="25" />

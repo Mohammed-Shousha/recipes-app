@@ -5,7 +5,7 @@ import { BoxesContainer } from '@components/styles/Containers.styles.'
 
 import { RecipesContext } from '@root/Context'
 
-import { BoxComponent } from '@components'
+import { BoxComponent } from './Box'
 
 export const Boxes = ({
   categories,
