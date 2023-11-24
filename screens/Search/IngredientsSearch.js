@@ -14,9 +14,11 @@ import {
 import { RecipesContext } from '@root/Context'
 
 import { IconInput, IngredientTile } from '@components'
+
 import { plusIcon, searchIcon } from '@assets/icons'
+
 import { INGREDIENTS_SEARCH } from '@utils/constants'
-import { fetchData } from '@root/utils/helpers'
+import { fetchData } from '@utils/helpers'
 
 export const IngredientsSearch = () => {
   const navigation = useNavigation()

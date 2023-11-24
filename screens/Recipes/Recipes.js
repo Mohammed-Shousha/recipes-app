@@ -1,16 +1,22 @@
 import { useContext, useState } from 'react'
 import { ScrollView } from 'react-native'
+
 import { Container } from '@components/styles/Containers.styles.'
-import { StyledButton, ButtonText } from '@components/styles/Buttons.styles'
-import { RecipesContext } from '@root/Context'
+
 import emptyDish from '@assets/images/emptyDish.png'
 
-import { RecipeTile, ErrorDisplay } from '@components'
+import { RecipesContext } from '@root/Context'
 
-const Recipes = () => {
+import { RecipeTile, ErrorDisplay, Button } from '@components'
+
+export const Recipes = () => {
   const { recipes } = useContext(RecipesContext)
 
   const [recipesNum, setRecipesNum] = useState(20) //initial recipes number
+
+  const loadMoreRecipes = () => {
+    setRecipesNum(recipesNum + 10)
+  }
 
   return recipes[0] === null ? ( //TODO: fix this hack
     <ErrorDisplay
@@ -24,16 +30,9 @@ const Recipes = () => {
           <RecipeTile key={recipe.id} recipe={recipe} />
         ))}
         {recipesNum < recipes.length && (
-          <StyledButton
-            width="80%"
-            onPress={() => setRecipesNum(recipesNum + 10)} //view more recipes
-          >
-            <ButtonText>Show More</ButtonText>
-          </StyledButton>
+          <Button onPress={loadMoreRecipes}>Show More</Button>
         )}
       </ScrollView>
     </Container>
   )
 }
-
-export default Recipes

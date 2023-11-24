@@ -1,11 +1,10 @@
-import Boxes from '@components/Boxes'
+import { Boxes } from '@components'
 
 import { Container } from '@components/styles/Containers.styles.'
-import { mainCategories } from '@root/utils/database'
 
+import { mainCategories } from '@utils/database'
 import { CATEGORY_SEARCH } from '@utils/constants'
-
-import { fetchData } from '@root/utils/helpers'
+import { fetchData } from '@utils/helpers'
 
 export const Main = () => {
   const fetchCategoryRecipes = async (name) => {

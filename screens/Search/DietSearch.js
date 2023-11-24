@@ -1,11 +1,10 @@
-import Boxes from '@components/Boxes'
+import { Boxes } from '@components'
 
 import { Container } from '@components/styles/Containers.styles.'
-import { dietCategories } from '@root/utils/database'
 
+import { dietCategories } from '@utils/database'
 import { DIET_SEARCH } from '@utils/constants'
-
-import { fetchData } from '@root/utils/helpers'
+import { fetchData } from '@utils/helpers'
 
 export const DietSearch = () => {
   const fetchDietRecipes = async (name) => {

@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
-import { ScrollView, ActivityIndicator, Modal, Pressable } from 'react-native'
-import { gql, useMutation } from '@apollo/client'
+import { ScrollView, Modal, Pressable } from 'react-native'
+import { useMutation } from '@apollo/client'
+
 import {
   RecipeDetailsContainer,
   RecipeDetail,
@@ -16,15 +17,24 @@ import {
   Exit,
 } from '@components/styles/Images.styles'
 import { RecipeTitle, Text } from '@components/styles/Texts.styles'
+
 import { DataContext } from '@root/Context'
-import { recipeDetails, recipesTypes } from '@root/utils/database'
+
 import heart from '@assets/icons/greyHeart.png'
 import redHeart from '@assets/icons/redHeart.png'
 import recipeTypeImg from '@assets/icons/recipeType.png'
 import recipeTime from '@assets/icons/recipeTime.png'
 import recipeCalories from '@assets/icons/recipeCalories.png'
 import xImg from '@assets/icons/x.png'
+
 import { RECIPE_URL } from '@utils/constants'
+import { recipeDetails, recipesTypes } from '@utils/database'
+import {
+  HANDLE_LIKING_RECIPE,
+  HANDLE_UNLIKING_RECIPE,
+} from '@utils/graphql/mutations'
+
+import { LoadingDisplay } from '@components'
 
 export const Recipe = ({ route, navigation }) => {
   const { id } = route.params
@@ -36,6 +46,14 @@ export const Recipe = ({ route, navigation }) => {
   const [activeDetail, setActiveDetail] = useState(0)
   const [like, setLike] = useState(false)
   const [alert, setAlert] = useState(false)
+
+  const showAlert = () => {
+    setAlert(true)
+  }
+
+  const hideAlert = () => {
+    setAlert(false)
+  }
 
   const [recipe, setRecipe] = useState({})
   const [nutrients, setNutrients] = useState([])
@@ -65,26 +83,6 @@ export const Recipe = ({ route, navigation }) => {
     },
   ]
 
-  const HANDLE_LIKING_RECIPE = gql`
-    mutation LikeRecipe(
-      $email: String!
-      $id: ID!
-      $title: String!
-      $image: String!
-    ) {
-      LikeRecipe(email: $email, id: $id, title: $title, image: $image) {
-        data {
-          ... on FavRecipe {
-            id
-            title
-            image
-          }
-        }
-        result
-      }
-    }
-  `
-
   const [LikeRecipe] = useMutation(HANDLE_LIKING_RECIPE, {
     onCompleted({ LikeRecipe }) {
       if (LikeRecipe.result === 1) {
@@ -99,7 +97,7 @@ export const Recipe = ({ route, navigation }) => {
 
   const likeRecipe = (recipe) => {
     const { title, image } = recipe
-    if (isSignedIn) {
+    if (!isSignedIn) {
       LikeRecipe({
         variables: {
           email,
@@ -109,24 +107,9 @@ export const Recipe = ({ route, navigation }) => {
         },
       })
     } else {
-      setAlert(true)
+      showAlert()
     }
   }
-
-  const HANDLE_UNLIKING_RECIPE = gql`
-    mutation UnlikeRecipe($email: String!, $id: ID!) {
-      UnlikeRecipe(email: $email, id: $id) {
-        data {
-          ... on FavRecipe {
-            id
-            title
-            image
-          }
-        }
-        result
-      }
-    }
-  `
 
   const [UnlikeRecipe] = useMutation(HANDLE_UNLIKING_RECIPE, {
     onCompleted({ UnlikeRecipe }) {
@@ -151,7 +134,7 @@ export const Recipe = ({ route, navigation }) => {
 
   const redirect = (route) => {
     navigation.navigate(route)
-    setAlert(false)
+    hideAlert()
   }
 
   useEffect(() => {
@@ -191,91 +174,86 @@ export const Recipe = ({ route, navigation }) => {
     fetchData()
   }, [id])
 
+  if (loading) return <LoadingDisplay />
+
   return (
     <Container>
-      {loading ? (
-        <Container center>
-          <ActivityIndicator color="green" size="large" />
-        </Container>
-      ) : (
-        <>
-          <Modal
-            animationType="fade"
-            visible={alert}
-            transparent
-            onRequestClose={() => setAlert(false)}
+      <Modal
+        animationType="fade"
+        visible={alert}
+        transparent
+        onRequestClose={() => hideAlert()}
+      >
+        <AlertContainer>
+          <Exit onPress={() => hideAlert()}>
+            <Icon source={xImg} size="12" />
+          </Exit>
+          <RowContainer>
+            <Pressable onPress={() => redirect('Sign In')}>
+              <Text bold>Sign in</Text>
+            </Pressable>
+            <Text> or </Text>
+            <Pressable onPress={() => redirect('Register')}>
+              <Text bold>Register</Text>
+            </Pressable>
+            <Text> to Like Recipes</Text>
+          </RowContainer>
+        </AlertContainer>
+      </Modal>
+
+      <RecipeImage source={{ uri: recipe.image }} />
+      <ScrollView>
+        <RowContainer>
+          <RecipeTitle>{recipe.title}</RecipeTitle>
+          <PressableIcon
+            onPress={!like ? () => likeRecipe(recipe) : unlikeRecipe}
           >
-            <AlertContainer>
-              <Exit onPress={() => setAlert(false)}>
-                <Icon source={xImg} size="12" />
-              </Exit>
-              <RowContainer>
-                <Pressable onPress={() => redirect('Sign In')}>
-                  <Text bold>Sign in</Text>
-                </Pressable>
-                <Text> or </Text>
-                <Pressable onPress={() => redirect('Register')}>
-                  <Text bold>Register</Text>
-                </Pressable>
-                <Text> to Like Recipes</Text>
-              </RowContainer>
-            </AlertContainer>
-          </Modal>
-          <RecipeImage source={{ uri: recipe.image }} />
-          <ScrollView>
-            <RowContainer>
-              <RecipeTitle>{recipe.title}</RecipeTitle>
-              <PressableIcon
-                onPress={!like ? () => likeRecipe(recipe) : unlikeRecipe}
-              >
-                <Icon source={like ? redHeart : heart} size="30" />
-              </PressableIcon>
-            </RowContainer>
-            <RowContainer>
-              {recipeInfo.map((r, i) => (
-                <RecipeInfo key={i} color={r.color}>
-                  <Icon source={r.image} size={r.size} />
-                  <Text size={r.size}>{r.name}</Text>
-                </RecipeInfo>
-              ))}
-            </RowContainer>
-            <RowContainer noPadding>
-              {recipeDetails.map((detail, i) => (
-                <RecipeDetail
-                  onPress={() => setActiveDetail(i)}
-                  active={activeDetail === i}
-                  key={i}
-                >
-                  <Text color="#214151">{detail}</Text>
-                </RecipeDetail>
-              ))}
-            </RowContainer>
-            {activeDetail === 0 ? (
-              <RecipeDetailsContainer>
-                {ingredients.map((ingredient, i) => (
-                  <Text key={i} color="#393e46">
-                    • {ingredient.original}
-                  </Text>
-                ))}
-              </RecipeDetailsContainer>
-            ) : activeDetail === 1 ? (
-              <RecipeDetailsContainer>
-                {instructions.map((instruction, i) => (
-                  <Text key={i}>• {instruction.step}</Text>
-                ))}
-              </RecipeDetailsContainer>
-            ) : (
-              <RecipeDetailsContainer>
-                {nutrients.map((nutrient, i) => (
-                  <Text key={i}>
-                    • {nutrient.name}: {nutrient.amount} {nutrient.unit}
-                  </Text>
-                ))}
-              </RecipeDetailsContainer>
-            )}
-          </ScrollView>
-        </>
-      )}
+            <Icon source={like ? redHeart : heart} size="30" />
+          </PressableIcon>
+        </RowContainer>
+        <RowContainer>
+          {recipeInfo.map((r, i) => (
+            <RecipeInfo key={i} color={r.color}>
+              <Icon source={r.image} size={r.size} />
+              <Text size={r.size}>{r.name}</Text>
+            </RecipeInfo>
+          ))}
+        </RowContainer>
+        <RowContainer noPadding>
+          {recipeDetails.map((detail, i) => (
+            <RecipeDetail
+              onPress={() => setActiveDetail(i)}
+              active={activeDetail === i}
+              key={i}
+            >
+              <Text color="#214151">{detail}</Text>
+            </RecipeDetail>
+          ))}
+        </RowContainer>
+        {activeDetail === 0 ? (
+          <RecipeDetailsContainer>
+            {ingredients.map((ingredient, i) => (
+              <Text key={i} color="#393e46">
+                • {ingredient.original}
+              </Text>
+            ))}
+          </RecipeDetailsContainer>
+        ) : activeDetail === 1 ? (
+          <RecipeDetailsContainer>
+            {instructions.map((instruction, i) => (
+              <Text key={i}>• {instruction.step}</Text>
+            ))}
+          </RecipeDetailsContainer>
+        ) : (
+          <RecipeDetailsContainer>
+            {nutrients.map((nutrient, i) => (
+              <Text key={i}>
+                • {nutrient.name}: {nutrient.amount} {nutrient.unit}
+              </Text>
+            ))}
+          </RecipeDetailsContainer>
+        )}
+      </ScrollView>
     </Container>
   )
 }

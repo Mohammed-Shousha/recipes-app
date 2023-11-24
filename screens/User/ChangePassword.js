@@ -1,14 +1,18 @@
 import { useContext, useState, useRef } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 
 import { Container } from '@components/styles/Containers.styles.'
 import { ErrorText } from '@components/styles/Texts.styles'
-import { ButtonText, StyledButton } from '@components/styles/Buttons.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
-import { passwordRegex } from '@root/utils/database'
+
 import { DataContext } from '@root/Context'
+
+import { passwordRegex } from '@utils/database'
+import { HANDLE_CHANGING_PASSWORD } from '@utils/graphql/mutations'
+
+import { Button } from '@components'
 
 export const ChangePassword = ({ navigation }) => {
   const { userData } = useContext(DataContext)
@@ -22,29 +26,6 @@ export const ChangePassword = ({ navigation }) => {
   const newPasswordRef = useRef()
   const confirmPasswordRef = useRef()
 
-  const HANDLE_CHANGING_PASSWORD = gql`
-    mutation ChangePassword(
-      $email: String!
-      $password: String!
-      $newPassword: String!
-    ) {
-      ChangePassword(
-        email: $email
-        password: $password
-        newPassword: $newPassword
-      ) {
-        ... on User {
-          id
-          name
-          email
-        }
-        ... on Error {
-          message
-        }
-      }
-    }
-  `
-
   const [ChangePassword] = useMutation(HANDLE_CHANGING_PASSWORD, {
     onCompleted({ ChangePassword }) {
       if (ChangePassword.name) {
@@ -56,6 +37,14 @@ export const ChangePassword = ({ navigation }) => {
       }
     },
   })
+
+  const activateInput = (input) => {
+    setActive(input)
+  }
+
+  const deactivateInput = () => {
+    setActive(null)
+  }
 
   return (
     <Container>
@@ -100,13 +89,10 @@ export const ChangePassword = ({ navigation }) => {
             <FormInput
               placeholder="Current Password"
               value={values.password}
-              onChangeText={handleChange('password')}
               secureTextEntry
-              onFocus={() => setActive('password')}
-              onBlur={() => {
-                setActive(false)
-                handleBlur('password')
-              }}
+              onChangeText={handleChange('password')}
+              onFocus={() => activateInput('password')}
+              onBlur={deactivateInput}
               active={active === 'password'}
               returnKeyType="next"
               onSubmitEditing={() => newPasswordRef.current.focus()}
@@ -118,13 +104,10 @@ export const ChangePassword = ({ navigation }) => {
             <FormInput
               placeholder="New Password"
               value={values.newPassword}
-              onChangeText={handleChange('newPassword')}
               secureTextEntry
-              onFocus={() => setActive('newPassword')}
-              onBlur={() => {
-                setActive(false)
-                handleBlur('newPassword')
-              }}
+              onChangeText={handleChange('newPassword')}
+              onFocus={() => activateInput('newPassword')}
+              onBlur={deactivateInput}
               active={active === 'newPassword'}
               returnKeyType="next"
               onSubmitEditing={() => confirmPasswordRef.current.focus()}
@@ -138,11 +121,8 @@ export const ChangePassword = ({ navigation }) => {
               value={values.confirmPassword}
               onChangeText={handleChange('confirmPassword')}
               secureTextEntry
-              onFocus={() => setActive('confirmPassword')}
-              onBlur={() => {
-                setActive(false)
-                handleBlur('confirmPassword')
-              }}
+              onFocus={() => activateInput('confirmPassword')}
+              onBlur={deactivateInput}
               active={active === 'confirmPassword'}
               returnKeyType="done"
               ref={confirmPasswordRef}
@@ -151,16 +131,14 @@ export const ChangePassword = ({ navigation }) => {
               <ErrorText>{errors.confirmPassword}</ErrorText>
             )}
             {passwordError && <ErrorText>{passwordError}</ErrorText>}
-            <StyledButton
-              width="70%"
+
+            <Button
               onPress={handleSubmit}
               disabled={disabled}
-              rev={disabled}
+              loading={disabled}
             >
-              <ButtonText size="28px" rev={disabled}>
-                Save
-              </ButtonText>
-            </StyledButton>
+              Save
+            </Button>
           </>
         )}
       </Formik>

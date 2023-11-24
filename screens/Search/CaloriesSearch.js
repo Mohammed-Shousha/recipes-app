@@ -1,11 +1,11 @@
-import Boxes from '@components/Boxes'
+import { Boxes } from '@components'
 
 import { Container } from '@components/styles/Containers.styles.'
-import { caloriesCategories } from '@root/utils/database'
 
+import { caloriesCategories } from '@utils/database'
 import { CALORIES_SEARCH } from '@utils/constants'
 
-import { fetchData } from '@root/utils/helpers'
+import { fetchData } from '@utils/helpers'
 
 export const CaloriesSearch = () => {
   const fetchCaloriesRecipes = async (name) => {

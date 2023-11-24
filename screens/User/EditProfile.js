@@ -1,66 +1,86 @@
 import { useContext, useState } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { ActivityIndicator } from 'react-native'
-import { uploadImage } from '@root/utils/helpers'
-import { Container, RowContainer } from '@components/styles/Containers.styles.'
+
+import {
+  Container,
+  RowContainer,
+  LoadingContainer,
+} from '@components/styles/Containers.styles.'
+
 import {
   EditUserImage,
   Icon,
-  LoadingContainer,
   UserImage,
 } from '@components/styles/Images.styles'
 import { ErrorText, ProfileText, Text } from '@components/styles/Texts.styles'
-import { ButtonText, StyledButton } from '@components/styles/Buttons.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
+
 import { DataContext } from '@root/Context'
+
+import { uploadImage } from '@utils/helpers'
 
 import user from '@assets/images/chef.png'
 import edit from '@assets/icons/edit.png'
 
+import { HANDLE_CHANGING_DATA } from '@utils/graphql/mutations'
+import { Button } from '@components'
+
 export const EditProfile = ({ navigation }) => {
-  const { userData, setUserData } = useContext(DataContext)
-  const { image, password } = userData
+  const {
+    userData: { name, email, image, password },
+    setUserData,
+  } = useContext(DataContext)
 
   const [userImage, setUserImage] = useState(image)
   const [loading, setLoading] = useState(false)
   const [active, setActive] = useState(false)
 
-  const HANDLE_CHANGING_DATA = gql`
-    mutation ChangeData($email: String!, $name: String!, $image: String) {
-      ChangeData(email: $email, name: $name, image: $image) {
-        ... on User {
-          id
-          name
-          email
-          image
-          password
-        }
-        ... on Error {
-          message
-        }
-      }
-    }
-  `
+  const activate = () => {
+    setActive(true)
+  }
+
+  const deactivate = () => {
+    setActive(false)
+  }
+
+  const handleChangePassword = () => {
+    navigation.navigate('Change Password')
+  }
 
   const [ChangeData] = useMutation(HANDLE_CHANGING_DATA, {
     onCompleted({ ChangeData }) {
       if (ChangeData.id) {
         const { name, email, image, password } = ChangeData
-        setUserData({
-          ...userData,
+        setUserData((prevUserData) => ({
+          ...prevUserData,
           email,
           name,
           image,
           password,
-        })
+        }))
         navigation.navigate('User')
       } else {
         alert(ChangeData.message)
       }
     },
   })
+
+  const handleFormSubmit = ({ name, email }) => {
+    setLoading(true)
+    // ChangeData({
+    //   variables: {
+    //     email,
+    //     name,
+    //     image: userImage,
+    //   },
+    // })
+    setTimeout(() => {
+      setLoading(false)
+    }, 2000)
+  }
 
   return (
     <Container>
@@ -86,22 +106,14 @@ export const EditProfile = ({ navigation }) => {
       </RowContainer>
       <Formik
         initialValues={{
-          name: userData.name,
-          email: userData.email,
+          name,
+          email,
         }}
         validationSchema={Yup.object({
           name: Yup.string().min(2, 'Too Short'),
           email: Yup.string(),
         })}
-        onSubmit={({ name, email }) => {
-          ChangeData({
-            variables: {
-              email,
-              name,
-              image: userImage,
-            },
-          })
-        }}
+        onSubmit={handleFormSubmit}
       >
         {({
           handleChange,
@@ -116,36 +128,30 @@ export const EditProfile = ({ navigation }) => {
             <FormInput
               value={values.name}
               onChangeText={handleChange('name')}
-              onFocus={() => setActive(true)}
-              onBlur={() => setActive(false)}
+              onFocus={activate}
+              onBlur={deactivate}
               active={active}
             />
             {errors.name && touched.name && (
               <ErrorText>{errors.name}</ErrorText>
             )}
+
             <ProfileText size="28">Email</ProfileText>
             <FormInput value={values.email} editable={false} />
             <Text center size="15">
               you can't change your email
             </Text>
+
             {password && (
-              <StyledButton
-                width="65%"
-                onPress={() => navigation.navigate('Change Password')}
-              >
-                <ButtonText size="28px">Change Password</ButtonText>
-              </StyledButton>
+              <Button onPress={handleChangePassword}>Change Password</Button>
             )}
-            <StyledButton
-              width="80%"
+            <Button
               onPress={handleSubmit}
               disabled={isSubmitting}
-              rev={isSubmitting}
+              loading={isSubmitting}
             >
-              <ButtonText size="28px" rev={isSubmitting}>
-                Save
-              </ButtonText>
-            </StyledButton>
+              Save
+            </Button>
           </>
         )}
       </Formik>

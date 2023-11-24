@@ -1,10 +1,9 @@
 import { useContext, useState } from 'react'
 import { ScrollView, Modal, Pressable, ActivityIndicator } from 'react-native'
+import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { gql, useMutation } from '@apollo/client'
-import { uploadImage, joinLines } from '@root/utils/helpers'
-import { ButtonText, StyledButton } from '@components/styles/Buttons.styles'
+
 import {
   EditRecipeImage,
   Exit,
@@ -20,7 +19,7 @@ import {
 } from '@components/styles/Containers.styles.'
 import { ErrorText, Text } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
-import { dishTypes } from '@root/utils/database'
+
 import { DataContext } from '@root/Context'
 
 import xImg from '@assets/icons/x.png'
@@ -28,66 +27,90 @@ import down from '@assets/icons/down.png'
 import gallery from '@assets/icons/gallery.png'
 import edit from '@assets/icons/edit.png'
 
-export const AddRecipe = ({ navigation }) => {
-  const { userData, setUserData } = useContext(DataContext)
-  const { email } = userData
+import { uploadImage, joinLines, separateLines } from '@utils/helpers'
+import { dishTypes } from '@utils/database'
+import {
+  HANDLE_EDITING_RECIPE,
+  HANDLE_ADDING_RECIPE,
+} from '@utils/graphql/mutations'
 
-  const [image, setImage] = useState('')
+import { Button } from '@components'
+
+export const RecipeForm = ({ route, navigation }) => {
+  const {
+    userData: { email, recipes },
+    setUserData,
+  } = useContext(DataContext)
+
+  let recipe = {
+    title: '',
+    time: '',
+    type: '',
+    directions: '',
+    ingredients: '',
+    image: '',
+  }
+
+  const id = route.params?.id
+
+  if (id) {
+    recipe = recipes.find((recipe) => recipe.id === id)
+  }
+
+  const { title, time, type, directions, ingredients, image } = recipe
+
+  const [recipeImage, setRecipeImage] = useState(image)
+  const [recipeType, setRecipeType] = useState(type)
+
   const [modal, setModal] = useState(false)
-  const [type, setType] = useState('')
-  const [active, setActive] = useState(false)
+  const [active, setActive] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const HANDLE_ADDING_RECIPE = gql`
-    mutation AddRecipe(
-      $email: String!
-      $title: String!
-      $time: Int!
-      $type: String!
-      $ingredients: String!
-      $directions: String!
-      $image: String
-    ) {
-      AddRecipe(
-        email: $email
-        title: $title
-        time: $time
-        type: $type
-        ingredients: $ingredients
-        directions: $directions
-        image: $image
-      ) {
-        data {
-          ... on Recipe {
-            id
-            title
-            time
-            type
-            ingredients
-            directions
-            image
-          }
-        }
-        result
-      }
-    }
-  `
+  const openModal = () => {
+    setModal(true)
+  }
 
-  const [AddRecipe] = useMutation(HANDLE_ADDING_RECIPE, {
-    onCompleted({ AddRecipe }) {
-      if (AddRecipe.result === 1) {
-        setUserData({
-          ...userData,
-          recipes: AddRecipe.data,
-        })
-        navigation.goBack()
-      }
-    },
-  })
+  const closeModal = () => {
+    setModal(false)
+  }
+
+  const activateInput = (input) => {
+    setActive(input)
+  }
+
+  const deactivateInput = () => {
+    setActive(null)
+  }
 
   const selectDishType = (type) => {
-    setType(type)
+    setRecipeType(type)
     setModal(false)
+  }
+
+  const handleCompleted = (mutationResponse) => {
+    if (mutationResponse.result === 1) {
+      setUserData((prevUserData) => ({
+        ...prevUserData,
+        recipes: mutationResponse.data,
+      }))
+      navigation.goBack()
+    }
+  }
+
+  const [EditRecipe] = useMutation(HANDLE_EDITING_RECIPE, {
+    onCompleted: ({ EditRecipe }) => handleCompleted(EditRecipe),
+  })
+
+  const [AddRecipe] = useMutation(HANDLE_ADDING_RECIPE, {
+    onCompleted: ({ AddRecipe }) => handleCompleted(AddRecipe),
+  })
+
+  const handleRecipe = async (id, recipeData) => {
+    if (id) {
+      EditRecipe({ variables: { id, ...recipeData } })
+    } else {
+      AddRecipe({ variables: { ...recipeData } })
+    }
   }
 
   return (
@@ -95,11 +118,11 @@ export const AddRecipe = ({ navigation }) => {
       <ScrollView>
         <Formik
           initialValues={{
-            title: '',
-            time: '',
-            type: '',
-            ingredients: '',
-            directions: '',
+            title,
+            time: '' + time,
+            type: recipeType,
+            ingredients: separateLines(ingredients),
+            directions: separateLines(directions),
           }}
           validationSchema={Yup.object({
             title: Yup.string().required('Required').min(2, 'Too Short'),
@@ -108,16 +131,14 @@ export const AddRecipe = ({ navigation }) => {
             directions: Yup.string().required('Required'),
           })}
           onSubmit={({ title, time, ingredients, directions }) => {
-            AddRecipe({
-              variables: {
-                email,
-                title,
-                time: +time,
-                type,
-                ingredients: joinLines(ingredients),
-                directions: joinLines(directions),
-                image,
-              },
+            handleRecipe(id, {
+              email,
+              title,
+              time: Number(time),
+              type: recipeType,
+              ingredients: joinLines(ingredients),
+              directions: joinLines(directions),
+              image: recipeImage,
             })
           }}
         >
@@ -134,34 +155,34 @@ export const AddRecipe = ({ navigation }) => {
                 placeholder="Recipe Name"
                 value={values.title}
                 onChangeText={handleChange('title')}
-                onFocus={() => setActive('title')}
-                onBlur={() => setActive(false)}
+                onFocus={() => activateInput('title')}
+                onBlur={deactivateInput}
                 active={active === 'title'}
                 returnKeyType="next"
               />
               {errors.title && touched.title && (
                 <ErrorText>{errors.title}</ErrorText>
               )}
-              <Pressable onPress={() => setModal(true)}>
+              <Pressable onPress={openModal}>
                 <FormInput
                   placeholder="Dish Type"
                   editable={false}
-                  value={type}
+                  value={recipeType}
                   active={modal}
                 />
-                <SelectionIcon onPress={() => setModal(true)}>
+                <SelectionIcon onPress={openModal}>
                   <Icon source={down} size="40" />
                 </SelectionIcon>
               </Pressable>
-              {!type && touched.type && <ErrorText>Required</ErrorText>}
+              {!recipeType && touched.type && <ErrorText>Required</ErrorText>}
               <FormInput
                 placeholder="Ingredients"
                 value={values.ingredients}
                 multiline
                 numberOfLines={3}
                 onChangeText={handleChange('ingredients')}
-                onFocus={() => setActive('ingredients')}
-                onBlur={() => setActive(false)}
+                onFocus={() => activateInput('ingredients')}
+                onBlur={deactivateInput}
                 active={active === 'ingredients'}
               />
               {errors.ingredients && touched.ingredients && (
@@ -173,8 +194,8 @@ export const AddRecipe = ({ navigation }) => {
                 multiline
                 numberOfLines={3}
                 onChangeText={handleChange('directions')}
-                onFocus={() => setActive('directions')}
-                onBlur={() => setActive(false)}
+                onFocus={() => activateInput('directions')}
+                onBlur={deactivateInput}
                 active={active === 'directions'}
               />
               {errors.directions && touched.directions && (
@@ -185,8 +206,8 @@ export const AddRecipe = ({ navigation }) => {
                 value={values.time}
                 keyboardType="numeric"
                 onChangeText={handleChange('time')}
-                onFocus={() => setActive('time')}
-                onBlur={() => setActive(false)}
+                onFocus={() => activateInput('time')}
+                onBlur={deactivateInput}
                 active={active === 'time'}
                 returnKeyType="done"
               />
@@ -197,10 +218,10 @@ export const AddRecipe = ({ navigation }) => {
                 animationType="fade"
                 visible={modal}
                 transparent
-                onRequestClose={() => setModal(false)}
+                onRequestClose={closeModal}
               >
                 <ModalContainer>
-                  <Exit onPress={() => setModal(false)}>
+                  <Exit onPress={closeModal}>
                     <Icon source={xImg} size="18" />
                   </Exit>
                   {dishTypes.map((type, i) => (
@@ -212,35 +233,30 @@ export const AddRecipe = ({ navigation }) => {
               </Modal>
               {loading ? (
                 <ActivityIndicator color="green" size="large" />
-              ) : !image ? (
-                <StyledButton width="45%">
-                  <RowContainer
-                    onPress={() => uploadImage(setLoading, setImage)}
-                  >
-                    <Icon source={gallery} size="23" />
-                    <ButtonText size="20px">Upload Image</ButtonText>
-                  </RowContainer>
-                </StyledButton>
+              ) : !recipeImage ? (
+                <Button
+                  onPress={() => uploadImage(setLoading, setRecipeImage)}
+                  icon={gallery}
+                >
+                  Upload Image
+                </Button>
               ) : (
                 <RowContainer>
-                  <RecipeImage added source={{ uri: image }} />
+                  <RecipeImage added source={{ uri: recipeImage }} />
                   <EditRecipeImage
-                    onPress={() => uploadImage(setLoading, setImage)}
+                    onPress={() => uploadImage(setLoading, setRecipeImage)}
                   >
                     <Icon source={edit} size="20" />
                   </EditRecipeImage>
                 </RowContainer>
               )}
-              <StyledButton
-                width="80%"
+              <Button
                 onPress={handleSubmit}
                 disabled={isSubmitting}
-                rev={isSubmitting}
+                loading={isSubmitting}
               >
-                <ButtonText size="28px" rev={isSubmitting}>
-                  Add Recipe
-                </ButtonText>
-              </StyledButton>
+                Confirm Recipe
+              </Button>
             </>
           )}
         </Formik>

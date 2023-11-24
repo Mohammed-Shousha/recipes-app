@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
 import { Modal, ScrollView } from 'react-native'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
+
 import {
   RecipeDetailsContainer,
   RecipeDetail,
@@ -15,25 +16,35 @@ import {
   PressableIcon,
 } from '@components/styles/Images.styles'
 import { RecipeTitle, Text } from '@components/styles/Texts.styles'
-import { StyledButton, ButtonText } from '@components/styles/Buttons.styles'
-import { DataContext } from '@root/Context'
 
-import { splitLines } from '@root/utils/helpers'
+import { DataContext } from '@root/Context'
 
 import recipeTypeImg from '@assets/icons/recipeType.png'
 import recipeTime from '@assets/icons/recipeTime.png'
 import bin from '@assets/icons/bin.png'
 import edit from '@assets/icons/edit_2.png'
 
+import { splitLines } from '@utils/helpers'
+import { HANDLE_DELETING_RECIPE } from '@utils/graphql/mutations'
+import { DEFAULT_RECIPE_IMAGE } from '@utils/constants'
+
+import { Button } from '@components'
+
 export const UserRecipe = ({ route, navigation }) => {
-  const { userData, setUserData, setLoading } = useContext(DataContext)
-  const { recipes, email } = userData
+  const {
+    userData: { recipes, email },
+    setUserData,
+    setLoading,
+  } = useContext(DataContext)
   const { id } = route.params
 
   const recipe = recipes.find((recipe) => recipe.id === id)
 
   const [activeDetail, setActiveDetail] = useState(0)
-  const [confirm, setConfirm] = useState(false)
+  const [modal, setModal] = useState(false)
+
+  const openModal = () => setModal(true)
+  const closeModal = () => setModal(false)
 
   const ingredients = splitLines(recipe.ingredients)
   const directions = splitLines(recipe.directions)
@@ -55,39 +66,20 @@ export const UserRecipe = ({ route, navigation }) => {
 
   const recipeDetails = ['Ingredients', 'Directions']
 
-  const HANDLE_DELETING_RECIPE = gql`
-    mutation DeleteRecipe($email: String!, $id: ID!) {
-      DeleteRecipe(email: $email, id: $id) {
-        data {
-          ... on Recipe {
-            id
-            title
-            time
-            type
-            ingredients
-            directions
-            image
-          }
-        }
-        result
-      }
-    }
-  `
-
   const [DeleteRecipe] = useMutation(HANDLE_DELETING_RECIPE, {
     onCompleted({ DeleteRecipe }) {
       if (DeleteRecipe.result === 1) {
-        setUserData({
-          ...userData,
+        setUserData((prevUserData) => ({
+          ...prevUserData,
           recipes: DeleteRecipe.data,
-        })
+        }))
       }
       setLoading(false)
     },
   })
 
   const deleteRecipe = () => {
-    setConfirm(false)
+    closeModal()
     setLoading(true)
     navigation.goBack()
     setTimeout(() => {
@@ -104,29 +96,32 @@ export const UserRecipe = ({ route, navigation }) => {
     <Container>
       <Modal
         animationType="fade"
-        visible={confirm}
+        visible={modal}
         transparent
-        onRequestClose={() => setConfirm(false)}
+        onRequestClose={closeModal}
       >
         <ConfirmContainer>
           <Text>Are you sure you want to delete this recipe?</Text>
           <RowContainer>
-            <StyledButton width="45%" onPress={deleteRecipe}>
-              <ButtonText size="20px">Confirm</ButtonText>
-            </StyledButton>
-            <StyledButton width="45%" onPress={() => setConfirm(false)} rev>
-              <ButtonText rev size="20px">
-                Cancel
-              </ButtonText>
-            </StyledButton>
+            <Button
+              onPress={deleteRecipe}
+              style={{ width: '45%', fontSize: '20px' }}
+            >
+              Confirm
+            </Button>
+            <Button
+              style={{ width: '45%', fontSize: '20px' }}
+              onPress={closeModal}
+              secondary
+            >
+              Cancel
+            </Button>
           </RowContainer>
         </ConfirmContainer>
       </Modal>
       <RecipeImage
         source={{
-          uri: recipe.image
-            ? recipe.image
-            : 'https://source.unsplash.com/Mz__0nr1AM8',
+          uri: recipe.image ?? DEFAULT_RECIPE_IMAGE,
         }}
       />
       <ScrollView>
@@ -140,7 +135,7 @@ export const UserRecipe = ({ route, navigation }) => {
             >
               <Icon source={edit} size="30" />
             </PressableIcon>
-            <PressableIcon onPress={() => setConfirm(true)}>
+            <PressableIcon onPress={openModal}>
               <Icon source={bin} size="30" />
             </PressableIcon>
           </RowContainer>
