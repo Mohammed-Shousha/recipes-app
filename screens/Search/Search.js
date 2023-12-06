@@ -1,8 +1,6 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 
-import { Container } from '@components/styles/Containers.styles.'
-
-import { RecipesContext } from '@root/Context'
+import { useRecipesContext } from '@root/Context'
 import { searchCategories } from '@utils/database'
 
 import { QUERY_SEARCH } from '@utils/constants'
@@ -15,13 +13,13 @@ import { Boxes, IconInput } from '@components'
 export const Search = ({ navigation }) => {
   const [searchValue, setSearchValue] = useState('')
 
-  const { setRecipes } = useContext(RecipesContext)
+  const { setRecipes } = useRecipesContext()
 
   const searchRecipes = async () => {
     const { results } = await fetchData(QUERY_SEARCH(searchValue))
 
     if (!results.length) {
-      setRecipes([null]) // TODO: the hack
+      setRecipes(null)
     } else {
       setRecipes(results)
     }
@@ -30,7 +28,7 @@ export const Search = ({ navigation }) => {
   }
 
   return (
-    <Container>
+    <>
       <IconInput
         placeholder="Search"
         icon={searchIcon}
@@ -39,6 +37,6 @@ export const Search = ({ navigation }) => {
         setInputValue={setSearchValue}
       />
       <Boxes categories={searchCategories} isSearch />
-    </Container>
+    </>
   )
 }

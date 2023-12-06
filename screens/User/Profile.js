@@ -1,5 +1,5 @@
-import { Container } from '@components/styles/Containers.styles.'
-import { Text } from '@components/styles/Texts.styles'
+import { CenterContainer } from '@components/styles/Containers.styles'
+import { StyledText } from '@components/styles/Texts.styles'
 
 import { Button } from '@components'
 
@@ -13,14 +13,14 @@ export const Profile = ({ navigation }) => {
   }
 
   return (
-    <Container center>
-      <Text center>
+    <CenterContainer>
+      <StyledText center>
         Sign In or Register to access your profile and your favourite recipes.
-      </Text>
+      </StyledText>
       <Button onPress={handleSignIn}>Sign In</Button>
       <Button onPress={handleResiger} secondary>
         Register
       </Button>
-    </Container>
+    </CenterContainer>
   )
 }

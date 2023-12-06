@@ -1,4 +1,4 @@
-import { useContext, useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Platform } from 'react-native'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
@@ -7,11 +7,10 @@ import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
 import { ANDROID_CLIENT_ID, EXPO_CLIENT_ID } from '@env'
 
-import { Container } from '@components/styles/Containers.styles.'
 import { ErrorText } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
 
-import { DataContext } from '@root/Context'
+import { useDataContext } from '@root/Context'
 
 import { googleIcon } from '@assets/icons'
 
@@ -25,7 +24,7 @@ WebBrowser.maybeCompleteAuthSession()
 const useProxy = Platform.select({ web: false, default: false })
 
 export const Register = ({ navigation }) => {
-  const { setIsSignedIn, setUserData } = useContext(DataContext)
+  const { setIsSignedIn, setUserData } = useDataContext()
 
   const [active, setActive] = useState(null)
   const [registerError, setRegisterError] = useState(null)
@@ -113,135 +112,127 @@ export const Register = ({ navigation }) => {
   if (loading) return <LoadingDisplay />
 
   return (
-    <Container>
-      <Formik
-        initialValues={{
-          name: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-        }}
-        validationSchema={Yup.object({
-          name: Yup.string().min(2, 'Too Short').required('Required'),
-          email: Yup.string().trim().email('Wrong Email').required('Required'),
-          password: Yup.string()
-            .required('Required')
-            .matches(
-              passwordRegex,
-              'Password must contain at least one letter, at least one number, and be longer than 8 charaters'
-            ),
-          confirmPassword: Yup.string()
-            .required('Required')
-            .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-        })}
-        onSubmit={({ name, email, password }) => {
-          setDisabled(true)
-          Register({
-            variables: {
-              name,
-              email: email.trim(),
-              password,
-            },
-          })
-        }}
-      >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-        }) => (
-          <>
-            <FormInput
-              placeholder="Name"
-              value={values.name}
-              autoFocus={false}
-              onChangeText={handleChange('name')}
-              onFocus={() => setActive('name')}
-              onBlur={() => {
-                setActive(false)
-                handleBlur('name')
-              }}
-              active={active === 'name'}
-              returnKeyType="next"
-              onSubmitEditing={() => emailRef.current.focus()}
-            />
-            {errors.name && touched.name && (
-              <ErrorText>{errors.name}</ErrorText>
-            )}
-            <FormInput
-              placeholder="Email"
-              value={values.email}
-              onChangeText={handleChange('email')}
-              onFocus={() => setActive('email')}
-              onBlur={() => {
-                setActive(false)
-                handleBlur('email')
-              }}
-              active={active === 'email'}
-              returnKeyType="next"
-              onSubmitEditing={() => passwordRef.current.focus()}
-              ref={emailRef}
-            />
-            {errors.email && touched.email && (
-              <ErrorText>{errors.email}</ErrorText>
-            )}
-            <FormInput
-              placeholder="Password"
-              value={values.password}
-              secureTextEntry
-              onChangeText={handleChange('password')}
-              onFocus={() => setActive('password')}
-              onBlur={() => {
-                setActive(false)
-                handleBlur('password')
-              }}
-              active={active === 'password'}
-              returnKeyType="next"
-              onSubmitEditing={() => confirmPasswordRef.current.focus()}
-              ref={passwordRef}
-            />
-            {errors.password && touched.password && (
-              <ErrorText>{errors.password}</ErrorText>
-            )}
-            <FormInput
-              placeholder="Confirm Password"
-              value={values.confirmPassword}
-              secureTextEntry
-              onChangeText={handleChange('confirmPassword')}
-              onFocus={() => setActive('confirmPassword')}
-              onBlur={() => {
-                setActive(false)
-                handleBlur('confirmPassword')
-              }}
-              active={active === 'confirmPassword'}
-              returnKeyType="done"
-              ref={confirmPasswordRef}
-            />
-            {errors.confirmPassword && touched.confirmPassword && (
-              <ErrorText>{errors.confirmPassword}</ErrorText>
-            )}
-            {registerError && <ErrorText>{registerError}</ErrorText>}
+    <Formik
+      initialValues={{
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      }}
+      validationSchema={Yup.object({
+        name: Yup.string().min(2, 'Too Short').required('Required'),
+        email: Yup.string().trim().email('Wrong Email').required('Required'),
+        password: Yup.string()
+          .required('Required')
+          .matches(
+            passwordRegex,
+            'Password must contain at least one letter, at least one number, and be longer than 8 charaters'
+          ),
+        confirmPassword: Yup.string()
+          .required('Required')
+          .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+      })}
+      onSubmit={({ name, email, password }) => {
+        setDisabled(true)
+        Register({
+          variables: {
+            name,
+            email: email.trim(),
+            password,
+          },
+        })
+      }}
+    >
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        touched,
+      }) => (
+        <>
+          <FormInput
+            placeholder="Name"
+            value={values.name}
+            autoFocus={false}
+            onChangeText={handleChange('name')}
+            onFocus={() => setActive('name')}
+            onBlur={() => {
+              setActive(false)
+              handleBlur('name')
+            }}
+            active={active === 'name'}
+            returnKeyType="next"
+            onSubmitEditing={() => emailRef.current.focus()}
+          />
+          {errors.name && touched.name && <ErrorText>{errors.name}</ErrorText>}
+          <FormInput
+            placeholder="Email"
+            value={values.email}
+            onChangeText={handleChange('email')}
+            onFocus={() => setActive('email')}
+            onBlur={() => {
+              setActive(false)
+              handleBlur('email')
+            }}
+            active={active === 'email'}
+            returnKeyType="next"
+            onSubmitEditing={() => passwordRef.current.focus()}
+            ref={emailRef}
+          />
+          {errors.email && touched.email && (
+            <ErrorText>{errors.email}</ErrorText>
+          )}
+          <FormInput
+            placeholder="Password"
+            value={values.password}
+            secureTextEntry
+            onChangeText={handleChange('password')}
+            onFocus={() => setActive('password')}
+            onBlur={() => {
+              setActive(false)
+              handleBlur('password')
+            }}
+            active={active === 'password'}
+            returnKeyType="next"
+            onSubmitEditing={() => confirmPasswordRef.current.focus()}
+            ref={passwordRef}
+          />
+          {errors.password && touched.password && (
+            <ErrorText>{errors.password}</ErrorText>
+          )}
+          <FormInput
+            placeholder="Confirm Password"
+            value={values.confirmPassword}
+            secureTextEntry
+            onChangeText={handleChange('confirmPassword')}
+            onFocus={() => setActive('confirmPassword')}
+            onBlur={() => {
+              setActive(false)
+              handleBlur('confirmPassword')
+            }}
+            active={active === 'confirmPassword'}
+            returnKeyType="done"
+            ref={confirmPasswordRef}
+          />
+          {errors.confirmPassword && touched.confirmPassword && (
+            <ErrorText>{errors.confirmPassword}</ErrorText>
+          )}
+          {registerError && <ErrorText>{registerError}</ErrorText>}
 
-            <Button
-              onPress={handleSubmit}
-              disabled={disabled}
-              loading={disabled}
-            >
-              Register
-            </Button>
-            <Button
-              onPress={handleGoogleAuth}
-              icon={googleIcon}
-              style={{ width: '70%', iconSize: '28' }}
-              disabled={!request}
-              secondary
-            />
-          </>
-        )}
-      </Formik>
-    </Container>
+          <Button onPress={handleSubmit} disabled={disabled} loading={disabled}>
+            Register
+          </Button>
+          <Button
+            onPress={handleGoogleAuth}
+            icon={googleIcon}
+            style={{ width: '70%', iconSize: '28' }}
+            disabled={!request}
+            secondary
+          />
+        </>
+      )}
+    </Formik>
   )
 }

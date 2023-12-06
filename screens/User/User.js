@@ -1,34 +1,25 @@
-import { useContext, useState } from 'react'
-import { Modal } from 'react-native'
+import { useState } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 
-import {
-  Container,
-  RowContainer,
-  ConfirmContainer,
-} from '@components/styles/Containers.styles.'
-import {
-  Icon,
-  PressableIcon,
-  UserImage,
-} from '@components/styles/Images.styles'
-import { Line, Text, Title } from '@components/styles/Texts.styles'
+import { UserDetailContainer } from '@components/styles/Containers.styles'
+import { UserImage } from '@components/styles/Images.styles'
+import { Line, StyledText, Title } from '@components/styles/Texts.styles'
 
-import { DataContext, initData } from '@root/Context'
+import { initData, useDataContext } from '@root/Context'
 
 import user from '@assets/images/chef.png'
 
 import { userDetails } from '@utils/database'
 import { RATE_FORM_URL } from '@utils/constants'
 
-import { Button } from '@components'
+import { PressableIcon, ConfirmModal } from '@components'
 
 export const User = ({ navigation }) => {
   const {
     setIsSignedIn,
     userData: { name, image },
     setUserData,
-  } = useContext(DataContext)
+  } = useDataContext()
 
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -59,49 +50,31 @@ export const User = ({ navigation }) => {
   }
 
   return (
-    <Container>
-      <RowContainer width="120px" noPadding center>
-        <UserImage source={image ? { uri: image } : user} />
-      </RowContainer>
+    <>
+      <UserImage source={image ? { uri: image } : user} />
       <Title>{name}</Title>
       <Line />
 
       {userDetails.map((detail, i) => (
-        <RowContainer
+        <UserDetailContainer
           key={i}
-          between
-          user
           onPress={() => onPressAction(detail.action)}
         >
-          <Text size="30">{detail.name}</Text>
-          <PressableIcon onPress={() => onPressAction(detail.action)}>
-            <Icon source={detail.img} size={detail.size} />
-          </PressableIcon>
-        </RowContainer>
+          <StyledText size="30">{detail.name}</StyledText>
+          <PressableIcon
+            onPress={() => onPressAction(detail.action)}
+            icon={detail.img}
+            size={detail.size}
+          />
+        </UserDetailContainer>
       ))}
 
-      <Modal
-        animationType="fade"
+      <ConfirmModal
+        message="Are you sure you want to log out?"
         visible={modalOpen}
-        transparent
-        onRequestClose={closeModal}
-      >
-        <ConfirmContainer>
-          <Text>Are you sure you want to log out?</Text>
-          <RowContainer>
-            <Button onPress={logOut} style={{ width: '45%', fontSize: '20px' }}>
-              Confirm
-            </Button>
-            <Button
-              style={{ width: '45%', fontSize: '20px' }}
-              onPress={closeModal}
-              secondary
-            >
-              Cancel
-            </Button>
-          </RowContainer>
-        </ConfirmContainer>
-      </Modal>
-    </Container>
+        onConfirm={logOut}
+        onClose={closeModal}
+      />
+    </>
   )
 }

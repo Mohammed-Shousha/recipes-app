@@ -1,7 +1,5 @@
 import { Boxes } from '@components'
 
-import { Container } from '@components/styles/Containers.styles.'
-
 import { caloriesCategories } from '@utils/database'
 import { CALORIES_SEARCH } from '@utils/constants'
 
@@ -24,11 +22,9 @@ export const CaloriesSearch = () => {
   }
 
   return (
-    <Container>
-      <Boxes
-        categories={caloriesCategories}
-        fetchRecipes={fetchCaloriesRecipes}
-      />
-    </Container>
+    <Boxes
+      categories={caloriesCategories}
+      fetchRecipes={fetchCaloriesRecipes}
+    />
   )
 }

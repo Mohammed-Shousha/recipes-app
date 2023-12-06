@@ -1,26 +1,29 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useMutation } from '@apollo/client'
 import { ActivityIndicator } from 'react-native'
 
 import {
-  Container,
   RowContainer,
   LoadingContainer,
-} from '@components/styles/Containers.styles.'
+} from '@components/styles/Containers.styles'
 
 import {
   EditUserImage,
   Icon,
   UserImage,
 } from '@components/styles/Images.styles'
-import { ErrorText, ProfileText, Text } from '@components/styles/Texts.styles'
+import {
+  ErrorText,
+  ProfileText,
+  StyledText,
+} from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
 
-import { DataContext } from '@root/Context'
+import { useDataContext } from '@root/Context'
 
-import { uploadImage } from '@utils/helpers'
+import useImageUploader from '@utils/hooks/useImageUploader'
 
 import user from '@assets/images/chef.png'
 import edit from '@assets/icons/edit.png'
@@ -32,10 +35,10 @@ export const EditProfile = ({ navigation }) => {
   const {
     userData: { name, email, image, password },
     setUserData,
-  } = useContext(DataContext)
+  } = useDataContext()
 
-  const [userImage, setUserImage] = useState(image)
-  const [loading, setLoading] = useState(false)
+  const { loading, image: userImage, uploadImage } = useImageUploader(image)
+
   const [active, setActive] = useState(false)
 
   const activate = () => {
@@ -69,7 +72,7 @@ export const EditProfile = ({ navigation }) => {
   })
 
   const handleFormSubmit = ({ name, email }) => {
-    setLoading(true)
+    // setLoading(true)
     // ChangeData({
     //   variables: {
     //     email,
@@ -78,27 +81,21 @@ export const EditProfile = ({ navigation }) => {
     //   },
     // })
     setTimeout(() => {
-      setLoading(false)
+      // setLoading(false)
     }, 2000)
   }
 
   return (
-    <Container>
-      <RowContainer width="120px" noPadding center>
+    <>
+      <RowContainer style={{ width: 'auto' }}>
         {loading ? (
           <LoadingContainer>
             <ActivityIndicator color="green" size="small" />
           </LoadingContainer>
         ) : (
           <>
-            <UserImage
-              source={
-                userImage ? { uri: userImage } : image ? { uri: image } : user
-              }
-            />
-            <EditUserImage
-              onPress={() => uploadImage(setLoading, setUserImage)}
-            >
+            <UserImage source={userImage ? { uri: userImage } : user} />
+            <EditUserImage onPress={uploadImage}>
               <Icon source={edit} size="15" />
             </EditUserImage>
           </>
@@ -138,9 +135,9 @@ export const EditProfile = ({ navigation }) => {
 
             <ProfileText size="28">Email</ProfileText>
             <FormInput value={values.email} editable={false} />
-            <Text center size="15">
+            <StyledText center size="15">
               you can't change your email
-            </Text>
+            </StyledText>
 
             {password && (
               <Button onPress={handleChangePassword}>Change Password</Button>
@@ -155,6 +152,6 @@ export const EditProfile = ({ navigation }) => {
           </>
         )}
       </Formik>
-    </Container>
+    </>
   )
 }
