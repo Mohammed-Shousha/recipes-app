@@ -1,6 +1,7 @@
-import { RowContainer } from '@components/styles/Containers.styles.'
+import { RowContainer } from '@components/styles/Containers.styles'
 import { Input } from '@components/styles/Inputs.styles'
-import { Icon, PressableIcon } from '@components/styles/Images.styles'
+
+import { PressableIcon } from './Icons'
 
 export const IconInput = ({
   placeholder,
@@ -19,9 +20,7 @@ export const IconInput = ({
         onSubmitEditing={handlePress}
         returnKeyType={returnKeyType || 'done'}
       />
-      <PressableIcon onPress={handlePress}>
-        <Icon source={icon} size="25" />
-      </PressableIcon>
+      <PressableIcon onPress={handlePress} icon={icon} size="25" />
     </RowContainer>
   )
 }

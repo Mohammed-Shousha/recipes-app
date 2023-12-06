@@ -1,7 +1,7 @@
-import { RowContainer } from './styles/Containers.styles.'
+import { RowContainer } from './styles/Containers.styles'
 import { useNavigation } from '@react-navigation/native'
 import { RecipeMiniImage } from './styles/Images.styles'
-import { Text } from './styles/Texts.styles'
+import { StyledText } from './styles/Texts.styles'
 import { DEFAULT_RECIPE_IMAGE } from '@utils/constants'
 
 export const RecipeTile = ({ recipe, userRecipe = false }) => {
@@ -18,9 +18,12 @@ export const RecipeTile = ({ recipe, userRecipe = false }) => {
   const handlePress = userRecipe ? navigateToUserRecipe : navigateToRecipe
 
   return (
-    <RowContainer flexStart onPress={handlePress}>
+    <RowContainer
+      style={{ justifyContent: 'flex-start' }}
+      onPress={handlePress}
+    >
       <RecipeMiniImage source={{ uri: recipe.image ?? DEFAULT_RECIPE_IMAGE }} />
-      <Text style={{ width: 240 }}>{recipe.title}</Text>
+      <StyledText style={{ width: 240 }}>{recipe.title}</StyledText>
     </RowContainer>
   )
 }

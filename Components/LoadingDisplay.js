@@ -1,8 +1,9 @@
 import { ActivityIndicator } from 'react-native'
-import { Container } from '@components/styles/Containers.styles.'
+
+import { CenterContainer } from '@components/styles/Containers.styles'
 
 export const LoadingDisplay = () => (
-  <Container center>
+  <CenterContainer>
     <ActivityIndicator color="green" size="large" />
-  </Container>
+  </CenterContainer>
 )

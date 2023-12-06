@@ -7,3 +7,8 @@ export * from './LoadingDisplay'
 export * from './IconInput'
 export * from './Back'
 export * from './Button'
+
+export * from './RecipeDetails'
+export * from './RecipeSummary'
+export * from './Icons'
+export * from './ConfirmModal'

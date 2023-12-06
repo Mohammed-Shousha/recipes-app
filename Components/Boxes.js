@@ -1,9 +1,8 @@
-import { useContext } from 'react'
 import { useNavigation } from '@react-navigation/native'
 
-import { BoxesContainer } from '@components/styles/Containers.styles.'
+import { BoxesContainer } from '@components/styles/Containers.styles'
 
-import { RecipesContext } from '@root/Context'
+import { useRecipesContext } from '@root/Context'
 
 import { BoxComponent } from './Box'
 
@@ -16,7 +15,7 @@ export const Boxes = ({
 }) => {
   const navigation = useNavigation()
 
-  const { setRecipes } = useContext(RecipesContext)
+  const { setRecipes } = useRecipesContext()
 
   const fetchAndNavigate = async (name) => {
     const recipes = await fetchRecipes(name)
