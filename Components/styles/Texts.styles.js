@@ -1,48 +1,55 @@
 import styled from 'styled-components/native'
 
-export const Text = styled.Text`
-  font-size: ${(props) => (props.size ? `${props.size}px` : '22px')};
-  font-family: sans-serif-light;
-  color: ${(props) => props.color || '#222831'};
+import fonts from './fonts.styles'
+
+const {
+  family: { light, thin },
+  size: { extraSmall, regular, medium, large },
+  color: { text, title, error },
+  weight: { bold, normal },
+} = fonts
+
+export const StyledText = styled.Text`
+  font-size: ${(props) => (props.size ? `${props.size}px` : regular)};
+  font-family: ${light};
+  color: ${(props) => props.color || text};
   text-align: ${(props) => (props.center ? 'center' : 'auto')};
-  align-self: ${(props) => (props.center ? 'center' : 'auto')};
-  font-weight: ${(props) => (props.bold ? 'bold' : 'normal')};
+  font-weight: ${(props) => (props.bold ? bold : normal)};
 `
 
 export const Title = styled.Text`
-  color: #214151;
-  align-self: center;
-  font-size: 30px;
-  font-family: sans-serif-thin;
-  font-weight: bold;
+  color: ${title};
+  font-size: ${large};
+  font-family: ${thin};
+  font-weight: ${bold};
   padding: 15px;
   text-align: center;
 `
 
 export const RecipeTitle = styled.Text`
-  color: #214151;
+  color: ${title};
   width: 85%;
-  font-size: 25px;
-  font-family: sans-serif-light;
-  text-align: left;
-`
-
-export const Line = styled.View`
-  border-bottom-width: 1px;
-  border-color: ${(props) => props.color || '#222831'};
-  margin: 10px 0 5px;
-  width: 97%;
-  align-self: center;
+  font-size: ${medium};
+  font-family: ${light};
 `
 
 export const ErrorText = styled.Text`
-  font-family: sans-serif-light;
-  color: red;
-  align-self: center;
-  font-size: 15px;
+  font-family: ${light};
+  color: ${error};
+  text-align: center;
+  font-size: ${extraSmall};
   margin: 3px 0;
 `
 
 export const ProfileText = styled.Text`
   margin: 10px 7px 0px;
+  font-family: ${light};
+`
+
+export const Line = styled.View`
+  border-bottom-width: 1px;
+  border-color: ${text};
+  margin: 5px 0;
+  width: 95%;
+  align-self: center;
 `

@@ -3,27 +3,18 @@ import styled from 'styled-components/native'
 
 export const RowContainer = styled.Pressable`
   flex-direction: row;
-  width: ${(props) => props.width || '100%'};
-  justify-content: ${(props) =>
-    props.flexStart
-      ? 'flex-start'
-      : props.between
-        ? 'space-between'
-        : props.center
-          ? 'center'
-          : 'space-around'};
   align-items: center;
   align-self: center;
-  padding: ${(props) =>
-    props.Nav
-      ? '7px 0'
-      : props.noPadding
-        ? '0'
-        : props.user
-          ? '15px 10px'
-          : '5px 0'};
-  background-color: ${(props) => (props.Nav ? '#eff7e1' : 'transparent')};
+  justify-content: space-around;
+  width: 100%;
+  padding: 5px 0;
+  background-color: transparent;
   z-index: 0;
+`
+
+export const UserDetailContainer = styled(RowContainer)`
+  justify-content: space-between;
+  padding: 15px 10px;
 `
 
 export const Box = styled.Pressable`
@@ -46,74 +37,35 @@ export const BoxesContainer = styled.View`
 `
 
 export const RecipeInfo = styled.View`
+  flex: 1;
   flex-direction: row;
-  width: ${(props) => (props.user ? '45%' : '30%')};
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
+  gap: 10px;
   background-color: ${(props) => props.color};
   height: 40px;
   padding: 5px;
+  margin: 0 5px;
   border-radius: 20px;
 `
 
 export const RecipeDetail = styled.Pressable`
-  width: ${(props) => (props.user ? '50%' : '33%')};
+  flex: 1;
   align-items: center;
   justify-content: center;
   height: 40px;
-  padding: 5px;
-  margin: 10px 5px 5px;
+  margin: 5px 5px;
   border-radius: 20px;
   border-width: ${(props) => (props.active ? '0.5px' : 0)};
 `
 
-export const RecipeDetailsContainer = styled.View`
+export const RecipeDetailsContainer = styled.ScrollView`
   flex: 1;
   align-self: center;
   width: 97%;
-  align-items: stretch;
-  margin: 1px;
   padding: 5px;
   border-top-width: 1px;
   border-top-color: grey;
-`
-
-export const ModalContainer = styled.View`
-  background-color: #eff7e1;
-  border-width: 2px;
-  border-color: #d3d3d3;
-  border-radius: 10px;
-  flex: 0.7;
-  justify-content: center;
-  align-self: center;
-  width: 60%;
-  margin: 30%;
-  padding: 10px 0 0;
-`
-
-export const ModalDetails = styled.Pressable`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  align-self: center;
-  border-bottom-width: 1px;
-  border-color: #d3d3d3;
-  margin: 5px 0 0;
-  width: 97%;
-`
-
-export const AlertContainer = styled.View`
-  background-color: #eff7e1;
-  align-self: center;
-  justify-content: center;
-  align-items: center;
-  width: 90%;
-  height: 8%;
-  border-radius: 10px;
-  border-width: 1px;
-  border-color: red;
-  margin: 15px 0;
-  padding: 10px;
 `
 
 export const ConfirmContainer = styled.View`
@@ -150,6 +102,6 @@ export const Container = styled(LinearGradient).attrs((props) => ({
 }))`
   flex: 1;
   align-items: stretch;
-  justify-content: ${(props) => (props.center ? 'center' : 'flex-start')};
+  justify-content: flex-start;
   z-index: 0;
 `

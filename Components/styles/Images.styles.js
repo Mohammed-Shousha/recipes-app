@@ -13,25 +13,10 @@ export const PressableIcon = styled.Pressable`
   z-index: 50;
 `
 
-export const Exit = styled.Pressable`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  justify-content: center;
-  z-index: 50;
-`
-
-export const SelectionIcon = styled.Pressable`
-  position: absolute;
-  bottom: 9px;
-  right: 7px;
-  justify-content: center;
-`
-
 export const RecipeMiniImage = styled.Image`
   width: 100px;
   height: 100px;
-  align-self: center;
+  align-self: flex-start;
   border-radius: 5px;
   margin: 0 7px;
 `
@@ -49,7 +34,7 @@ export const UserImage = styled.Image`
   height: 100px;
   border-radius: 50px;
   align-self: center;
-  margin-top: 25px;
+  margin-top: 20px;
 `
 
 export const EditUserImage = styled.Pressable`
@@ -67,7 +52,7 @@ export const EditUserImage = styled.Pressable`
 export const EditRecipeImage = styled.Pressable`
   position: absolute;
   bottom: 15px;
-  left: 10px;
+  right: 10px;
   justify-content: center;
   z-index: 100;
   background-color: white;
