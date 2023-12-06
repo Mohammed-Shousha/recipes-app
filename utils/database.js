@@ -32,7 +32,7 @@ import logOut from '@assets/icons/logout.png'
 import next from '@assets/icons/next.png'
 import star from '@assets/icons/star.png'
 
-import Back from '@components/Back'
+import { Back } from '@components'
 
 export const stackScreenOptions = {
   headerStyle: {
@@ -186,9 +186,7 @@ export const dishTypes = [
   'Drink',
 ]
 
-export const recipeDetails = ['Ingredients', 'Directions', 'Nutrients']
-
-export const recipesTypes = [
+export const RECIPES_TYPES = [
   'breakfast',
   'dinner',
   'salad',
