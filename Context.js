@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react'
+import { createContext, useState, useEffect, useContext } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const initData = {
@@ -7,11 +7,27 @@ export const initData = {
   password: '',
   image: '',
   favRecipes: null,
-  recipes: [],
+  recipes: null,
 }
 
-export const RecipesContext = createContext()
-export const DataContext = createContext()
+const RecipesContext = createContext()
+const DataContext = createContext()
+
+export const useDataContext = () => {
+  const context = useContext(DataContext)
+  if (!context) {
+    throw new Error('useData must be used within a DataProvider')
+  }
+  return context
+}
+
+export const useRecipesContext = () => {
+  const context = useContext(RecipesContext)
+  if (!context) {
+    throw new Error('useRecipes must be used within a RecipesProvider')
+  }
+  return context
+}
 
 export const RecipesProvider = ({ children }) => {
   const [recipes, setRecipes] = useState([])
