@@ -1,5 +1,4 @@
 import { ToastAndroid } from 'react-native'
-import { useMutation } from '@apollo/client'
 
 import { RowContainer } from '@components/styles/Containers.styles'
 import { RecipeImage } from '@components/styles/Images.styles'
@@ -9,27 +8,27 @@ import { useDataContext } from '@root/Context'
 
 import heart from '@assets/icons/greyHeart.png'
 import redHeart from '@assets/icons/redHeart.png'
-
-import {
-  HANDLE_LIKING_RECIPE,
-  HANDLE_UNLIKING_RECIPE,
-} from '@utils/graphql/mutations'
+import emptyDish from '@assets/images/emptyDish.png'
 
 import {
   LoadingDisplay,
   RecipeDetails,
   RecipeSummary,
   PressableIcon,
+  ErrorDisplay,
 } from '@components'
 
 import useFetchRecipe from '@utils/hooks/useFetchRecipe'
+import useRecipesMutations from '@utils/hooks/useRecipesMutations'
 
 import { DEFAULT_RECIPE_IMAGE } from '@utils/constants'
 
 export const Recipe = ({ route }) => {
   const { id } = route.params
 
-  const { email, isSignedIn, setFavRecipes } = useDataContext()
+  const { likeRecipe, unlikeRecipe } = useRecipesMutations()
+
+  const { email, isSignedIn } = useDataContext()
 
   const {
     recipe,
@@ -38,8 +37,9 @@ export const Recipe = ({ route }) => {
     nutrients,
     calories,
     recipeType,
-    loading,
     like,
+    loading,
+    error,
   } = useFetchRecipe(id)
 
   const recipeDetails = {
@@ -48,18 +48,10 @@ export const Recipe = ({ route }) => {
     Nutrients: nutrients,
   }
 
-  const [LikeRecipe] = useMutation(HANDLE_LIKING_RECIPE, {
-    onCompleted({ LikeRecipe }) {
-      if (LikeRecipe.result === 1) {
-        setFavRecipes(LikeRecipe.data)
-      }
-    },
-  })
-
-  const likeRecipe = (recipe) => {
+  const handleLikeRecipe = (recipe) => {
     const { title, image } = recipe
     if (isSignedIn) {
-      LikeRecipe({
+      likeRecipe({
         variables: {
           email,
           id,
@@ -72,16 +64,8 @@ export const Recipe = ({ route }) => {
     }
   }
 
-  const [UnlikeRecipe] = useMutation(HANDLE_UNLIKING_RECIPE, {
-    onCompleted({ UnlikeRecipe }) {
-      if (UnlikeRecipe.result === 1) {
-        setFavRecipes(UnlikeRecipe.data)
-      }
-    },
-  })
-
-  const unlikeRecipe = () => {
-    UnlikeRecipe({
+  const handleUnlikeRecipe = () => {
+    unlikeRecipe({
       variables: {
         email,
         id,
@@ -89,12 +73,15 @@ export const Recipe = ({ route }) => {
     })
   }
 
-  const toggleLike = () => (like ? unlikeRecipe() : likeRecipe(recipe))
+  const toggleLike = () =>
+    like ? handleUnlikeRecipe() : handleLikeRecipe(recipe)
 
   const showToast = () =>
     ToastAndroid.show('Sign in or Resigter to like recipes', ToastAndroid.SHORT)
 
   if (loading) return <LoadingDisplay />
+
+  if (error) return <ErrorDisplay message={error} icon={emptyDish} />
 
   return (
     <>

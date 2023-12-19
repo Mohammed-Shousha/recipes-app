@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 import { ScrollView, ActivityIndicator } from 'react-native'
-import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 
@@ -22,17 +21,16 @@ import edit from '@assets/icons/edit.png'
 
 import { joinLines, separateLines } from '@utils/helpers'
 import { dishTypes } from '@utils/database'
-import {
-  HANDLE_EDITING_RECIPE,
-  HANDLE_ADDING_RECIPE,
-} from '@utils/graphql/mutations'
 
 import useImageUploader from '@utils/hooks/useImageUploader'
+import useRecipesMutations from '@utils/hooks/useRecipesMutations'
 
 import { Button } from '@components'
 
-export const RecipeForm = ({ route, navigation }) => {
-  const { email, userRecipes, setUserRecipes } = useDataContext()
+export const RecipeForm = ({ route }) => {
+  const { email, userRecipes } = useDataContext()
+
+  const { editRecipe, addRecipe } = useRecipesMutations()
 
   let recipe = {
     title: '',
@@ -65,26 +63,11 @@ export const RecipeForm = ({ route, navigation }) => {
 
   const deactivateInput = () => setActiveInput(null)
 
-  const handleCompleted = (mutationResponse) => {
-    if (mutationResponse.result === 1) {
-      setUserRecipes(mutationResponse.data)
-      navigation.goBack()
-    }
-  }
-
-  const [EditRecipe] = useMutation(HANDLE_EDITING_RECIPE, {
-    onCompleted: ({ EditRecipe }) => handleCompleted(EditRecipe),
-  })
-
-  const [AddRecipe] = useMutation(HANDLE_ADDING_RECIPE, {
-    onCompleted: ({ AddRecipe }) => handleCompleted(AddRecipe),
-  })
-
   const handleRecipe = async (id, recipeData) => {
     if (id) {
-      EditRecipe({ variables: { id, ...recipeData } })
+      editRecipe({ variables: { id, ...recipeData } })
     } else {
-      AddRecipe({ variables: { ...recipeData } })
+      addRecipe({ variables: { ...recipeData } })
     }
   }
 

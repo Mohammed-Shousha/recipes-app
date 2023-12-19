@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useMutation } from '@apollo/client'
 
 import { RowContainer } from '@components/styles/Containers.styles'
 import { RecipeImage } from '@components/styles/Images.styles'
@@ -11,7 +10,6 @@ import bin from '@assets/icons/bin.png'
 import edit from '@assets/icons/edit_2.png'
 
 import { splitLines } from '@utils/helpers'
-import { HANDLE_DELETING_RECIPE } from '@utils/graphql/mutations'
 import { DEFAULT_RECIPE_IMAGE } from '@utils/constants'
 
 import {
@@ -21,8 +19,12 @@ import {
   ConfirmModal,
 } from '@components'
 
+import useRecipesMutations from '@utils/hooks/useRecipesMutations'
+
 export const UserRecipe = ({ route, navigation }) => {
-  const { userRecipes, email, setUserRecipes, setLoading } = useDataContext()
+  const { userRecipes, email, setLoading } = useDataContext()
+
+  const { deleteRecipe } = useRecipesMutations()
 
   const { id } = route.params
 
@@ -33,19 +35,10 @@ export const UserRecipe = ({ route, navigation }) => {
   const openModal = () => setModal(true)
   const closeModal = () => setModal(false)
 
-  const [DeleteRecipe] = useMutation(HANDLE_DELETING_RECIPE, {
-    onCompleted({ DeleteRecipe }) {
-      if (DeleteRecipe.result === 1) {
-        setUserRecipes(DeleteRecipe.data)
-        setLoading(false)
-      }
-    },
-  })
-
-  const deleteRecipe = () => {
+  const handleDeleteRecipe = () => {
     closeModal()
     setLoading(true)
-    DeleteRecipe({
+    deleteRecipe({
       variables: {
         email,
         id,
@@ -86,7 +79,7 @@ export const UserRecipe = ({ route, navigation }) => {
       <ConfirmModal
         message="Are you sure you want to delete this recipe?"
         visible={modal}
-        onConfirm={deleteRecipe}
+        onConfirm={handleDeleteRecipe}
         onClose={closeModal}
       />
     </>
