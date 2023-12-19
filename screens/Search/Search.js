@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { useRecipesContext } from '@root/Context'
+import { useDataContext } from '@root/Context'
 import { searchCategories } from '@utils/database'
 
 import { QUERY_SEARCH } from '@utils/constants'
@@ -13,7 +13,7 @@ import { Boxes, IconInput } from '@components'
 export const Search = ({ navigation }) => {
   const [searchValue, setSearchValue] = useState('')
 
-  const { setRecipes } = useRecipesContext()
+  const { setRecipes } = useDataContext()
 
   const searchRecipes = async () => {
     const { results } = await fetchData(QUERY_SEARCH(searchValue))

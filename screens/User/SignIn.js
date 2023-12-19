@@ -12,7 +12,7 @@ import { useDataContext } from '@root/Context'
 
 import { googleIcon } from '@assets/icons'
 
-import { useGoogleAuth } from '@utils/hooks'
+import useGoogleAuth from '@utils/hooks/useGoogleAuth'
 import { HANDLE_SIGN_IN, HANDLE_GOOGLE_AUTH } from '@utils/graphql/mutations'
 import { GOOGLE_API_URL } from '@utils/constants'
 
@@ -22,10 +22,10 @@ WebBrowser.maybeCompleteAuthSession()
 // const useProxy = Platform.select({ web: false, default: false })
 
 export const SignIn = ({ navigation }) => {
-  const { setIsSignedIn, setUserData } = useDataContext()
+  const { authenticateUser } = useDataContext()
 
   const [active, setActive] = useState(null)
-  const [signInError, setSignInError] = useState(null)
+  const [error, setError] = useState(null)
   // const [loading, setLoading] = useState(false)
   const [disabled, setDisabled] = useState(false)
 
@@ -34,21 +34,22 @@ export const SignIn = ({ navigation }) => {
   const [SignIn] = useMutation(HANDLE_SIGN_IN, {
     onCompleted({ SignIn }) {
       if (SignIn.id) {
-        const { name, email, fav_recipes, recipes, image, password } = SignIn
-        setIsSignedIn(true)
-        navigation.navigate('User')
-        setUserData({
+        const { name, email, favRecipes, recipes, image, password } = SignIn
+
+        authenticateUser({
           name,
           email,
           password,
           image,
-          favRecipes: fav_recipes,
-          recipes,
+          favRecipes,
+          userRecipes: recipes,
         })
+
+        navigation.navigate('User')
       } else if (SignIn.message) {
         setDisabled(false)
-        setSignInError(SignIn.message)
-        setTimeout(() => setSignInError(null), 3000)
+        setError(SignIn.message)
+        setTimeout(() => setError(null), 3000)
       }
     },
   })
@@ -56,17 +57,17 @@ export const SignIn = ({ navigation }) => {
   const [GoogleAuth] = useMutation(HANDLE_GOOGLE_AUTH, {
     onCompleted({ GoogleAuth }) {
       if (GoogleAuth.id) {
-        const { name, email, fav_recipes, recipes, image, password } =
-          GoogleAuth
-        setUserData({
+        const { name, email, favRecipes, recipes, image, password } = GoogleAuth
+
+        authenticateUser({
           name,
           email,
           password,
           image,
-          favRecipes: fav_recipes,
-          recipes,
+          favRecipes,
+          userRecipes: recipes,
         })
-        setIsSignedIn(true)
+
         navigation.navigate('User')
       }
     },
@@ -175,7 +176,7 @@ export const SignIn = ({ navigation }) => {
           {errors.password && touched.password && (
             <ErrorText>{errors.password}</ErrorText>
           )}
-          {signInError && <ErrorText>{signInError}</ErrorText>}
+          {error && <ErrorText>{error}</ErrorText>}
 
           <Button
             onPress={handleSubmit}

@@ -1,81 +1,145 @@
-import { createContext, useState, useEffect, useContext } from 'react'
+import { createContext, useReducer, useEffect, useContext } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export const initData = {
-  name: '',
-  email: '',
-  password: '',
-  image: '',
-  favRecipes: null,
-  recipes: null,
-}
-
-const RecipesContext = createContext()
 const DataContext = createContext()
 
 export const useDataContext = () => {
   const context = useContext(DataContext)
   if (!context) {
-    throw new Error('useData must be used within a DataProvider')
+    throw new Error('useStateContext must be used within a StateProvider')
   }
   return context
 }
 
-export const useRecipesContext = () => {
-  const context = useContext(RecipesContext)
-  if (!context) {
-    throw new Error('useRecipes must be used within a RecipesProvider')
-  }
-  return context
+const initialState = {
+  name: '',
+  email: '',
+  password: '',
+  image: '',
+  favRecipes: null,
+  userRecipes: null,
+  isSignedIn: false,
+  loading: false,
+  recipes: [],
 }
 
-export const RecipesProvider = ({ children }) => {
-  const [recipes, setRecipes] = useState([])
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_FAV_RECIPES':
+      return {
+        ...state,
+        favRecipes: action.payload,
+      }
 
-  return (
-    <RecipesContext.Provider value={{ recipes, setRecipes }}>
-      {children}
-    </RecipesContext.Provider>
-  )
+    case 'SET_USER_RECIPES':
+      return {
+        ...state,
+        userRecipes: action.payload,
+      }
+
+    case 'SET_LOADING':
+      return {
+        ...state,
+        loading: action.payload,
+      }
+
+    case 'SET_RECIPES':
+      return {
+        ...state,
+        recipes: action.payload,
+      }
+
+    case 'SET_USER_DATA':
+      return {
+        ...state,
+        ...action.payload,
+      }
+
+    case 'AUTHENTICATE_USER':
+      return {
+        ...state,
+        ...action.payload,
+        isSignedIn: true,
+      }
+
+    case 'LOG_OUT':
+      return initialState
+
+    default:
+      throw new Error(`Unhandled action type: ${action.type}`)
+  }
 }
 
 export const DataProvider = ({ children }) => {
-  const [isSignedIn, setIsSignedIn] = useState(false)
-  const [userData, setUserData] = useState(initData)
-  const [loading, setLoading] = useState(false)
+  const [state, dispatch] = useReducer(reducer, initialState)
+
+  const setUserData = (userData) => {
+    dispatch({ type: 'SET_USER_DATA', payload: userData })
+  }
+
+  const setLoading = (loading) => {
+    dispatch({ type: 'SET_LOADING', payload: loading })
+  }
+
+  const setRecipes = (recipes) => {
+    dispatch({ type: 'SET_RECIPES', payload: recipes })
+  }
+
+  const setFavRecipes = (favRecipes) => {
+    dispatch({ type: 'SET_FAV_RECIPES', payload: favRecipes })
+  }
+
+  const setUserRecipes = (userRecipes) => {
+    dispatch({ type: 'SET_USER_RECIPES', payload: userRecipes })
+  }
+
+  const authenticateUser = (userData) => {
+    dispatch({ type: 'AUTHENTICATE_USER', payload: userData })
+  }
+
+  const logOut = () => {
+    dispatch({ type: 'LOG_OUT' })
+  }
 
   useEffect(() => {
-    //store saved data to state
-    AsyncStorage.getItem('Data').then((jsonData) => {
-      if (jsonData) {
-        setUserData(JSON.parse(jsonData)) //json 'string' to object
+    const fetchData = async () => {
+      try {
+        const jsonData = await AsyncStorage.getItem('StateData')
+        if (jsonData) {
+          setUserData(JSON.parse(jsonData))
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error)
       }
-    })
-    AsyncStorage.getItem('isSignedIn').then((isSignedIn) => {
-      if (isSignedIn) {
-        setIsSignedIn(isSignedIn === 'true') //string to boolean
-      }
-    })
+    }
+
+    fetchData()
   }, [])
 
   useEffect(() => {
-    //store state to saved data
-    const jsonData = JSON.stringify(userData) //object to json 'string'
-    if (userData !== initData) {
-      AsyncStorage.setItem('Data', jsonData)
+    const saveStateToStorage = async () => {
+      try {
+        const jsonData = JSON.stringify(state)
+        await AsyncStorage.setItem('StateData', jsonData)
+      } catch (error) {
+        console.error('Error saving state to storage:', error)
+      }
     }
-    AsyncStorage.setItem('isSignedIn', `${isSignedIn}`) //boolean to string
-  }, [userData, isSignedIn])
+
+    saveStateToStorage()
+  }, [state])
 
   return (
     <DataContext.Provider
       value={{
-        isSignedIn,
-        setIsSignedIn,
-        userData,
         setUserData,
-        loading,
         setLoading,
+        setRecipes,
+        setFavRecipes,
+        setUserRecipes,
+        authenticateUser,
+        logOut,
+        ...state,
       }}
     >
       {children}

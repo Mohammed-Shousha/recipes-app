@@ -29,11 +29,7 @@ import { DEFAULT_RECIPE_IMAGE } from '@utils/constants'
 export const Recipe = ({ route }) => {
   const { id } = route.params
 
-  const {
-    userData: { email },
-    setUserData,
-    isSignedIn,
-  } = useDataContext()
+  const { email, isSignedIn, setFavRecipes } = useDataContext()
 
   const {
     recipe,
@@ -44,7 +40,6 @@ export const Recipe = ({ route }) => {
     recipeType,
     loading,
     like,
-    setLike,
   } = useFetchRecipe(id)
 
   const recipeDetails = {
@@ -56,17 +51,14 @@ export const Recipe = ({ route }) => {
   const [LikeRecipe] = useMutation(HANDLE_LIKING_RECIPE, {
     onCompleted({ LikeRecipe }) {
       if (LikeRecipe.result === 1) {
-        setUserData((userData) => ({
-          ...userData,
-          favRecipes: LikeRecipe.data,
-        }))
+        setFavRecipes(LikeRecipe.data)
       }
     },
   })
 
   const likeRecipe = (recipe) => {
     const { title, image } = recipe
-    if (!isSignedIn) {
+    if (isSignedIn) {
       LikeRecipe({
         variables: {
           email,
@@ -75,7 +67,6 @@ export const Recipe = ({ route }) => {
           image,
         },
       })
-      setLike(true)
     } else {
       showToast()
     }
@@ -84,10 +75,7 @@ export const Recipe = ({ route }) => {
   const [UnlikeRecipe] = useMutation(HANDLE_UNLIKING_RECIPE, {
     onCompleted({ UnlikeRecipe }) {
       if (UnlikeRecipe.result === 1) {
-        setUserData((userData) => ({
-          ...userData,
-          favRecipes: UnlikeRecipe.data,
-        }))
+        setFavRecipes(UnlikeRecipe.data)
       }
     },
   })
@@ -99,26 +87,18 @@ export const Recipe = ({ route }) => {
         id,
       },
     })
-    setLike(false)
   }
 
-  const toggleLike = () => {
-    if (like) {
-      unlikeRecipe()
-    } else {
-      likeRecipe(recipe)
-    }
-  }
+  const toggleLike = () => (like ? unlikeRecipe() : likeRecipe(recipe))
 
-  const showToast = () => {
+  const showToast = () =>
     ToastAndroid.show('Sign in or Resigter to like recipes', ToastAndroid.SHORT)
-  }
 
   if (loading) return <LoadingDisplay />
 
   return (
     <>
-      <RecipeImage source={{ uri: recipe.image ?? DEFAULT_RECIPE_IMAGE }} />
+      <RecipeImage source={{ uri: recipe.image || DEFAULT_RECIPE_IMAGE }} />
 
       <RowContainer>
         <RecipeTitle>{recipe.title}</RecipeTitle>

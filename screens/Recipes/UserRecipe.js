@@ -22,49 +22,36 @@ import {
 } from '@components'
 
 export const UserRecipe = ({ route, navigation }) => {
-  const {
-    userData: { recipes, email },
-    setUserData,
-    setLoading,
-  } = useDataContext()
+  const { userRecipes, email, setUserRecipes, setLoading } = useDataContext()
+
   const { id } = route.params
 
-  const recipe = recipes.find((recipe) => recipe.id === id)
+  const recipe = userRecipes.find((recipe) => recipe.id === id)
 
   const [modal, setModal] = useState(false)
 
   const openModal = () => setModal(true)
   const closeModal = () => setModal(false)
 
-  const ingredients = splitLines(recipe.ingredients)
-  const directions = splitLines(recipe.directions)
-
-  const recipeDetails = { Ingredients: ingredients, Directions: directions }
-
   const [DeleteRecipe] = useMutation(HANDLE_DELETING_RECIPE, {
     onCompleted({ DeleteRecipe }) {
       if (DeleteRecipe.result === 1) {
-        setUserData((prevUserData) => ({
-          ...prevUserData,
-          recipes: DeleteRecipe.data,
-        }))
+        setUserRecipes(DeleteRecipe.data)
+        setLoading(false)
       }
-      setLoading(false)
     },
   })
 
   const deleteRecipe = () => {
     closeModal()
     setLoading(true)
+    DeleteRecipe({
+      variables: {
+        email,
+        id,
+      },
+    })
     navigation.goBack()
-    setTimeout(() => {
-      DeleteRecipe({
-        variables: {
-          email,
-          id,
-        },
-      })
-    }, 500)
   }
 
   const editRecipe = () => {
@@ -75,7 +62,7 @@ export const UserRecipe = ({ route, navigation }) => {
     <>
       <RecipeImage
         source={{
-          uri: recipe.image ?? DEFAULT_RECIPE_IMAGE,
+          uri: recipe.image || DEFAULT_RECIPE_IMAGE,
         }}
       />
 
@@ -89,7 +76,12 @@ export const UserRecipe = ({ route, navigation }) => {
 
       <RecipeSummary recipe={recipe} />
 
-      <RecipeDetails recipeDetails={recipeDetails} />
+      <RecipeDetails
+        recipeDetails={{
+          Ingredients: splitLines(recipe.ingredients),
+          Directions: splitLines(recipe.directions),
+        }}
+      />
 
       <ConfirmModal
         message="Are you sure you want to delete this recipe?"

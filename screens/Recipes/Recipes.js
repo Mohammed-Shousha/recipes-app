@@ -2,12 +2,12 @@ import { FlatList } from 'react-native'
 
 import emptyDish from '@assets/images/emptyDish.png'
 
-import { useRecipesContext } from '@root/Context'
+import { useDataContext } from '@root/Context'
 
 import { RecipeTile, ErrorDisplay } from '@components'
 
 export const Recipes = () => {
-  const { recipes } = useRecipesContext()
+  const { recipes } = useDataContext()
 
   if (!recipes)
     return (

@@ -7,11 +7,9 @@ import { RecipeTile, ErrorDisplay } from '@components'
 import emptyDish from '@assets/images/emptyDish.png'
 
 export const Favourite = () => {
-  const {
-    userData: { favRecipes },
-  } = useDataContext()
+  const { favRecipes } = useDataContext()
 
-  if (!favRecipes.length)
+  if (!favRecipes?.length)
     return (
       <ErrorDisplay
         message="Sorry We Couldn't Find Any Recipe"

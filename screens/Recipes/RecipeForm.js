@@ -32,10 +32,7 @@ import useImageUploader from '@utils/hooks/useImageUploader'
 import { Button } from '@components'
 
 export const RecipeForm = ({ route, navigation }) => {
-  const {
-    userData: { email, recipes },
-    setUserData,
-  } = useDataContext()
+  const { email, userRecipes, setUserRecipes } = useDataContext()
 
   let recipe = {
     title: '',
@@ -49,7 +46,7 @@ export const RecipeForm = ({ route, navigation }) => {
   const id = route.params?.id
 
   if (id) {
-    recipe = recipes.find((recipe) => recipe.id === id)
+    recipe = userRecipes?.find((recipe) => recipe.id === id)
   }
 
   const { title, time, type, directions, ingredients, image } = recipe
@@ -70,10 +67,7 @@ export const RecipeForm = ({ route, navigation }) => {
 
   const handleCompleted = (mutationResponse) => {
     if (mutationResponse.result === 1) {
-      setUserData((userData) => ({
-        ...userData,
-        recipes: mutationResponse.data,
-      }))
+      setUserRecipes(mutationResponse.data)
       navigation.goBack()
     }
   }
@@ -215,7 +209,7 @@ export const RecipeForm = ({ route, navigation }) => {
               disabled={isSubmitting}
               loading={isSubmitting}
             >
-              Confirm Recipe
+              {id ? 'Confirm Recipe' : 'Add Recipe'}
             </Button>
           </>
         )}

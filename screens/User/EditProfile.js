@@ -32,10 +32,7 @@ import { HANDLE_CHANGING_DATA } from '@utils/graphql/mutations'
 import { Button } from '@components'
 
 export const EditProfile = ({ navigation }) => {
-  const {
-    userData: { name, email, image, password },
-    setUserData,
-  } = useDataContext()
+  const { name, email, image, password, setUserData } = useDataContext()
 
   const { loading, image: userImage, uploadImage } = useImageUploader(image)
 
@@ -57,13 +54,12 @@ export const EditProfile = ({ navigation }) => {
     onCompleted({ ChangeData }) {
       if (ChangeData.id) {
         const { name, email, image, password } = ChangeData
-        setUserData((prevUserData) => ({
-          ...prevUserData,
+        setUserData({
           email,
           name,
           image,
           password,
-        }))
+        })
         navigation.navigate('User')
       } else {
         alert(ChangeData.message)
@@ -72,17 +68,13 @@ export const EditProfile = ({ navigation }) => {
   })
 
   const handleFormSubmit = ({ name, email }) => {
-    // setLoading(true)
-    // ChangeData({
-    //   variables: {
-    //     email,
-    //     name,
-    //     image: userImage,
-    //   },
-    // })
-    setTimeout(() => {
-      // setLoading(false)
-    }, 2000)
+    ChangeData({
+      variables: {
+        email,
+        name,
+        image: userImage,
+      },
+    })
   }
 
   return (

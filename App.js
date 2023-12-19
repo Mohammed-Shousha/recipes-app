@@ -28,7 +28,7 @@ import {
 
 import { Icon } from '@components/styles/Images.styles'
 
-import { DataProvider, RecipesProvider, useDataContext } from '@root/Context'
+import { DataProvider, useDataContext } from '@root/Context'
 
 import {
   navIcons,
@@ -192,7 +192,7 @@ const App = () => {
       }
     }
     getConnectionStatus()
-  })
+  }, [])
 
   if (!connected) {
     return withContainer(ErrorDisplay)({
@@ -204,35 +204,30 @@ const App = () => {
 
   return (
     <ApolloProvider client={client}>
-      <RecipesProvider>
-        <DataProvider>
-          <NavigationContainer>
-            <Tab.Navigator
-              initialRouteName="Main-Tab"
-              screenOptions={({ route }) => ({
-                tabBarIcon: ({ focused }) => {
-                  const routeName = route.name.split('-')[0]
-                  const iconName = focused
-                    ? navIcons[routeName][0]
-                    : navIcons[routeName][1]
-                  const size = iconsSizes[routeName]
-                  return <Icon source={iconName} size={size} />
-                },
-                ...tabOptions,
-              })}
-            >
-              <Tab.Screen name="Main-Tab" component={MainStackScreen} />
-              <Tab.Screen name="Search-Tab" component={SearchStackScreen} />
-              <Tab.Screen
-                name="Favourite-Tab"
-                component={FavouriteStackScreen}
-              />
-              <Tab.Screen name="User-Tab" component={UserStackScreen} />
-            </Tab.Navigator>
-            <StatusBar hidden />
-          </NavigationContainer>
-        </DataProvider>
-      </RecipesProvider>
+      <DataProvider>
+        <NavigationContainer>
+          <Tab.Navigator
+            initialRouteName="Main-Tab"
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused }) => {
+                const routeName = route.name.split('-')[0]
+                const iconName = focused
+                  ? navIcons[routeName][0]
+                  : navIcons[routeName][1]
+                const size = iconsSizes[routeName]
+                return <Icon source={iconName} size={size} />
+              },
+              ...tabOptions,
+            })}
+          >
+            <Tab.Screen name="Main-Tab" component={MainStackScreen} />
+            <Tab.Screen name="Search-Tab" component={SearchStackScreen} />
+            <Tab.Screen name="Favourite-Tab" component={FavouriteStackScreen} />
+            <Tab.Screen name="User-Tab" component={UserStackScreen} />
+          </Tab.Navigator>
+          <StatusBar hidden />
+        </NavigationContainer>
+      </DataProvider>
     </ApolloProvider>
   )
 }

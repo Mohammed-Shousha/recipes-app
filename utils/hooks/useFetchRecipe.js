@@ -7,9 +7,7 @@ import { RECIPE_URL } from '@utils/constants'
 import { capitalize } from '@utils/helpers'
 
 const useFetchRecipe = (id) => {
-  const {
-    userData: { favRecipes },
-  } = useDataContext()
+  const { favRecipes } = useDataContext()
 
   const [recipe, setRecipe] = useState({})
   const [ingredients, setIngredients] = useState([])
@@ -64,14 +62,6 @@ const useFetchRecipe = (id) => {
         )
 
         setRecipeType(capitalize(filteredTypes[0]))
-
-        if (favRecipes) {
-          const liked = favRecipes.some((recipe) => recipe.id === id)
-
-          if (liked) {
-            setLike(true)
-          }
-        }
       } catch (error) {
         console.error({ error })
         setError('Error fetching recipe data.')
@@ -81,6 +71,11 @@ const useFetchRecipe = (id) => {
     }
 
     fetchData()
+  }, [id])
+
+  useEffect(() => {
+    const liked = favRecipes?.some((recipe) => recipe.id === String(id))
+    setLike(liked)
   }, [id, favRecipes])
 
   return {
@@ -91,7 +86,6 @@ const useFetchRecipe = (id) => {
     instructions,
     recipeType,
     like,
-    setLike,
     loading,
     error,
   }

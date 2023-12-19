@@ -11,10 +11,7 @@ import { plusIcon } from '@assets/icons'
 import { LoadingDisplay, ErrorDisplay, RecipeTile } from '@components'
 
 export const UserRecipes = ({ navigation }) => {
-  const {
-    userData: { recipes },
-    loading,
-  } = useDataContext()
+  const { userRecipes, loading } = useDataContext()
 
   const navigateToAddRecipe = () => {
     navigation.navigate('Add Recipe')
@@ -24,9 +21,9 @@ export const UserRecipes = ({ navigation }) => {
 
   return (
     <>
-      {recipes.length ? (
+      {userRecipes?.length ? (
         <ScrollView>
-          {recipes.map((recipe) => (
+          {userRecipes.map((recipe) => (
             <RecipeTile key={recipe.id} recipe={recipe} userRecipe />
           ))}
         </ScrollView>

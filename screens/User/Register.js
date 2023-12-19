@@ -24,7 +24,7 @@ WebBrowser.maybeCompleteAuthSession()
 const useProxy = Platform.select({ web: false, default: false })
 
 export const Register = ({ navigation }) => {
-  const { setIsSignedIn, setUserData } = useDataContext()
+  const { authenticateUser } = useDataContext()
 
   const [active, setActive] = useState(null)
   const [registerError, setRegisterError] = useState(null)
@@ -39,13 +39,10 @@ export const Register = ({ navigation }) => {
     onCompleted({ Register }) {
       if (Register.id) {
         const { name, email, password } = Register
-        setIsSignedIn(true)
+
+        authenticateUser({ name, email, password })
+
         navigation.navigate('User')
-        setUserData({
-          name,
-          email,
-          password,
-        })
       } else if (Register.message) {
         setDisabled(false)
         setRegisterError(Register.message)
@@ -57,17 +54,17 @@ export const Register = ({ navigation }) => {
   const [GoogleAuth] = useMutation(HANDLE_GOOGLE_AUTH, {
     onCompleted({ GoogleAuth }) {
       if (GoogleAuth.id) {
-        const { name, email, fav_recipes, recipes, image, password } =
-          GoogleAuth
-        setUserData({
+        const { name, email, favRecipes, recipes, image, password } = GoogleAuth
+
+        authenticateUser({
           name,
           email,
           password,
           image,
-          favRecipes: fav_recipes,
-          recipes,
+          favRecipes,
+          userRecipes: recipes,
         })
-        setIsSignedIn(true)
+
         navigation.navigate('User')
       }
     },

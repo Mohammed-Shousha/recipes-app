@@ -9,7 +9,7 @@ import {
   RowContainer,
 } from '@components/styles/Containers.styles'
 
-import { useRecipesContext } from '@root/Context'
+import { useDataContext } from '@root/Context'
 
 import { IconInput, IngredientTile, PressableIcon } from '@components'
 
@@ -20,7 +20,7 @@ import { fetchData } from '@utils/helpers'
 
 export const IngredientsSearch = () => {
   const navigation = useNavigation()
-  const { setRecipes } = useRecipesContext()
+  const { setRecipes } = useDataContext()
 
   const [ingredients, setIngredients] = useState([])
   const [ingredient, setIngredient] = useState('')

@@ -5,7 +5,7 @@ import { UserDetailContainer } from '@components/styles/Containers.styles'
 import { UserImage } from '@components/styles/Images.styles'
 import { Line, StyledText, Title } from '@components/styles/Texts.styles'
 
-import { initData, useDataContext } from '@root/Context'
+import { useDataContext } from '@root/Context'
 
 import user from '@assets/images/chef.png'
 
@@ -15,11 +15,7 @@ import { RATE_FORM_URL } from '@utils/constants'
 import { PressableIcon, ConfirmModal } from '@components'
 
 export const User = ({ navigation }) => {
-  const {
-    setIsSignedIn,
-    userData: { name, image },
-    setUserData,
-  } = useDataContext()
+  const { name, image, logOut } = useDataContext()
 
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -43,10 +39,9 @@ export const User = ({ navigation }) => {
     }
   }
 
-  const logOut = () => {
+  const handleLogOut = () => {
     closeModal()
-    setIsSignedIn(false)
-    setUserData(initData)
+    logOut()
   }
 
   return (
@@ -72,7 +67,7 @@ export const User = ({ navigation }) => {
       <ConfirmModal
         message="Are you sure you want to log out?"
         visible={modalOpen}
-        onConfirm={logOut}
+        onConfirm={handleLogOut}
         onClose={closeModal}
       />
     </>

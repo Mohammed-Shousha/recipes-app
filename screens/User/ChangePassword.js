@@ -14,8 +14,7 @@ import { HANDLE_CHANGING_PASSWORD } from '@utils/graphql/mutations'
 import { Button } from '@components'
 
 export const ChangePassword = ({ navigation }) => {
-  const { userData } = useDataContext()
-  const { email } = userData
+  const { email } = useDataContext()
 
   const [passwordError, setPasswordError] = useState(null)
   const [active, setActive] = useState(null)
