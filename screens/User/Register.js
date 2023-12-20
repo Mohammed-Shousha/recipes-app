@@ -14,8 +14,9 @@ import { useDataContext } from '@root/Context'
 
 import { googleIcon } from '@assets/icons'
 
+import useUserMutations from '@utils/hooks/useUserMutations'
 import { passwordRegex } from '@utils/database'
-import { HANDLE_REGISTER, HANDLE_GOOGLE_AUTH } from '@utils/graphql/mutations'
+import { HANDLE_GOOGLE_AUTH } from '@utils/graphql/mutations'
 import { GOOGLE_API_URL } from '@utils/constants'
 
 import { LoadingDisplay, Button } from '@components'
@@ -26,30 +27,14 @@ const useProxy = Platform.select({ web: false, default: false })
 export const Register = ({ navigation }) => {
   const { authenticateUser } = useDataContext()
 
+  const { register, error } = useUserMutations()
+
   const [active, setActive] = useState(null)
-  const [registerError, setRegisterError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [disabled, setDisabled] = useState(false)
 
   const emailRef = useRef()
   const passwordRef = useRef()
   const confirmPasswordRef = useRef()
-
-  const [Register] = useMutation(HANDLE_REGISTER, {
-    onCompleted({ Register }) {
-      if (Register.id) {
-        const { name, email, password } = Register
-
-        authenticateUser({ name, email, password })
-
-        navigation.navigate('User')
-      } else if (Register.message) {
-        setDisabled(false)
-        setRegisterError(Register.message)
-        setTimeout(() => setRegisterError(null), 3000)
-      }
-    },
-  })
 
   const [GoogleAuth] = useMutation(HANDLE_GOOGLE_AUTH, {
     onCompleted({ GoogleAuth }) {
@@ -129,11 +114,10 @@ export const Register = ({ navigation }) => {
           .required('Required')
           .oneOf([Yup.ref('password'), null], 'Passwords must match'),
       })}
-      onSubmit={({ name, email, password }) => {
-        setDisabled(true)
-        Register({
+      onSubmit={async ({ name, email, password }) => {
+        await register({
           variables: {
-            name,
+            name: name.trim(),
             email: email.trim(),
             password,
           },
@@ -147,6 +131,7 @@ export const Register = ({ navigation }) => {
         values,
         errors,
         touched,
+        isSubmitting,
       }) => (
         <>
           <FormInput
@@ -216,9 +201,9 @@ export const Register = ({ navigation }) => {
           {errors.confirmPassword && touched.confirmPassword && (
             <ErrorText>{errors.confirmPassword}</ErrorText>
           )}
-          {registerError && <ErrorText>{registerError}</ErrorText>}
+          {error && <ErrorText>{error}</ErrorText>}
 
-          <Button onPress={handleSubmit} disabled={disabled} loading={disabled}>
+          <Button onPress={handleSubmit} disabled={isSubmitting}>
             Register
           </Button>
           <Button

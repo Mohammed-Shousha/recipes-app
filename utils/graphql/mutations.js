@@ -25,7 +25,7 @@ export const HANDLE_SIGN_IN = gql`
         email
         password
         image
-        fav_recipes {
+        favRecipes {
           id
           title
           image
@@ -55,7 +55,7 @@ export const HANDLE_GOOGLE_AUTH = gql`
       email
       image
       password
-      fav_recipes {
+      favRecipes {
         id
         title
         image

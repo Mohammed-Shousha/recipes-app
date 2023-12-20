@@ -1,14 +1,12 @@
 import { useState } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { useMutation } from '@apollo/client'
 import { ActivityIndicator } from 'react-native'
 
 import {
   RowContainer,
   LoadingContainer,
 } from '@components/styles/Containers.styles'
-
 import {
   EditUserImage,
   Icon,
@@ -24,15 +22,17 @@ import { FormInput } from '@components/styles/Inputs.styles'
 import { useDataContext } from '@root/Context'
 
 import useImageUploader from '@utils/hooks/useImageUploader'
+import useUserMutations from '@utils/hooks/useUserMutations'
 
 import user from '@assets/images/chef.png'
 import edit from '@assets/icons/edit.png'
 
-import { HANDLE_CHANGING_DATA } from '@utils/graphql/mutations'
 import { Button } from '@components'
 
 export const EditProfile = ({ navigation }) => {
-  const { name, email, image, password, setUserData } = useDataContext()
+  const { name, email, image, password } = useDataContext()
+
+  const { changeData } = useUserMutations()
 
   const { loading, image: userImage, uploadImage } = useImageUploader(image)
 
@@ -48,33 +48,6 @@ export const EditProfile = ({ navigation }) => {
 
   const handleChangePassword = () => {
     navigation.navigate('Change Password')
-  }
-
-  const [ChangeData] = useMutation(HANDLE_CHANGING_DATA, {
-    onCompleted({ ChangeData }) {
-      if (ChangeData.id) {
-        const { name, email, image, password } = ChangeData
-        setUserData({
-          email,
-          name,
-          image,
-          password,
-        })
-        navigation.navigate('User')
-      } else {
-        alert(ChangeData.message)
-      }
-    },
-  })
-
-  const handleFormSubmit = ({ name, email }) => {
-    ChangeData({
-      variables: {
-        email,
-        name,
-        image: userImage,
-      },
-    })
   }
 
   return (
@@ -102,7 +75,15 @@ export const EditProfile = ({ navigation }) => {
           name: Yup.string().min(2, 'Too Short'),
           email: Yup.string(),
         })}
-        onSubmit={handleFormSubmit}
+        onSubmit={async ({ name, email }) => {
+          await changeData({
+            variables: {
+              email,
+              name,
+              image: userImage,
+            },
+          })
+        }}
       >
         {({
           handleChange,
@@ -134,11 +115,7 @@ export const EditProfile = ({ navigation }) => {
             {password && (
               <Button onPress={handleChangePassword}>Change Password</Button>
             )}
-            <Button
-              onPress={handleSubmit}
-              disabled={isSubmitting}
-              loading={isSubmitting}
-            >
+            <Button onPress={handleSubmit} disabled={isSubmitting}>
               Save
             </Button>
           </>

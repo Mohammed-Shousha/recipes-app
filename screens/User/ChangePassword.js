@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { useMutation } from '@apollo/client'
 
 import { ErrorText } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
@@ -9,32 +8,20 @@ import { FormInput } from '@components/styles/Inputs.styles'
 import { useDataContext } from '@root/Context'
 
 import { passwordRegex } from '@utils/database'
-import { HANDLE_CHANGING_PASSWORD } from '@utils/graphql/mutations'
+import useUserMutations from '@utils/hooks/useUserMutations'
 
 import { Button } from '@components'
 
-export const ChangePassword = ({ navigation }) => {
+export const ChangePassword = () => {
   const { email } = useDataContext()
 
-  const [passwordError, setPasswordError] = useState(null)
+  const { changePassword, error } = useUserMutations()
+
   const [active, setActive] = useState(null)
-  const [disabled, setDisabled] = useState(false)
 
   const passwordRef = useRef()
   const newPasswordRef = useRef()
   const confirmPasswordRef = useRef()
-
-  const [ChangePassword] = useMutation(HANDLE_CHANGING_PASSWORD, {
-    onCompleted({ ChangePassword }) {
-      if (ChangePassword.name) {
-        navigation.navigate('Edit Profile')
-      } else if (ChangePassword.message) {
-        setDisabled(false)
-        setPasswordError(ChangePassword.message)
-        setTimeout(() => setPasswordError(null), 3000)
-      }
-    },
-  })
 
   const activateInput = (input) => setActive(input)
 
@@ -59,9 +46,8 @@ export const ChangePassword = ({ navigation }) => {
           .required('Required')
           .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
       })}
-      onSubmit={({ password, newPassword }) => {
-        setDisabled(true)
-        ChangePassword({
+      onSubmit={async ({ password, newPassword }) => {
+        await changePassword({
           variables: {
             email,
             password,
@@ -70,7 +56,14 @@ export const ChangePassword = ({ navigation }) => {
         })
       }}
     >
-      {({ handleChange, handleSubmit, values, errors, touched }) => (
+      {({
+        handleChange,
+        handleSubmit,
+        values,
+        errors,
+        touched,
+        isSubmitting,
+      }) => (
         <>
           <FormInput
             placeholder="Current Password"
@@ -116,9 +109,9 @@ export const ChangePassword = ({ navigation }) => {
           {errors.confirmPassword && touched.confirmPassword && (
             <ErrorText>{errors.confirmPassword}</ErrorText>
           )}
-          {passwordError && <ErrorText>{passwordError}</ErrorText>}
+          {error && <ErrorText>{error}</ErrorText>}
 
-          <Button onPress={handleSubmit} disabled={disabled} loading={disabled}>
+          <Button onPress={handleSubmit} disabled={isSubmitting}>
             Save
           </Button>
         </>

@@ -1,115 +1,25 @@
-import { useEffect, useRef, useState } from 'react'
-// import { Platform } from 'react-native'
-import { useMutation } from '@apollo/client'
+import { useRef, useState } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { ANDROID_CLIENT_ID, EXPO_CLIENT_ID } from '@env'
-import * as WebBrowser from 'expo-web-browser'
-import { useAuthRequest } from 'expo-auth-session/providers/google'
+
 import { ErrorText } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
-import { useDataContext } from '@root/Context'
 
 import { googleIcon } from '@assets/icons'
 
 import useGoogleAuth from '@utils/hooks/useGoogleAuth'
-import { HANDLE_SIGN_IN, HANDLE_GOOGLE_AUTH } from '@utils/graphql/mutations'
-import { GOOGLE_API_URL } from '@utils/constants'
+import useUserMutations from '@utils/hooks/useUserMutations'
 
 import { LoadingDisplay, Button } from '@components'
 
-WebBrowser.maybeCompleteAuthSession()
-// const useProxy = Platform.select({ web: false, default: false })
-
-export const SignIn = ({ navigation }) => {
-  const { authenticateUser } = useDataContext()
+export const SignIn = () => {
+  const { signIn, error } = useUserMutations()
 
   const [active, setActive] = useState(null)
-  const [error, setError] = useState(null)
-  // const [loading, setLoading] = useState(false)
-  const [disabled, setDisabled] = useState(false)
 
   const passwordRef = useRef()
 
-  const [SignIn] = useMutation(HANDLE_SIGN_IN, {
-    onCompleted({ SignIn }) {
-      if (SignIn.id) {
-        const { name, email, favRecipes, recipes, image, password } = SignIn
-
-        authenticateUser({
-          name,
-          email,
-          password,
-          image,
-          favRecipes,
-          userRecipes: recipes,
-        })
-
-        navigation.navigate('User')
-      } else if (SignIn.message) {
-        setDisabled(false)
-        setError(SignIn.message)
-        setTimeout(() => setError(null), 3000)
-      }
-    },
-  })
-
-  const [GoogleAuth] = useMutation(HANDLE_GOOGLE_AUTH, {
-    onCompleted({ GoogleAuth }) {
-      if (GoogleAuth.id) {
-        const { name, email, favRecipes, recipes, image, password } = GoogleAuth
-
-        authenticateUser({
-          name,
-          email,
-          password,
-          image,
-          favRecipes,
-          userRecipes: recipes,
-        })
-
-        navigation.navigate('User')
-      }
-    },
-  })
-
-  const [request, response, promptAsync] = useAuthRequest({
-    androidClientId: ANDROID_CLIENT_ID,
-    expoClientId: EXPO_CLIENT_ID,
-  })
-
-  const getUserData = async (accessToken) => {
-    const response = await fetch(GOOGLE_API_URL(accessToken))
-    const result = await response.json()
-    const { email, name, picture } = result
-    GoogleAuth({
-      variables: {
-        email,
-        name,
-        image: picture,
-      },
-    })
-  }
-
-  // const handleGoogleAuth = () => {
-  //   promptAsync({ useProxy, showInRecents: true })
-  //   setLoading(true)
-  // }
-
   const { handleGoogleAuth, loading } = useGoogleAuth()
-
-  useEffect(() => {
-    let isMounted = true
-    if (isMounted) {
-      if (response?.type === 'success') {
-        const { authentication } = response
-        getUserData(authentication.accessToken)
-      }
-    }
-    return () => {
-      isMounted = false
-    }
-  }, [response])
 
   if (loading) return <LoadingDisplay />
 
@@ -123,9 +33,8 @@ export const SignIn = ({ navigation }) => {
         email: Yup.string().trim().email('Wrong Email').required('Required'),
         password: Yup.string().required('Required'),
       })}
-      onSubmit={({ email, password }) => {
-        setDisabled(true)
-        SignIn({
+      onSubmit={async ({ email, password }) => {
+        await signIn({
           variables: {
             email: email.trim(),
             password,
@@ -140,6 +49,7 @@ export const SignIn = ({ navigation }) => {
         values,
         errors,
         touched,
+        isSubmitting,
       }) => (
         <>
           <FormInput
@@ -181,8 +91,7 @@ export const SignIn = ({ navigation }) => {
           <Button
             onPress={handleSubmit}
             style={{ width: '70%', fontSize: '24px' }}
-            disabled={disabled}
-            loading={disabled}
+            disabled={isSubmitting}
           >
             Sign In
           </Button>
@@ -190,7 +99,6 @@ export const SignIn = ({ navigation }) => {
             onPress={handleGoogleAuth}
             icon={googleIcon}
             style={{ width: '70%', iconSize: '28' }}
-            disabled={!request}
             secondary
           />
         </>
