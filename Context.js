@@ -19,7 +19,6 @@ const initialState = {
   favRecipes: null,
   userRecipes: null,
   isSignedIn: false,
-  loading: false,
   recipes: [],
 }
 
@@ -35,12 +34,6 @@ const reducer = (state, action) => {
       return {
         ...state,
         userRecipes: action.payload,
-      }
-
-    case 'SET_LOADING':
-      return {
-        ...state,
-        loading: action.payload,
       }
 
     case 'SET_RECIPES':
@@ -75,10 +68,6 @@ export const DataProvider = ({ children }) => {
 
   const setUserData = (userData) => {
     dispatch({ type: 'SET_USER_DATA', payload: userData })
-  }
-
-  const setLoading = (loading) => {
-    dispatch({ type: 'SET_LOADING', payload: loading })
   }
 
   const setRecipes = (recipes) => {
@@ -133,7 +122,6 @@ export const DataProvider = ({ children }) => {
     <DataContext.Provider
       value={{
         setUserData,
-        setLoading,
         setRecipes,
         setFavRecipes,
         setUserRecipes,

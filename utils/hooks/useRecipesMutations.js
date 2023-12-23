@@ -12,7 +12,7 @@ import {
 import { useDataContext } from '@root/Context'
 
 const useRecipesMutations = () => {
-  const { setFavRecipes, setUserRecipes, setLoading } = useDataContext()
+  const { setFavRecipes, setUserRecipes } = useDataContext()
 
   const navigation = useNavigation()
 
@@ -25,26 +25,27 @@ const useRecipesMutations = () => {
   }
 
   const [addRecipe] = useMutation(HANDLE_ADDING_RECIPE, {
-    onCompleted: ({ AddRecipe }) =>
+    onCompleted({ AddRecipe }) {
       handleCompleted(AddRecipe, () => {
         setUserRecipes(AddRecipe.data)
         navigation.goBack()
-      }),
+      })
+    },
   })
 
   const [editRecipe] = useMutation(HANDLE_EDITING_RECIPE, {
-    onCompleted: ({ EditRecipe }) =>
+    onCompleted({ EditRecipe }) {
       handleCompleted(EditRecipe, () => {
         setUserRecipes(EditRecipe.data)
         navigation.goBack()
-      }),
+      })
+    },
   })
 
   const [deleteRecipe] = useMutation(HANDLE_DELETING_RECIPE, {
     onCompleted({ DeleteRecipe }) {
       handleCompleted(DeleteRecipe, () => {
         setUserRecipes(DeleteRecipe.data)
-        setLoading(false)
       })
     },
   })

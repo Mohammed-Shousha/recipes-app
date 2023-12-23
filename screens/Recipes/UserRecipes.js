@@ -8,16 +8,14 @@ import { useDataContext } from '@root/Context'
 import cookbook from '@assets/images/cookbook.png'
 import { plusIcon } from '@assets/icons'
 
-import { LoadingDisplay, ErrorDisplay, RecipeTile } from '@components'
+import { ErrorDisplay, RecipeTile } from '@components'
 
 export const UserRecipes = ({ navigation }) => {
-  const { userRecipes, loading } = useDataContext()
+  const { userRecipes } = useDataContext()
 
   const navigateToAddRecipe = () => {
     navigation.navigate('Add Recipe')
   }
-
-  if (loading) return <LoadingDisplay />
 
   return (
     <>

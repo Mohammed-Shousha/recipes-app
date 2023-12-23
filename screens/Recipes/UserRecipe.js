@@ -17,12 +17,15 @@ import {
   RecipeSummary,
   PressableIcon,
   ConfirmModal,
+  LoadingDisplay,
 } from '@components'
 
 import useRecipesMutations from '@utils/hooks/useRecipesMutations'
 
 export const UserRecipe = ({ route, navigation }) => {
-  const { userRecipes, email, setLoading } = useDataContext()
+  const { userRecipes, email } = useDataContext()
+
+  const [loading, setLoading] = useState(false)
 
   const { deleteRecipe } = useRecipesMutations()
 
@@ -35,21 +38,24 @@ export const UserRecipe = ({ route, navigation }) => {
   const openModal = () => setModal(true)
   const closeModal = () => setModal(false)
 
-  const handleDeleteRecipe = () => {
+  const handleDeleteRecipe = async () => {
     closeModal()
     setLoading(true)
-    deleteRecipe({
+    await deleteRecipe({
       variables: {
         email,
         id,
       },
     })
+    setLoading(false)
     navigation.goBack()
   }
 
   const editRecipe = () => {
     navigation.navigate('Edit Recipe', { id: recipe.id })
   }
+
+  if (loading || !recipe) return <LoadingDisplay />
 
   return (
     <>
