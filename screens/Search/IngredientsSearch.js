@@ -9,7 +9,7 @@ import {
   RowContainer,
 } from '@components/styles/Containers.styles'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import { IconInput, IngredientTile, PressableIcon } from '@components'
 

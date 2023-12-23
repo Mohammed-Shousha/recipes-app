@@ -14,7 +14,7 @@ import { ErrorText } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
 import { DropDown } from '@components/styles/DropDown.styles'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import gallery from '@assets/icons/gallery.png'
 import edit from '@assets/icons/edit.png'
@@ -187,11 +187,7 @@ export const RecipeForm = ({ route }) => {
                 </EditRecipeImage>
               </RowContainer>
             )}
-            <Button
-              onPress={handleSubmit}
-              disabled={isSubmitting}
-              loading={isSubmitting}
-            >
+            <Button onPress={handleSubmit} disabled={isSubmitting}>
               {id ? 'Confirm Recipe' : 'Add Recipe'}
             </Button>
           </>

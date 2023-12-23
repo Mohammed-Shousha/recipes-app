@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import { RECIPES_TYPES } from '@utils/database'
 import { RECIPE_URL } from '@utils/constants'
@@ -24,7 +24,13 @@ const useFetchRecipe = (id) => {
       try {
         setLoading(true)
         setError(null)
+
         const response = await fetch(RECIPE_URL(id))
+
+        if (!response.ok) {
+          throw new Error('Error fetching recipe data.')
+        }
+
         const {
           title,
           image,
@@ -63,8 +69,8 @@ const useFetchRecipe = (id) => {
 
         setRecipeType(capitalize(filteredTypes[0]))
       } catch (error) {
-        console.error({ error })
-        setError('Error fetching recipe data.')
+        console.error('useFetchRecipe error:', error.message)
+        setError('Unable to fetch recipe data.')
       } finally {
         setLoading(false)
       }

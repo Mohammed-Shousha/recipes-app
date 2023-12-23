@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native'
 
 import { BoxesContainer } from '@components/styles/Containers.styles'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import { BoxComponent } from './Box'
 

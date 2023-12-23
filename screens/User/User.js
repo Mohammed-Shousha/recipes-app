@@ -5,7 +5,7 @@ import { UserDetailContainer } from '@components/styles/Containers.styles'
 import { UserImage } from '@components/styles/Images.styles'
 import { Line, StyledText, Title } from '@components/styles/Texts.styles'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import user from '@assets/images/chef.png'
 

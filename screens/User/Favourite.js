@@ -1,6 +1,6 @@
 import { ScrollView } from 'react-native'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import { RecipeTile, ErrorDisplay } from '@components'
 

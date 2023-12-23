@@ -5,7 +5,7 @@ import * as Yup from 'yup'
 import { ErrorText } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import { passwordRegex } from '@utils/database'
 import useUserMutations from '@utils/hooks/useUserMutations'

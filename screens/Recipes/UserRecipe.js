@@ -4,7 +4,7 @@ import { RowContainer } from '@components/styles/Containers.styles'
 import { RecipeImage } from '@components/styles/Images.styles'
 import { RecipeTitle } from '@components/styles/Texts.styles'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import bin from '@assets/icons/bin.png'
 import edit from '@assets/icons/edit_2.png'

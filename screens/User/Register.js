@@ -4,13 +4,13 @@ import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import * as WebBrowser from 'expo-web-browser'
-import * as Google from 'expo-auth-session/providers/google'
+import { useAuthRequest } from 'expo-auth-session/providers/google'
 import { ANDROID_CLIENT_ID, EXPO_CLIENT_ID } from '@env'
 
 import { ErrorText } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import { googleIcon } from '@assets/icons'
 
@@ -55,9 +55,10 @@ export const Register = ({ navigation }) => {
     },
   })
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
+  const [request, response, promptAsync] = useAuthRequest({
     androidClientId: ANDROID_CLIENT_ID,
-    expoClientId: EXPO_CLIENT_ID,
+    // expoClientId: EXPO_CLIENT_ID,
+    clientId: ANDROID_CLIENT_ID,
   })
 
   const getUserData = async (accessToken) => {

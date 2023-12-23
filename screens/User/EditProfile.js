@@ -19,7 +19,7 @@ import {
 } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import useImageUploader from '@utils/hooks/useImageUploader'
 import useUserMutations from '@utils/hooks/useUserMutations'

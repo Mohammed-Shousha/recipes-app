@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 import { searchCategories } from '@utils/database'
 
 import { QUERY_SEARCH } from '@utils/constants'

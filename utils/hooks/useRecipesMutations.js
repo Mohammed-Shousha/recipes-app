@@ -9,7 +9,7 @@ import {
   HANDLE_ADDING_RECIPE,
 } from '@utils/graphql/mutations'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 const useRecipesMutations = () => {
   const { setFavRecipes, setUserRecipes } = useDataContext()

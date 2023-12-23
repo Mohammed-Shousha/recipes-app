@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import {
   HANDLE_SIGN_IN,

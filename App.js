@@ -28,7 +28,7 @@ import {
 
 import { Icon } from '@components/styles/Images.styles'
 
-import { DataProvider, useDataContext } from '@root/Context'
+import { DataProvider, useDataContext } from '@context'
 
 import {
   navIcons,
@@ -41,15 +41,15 @@ import {
 import noConnection from '@assets/images/noConnection.png'
 import { ErrorDisplay } from '@components'
 
-import { BACKEND_URL } from '@utils/constants'
+// import { BACKEND_URL } from '@utils/constants'
 import { Container } from '@components/styles/Containers.styles'
 
 I18nManager.forceRTL(false)
 I18nManager.allowRTL(false)
 
 const client = new ApolloClient({
-  uri: BACKEND_URL,
-  //   uri: "http://192.168.1.18:7000/graphql",
+  // uri: BACKEND_URL,
+  uri: 'http://192.168.1.18:7000/graphql',
   cache: new InMemoryCache(),
 })
 

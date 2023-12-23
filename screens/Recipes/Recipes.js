@@ -2,7 +2,7 @@ import { FlatList } from 'react-native'
 
 import emptyDish from '@assets/images/emptyDish.png'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import { RecipeTile, ErrorDisplay } from '@components'
 

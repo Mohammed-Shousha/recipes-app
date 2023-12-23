@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native'
 import { AddButton } from '@components/styles/Buttons.styles'
 import { Icon } from '@components/styles/Images.styles'
 
-import { useDataContext } from '@root/Context'
+import { useDataContext } from '@context'
 
 import cookbook from '@assets/images/cookbook.png'
 import { plusIcon } from '@assets/icons'

@@ -37,11 +37,11 @@ module.exports = {
         root: ['.'],
         extensions: ['.js', '.jsx', '.json'],
         alias: {
-          '@root': './',
           '@components': './components',
           '@screens': './screens',
           '@utils': './utils',
           '@assets': './assets',
+          '@context': './context',
         },
       },
     ],
