@@ -11,7 +11,7 @@ import {
   HANDLE_CHANGING_PASSWORD,
 } from '@utils/graphql/mutations'
 
-const useUserMutations = () => {
+export const useUserMutations = () => {
   const { authenticateUser, setUserData } = useDataContext()
   const navigation = useNavigation()
 
@@ -80,5 +80,3 @@ const useUserMutations = () => {
     error,
   }
 }
-
-export default useUserMutations

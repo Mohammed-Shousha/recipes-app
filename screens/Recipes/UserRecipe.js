@@ -20,7 +20,7 @@ import {
   LoadingDisplay,
 } from '@components'
 
-import useRecipesMutations from '@utils/hooks/useRecipesMutations'
+import { useRecipesMutations } from '@hooks'
 
 export const UserRecipe = ({ route, navigation }) => {
   const { userRecipes, email } = useDataContext()

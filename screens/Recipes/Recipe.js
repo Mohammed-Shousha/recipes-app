@@ -18,8 +18,7 @@ import {
   ErrorDisplay,
 } from '@components'
 
-import useFetchRecipe from '@utils/hooks/useFetchRecipe'
-import useRecipesMutations from '@utils/hooks/useRecipesMutations'
+import { useFetchRecipe, useRecipesMutations } from '@hooks'
 
 import { DEFAULT_RECIPE_IMAGE } from '@utils/constants'
 

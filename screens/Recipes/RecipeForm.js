@@ -22,8 +22,7 @@ import edit from '@assets/icons/edit.png'
 import { joinLines, separateLines } from '@utils/helpers'
 import { dishTypes } from '@utils/database'
 
-import useImageUploader from '@utils/hooks/useImageUploader'
-import useRecipesMutations from '@utils/hooks/useRecipesMutations'
+import { useImageUploader, useRecipesMutations } from '@hooks'
 
 import { Button } from '@components'
 

@@ -21,8 +21,7 @@ import { FormInput } from '@components/styles/Inputs.styles'
 
 import { useDataContext } from '@context'
 
-import useImageUploader from '@utils/hooks/useImageUploader'
-import useUserMutations from '@utils/hooks/useUserMutations'
+import { useImageUploader, useUserMutations } from '@hooks'
 
 import user from '@assets/images/chef.png'
 import edit from '@assets/icons/edit.png'

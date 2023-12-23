@@ -8,7 +8,7 @@ import { FormInput } from '@components/styles/Inputs.styles'
 import { useDataContext } from '@context'
 
 import { passwordRegex } from '@utils/database'
-import useUserMutations from '@utils/hooks/useUserMutations'
+import { useUserMutations } from '@hooks'
 
 import { Button } from '@components'
 

@@ -11,7 +11,7 @@ import {
 
 import { useDataContext } from '@context'
 
-const useRecipesMutations = () => {
+export const useRecipesMutations = () => {
   const { setFavRecipes, setUserRecipes } = useDataContext()
 
   const navigation = useNavigation()
@@ -74,5 +74,3 @@ const useRecipesMutations = () => {
     unlikeRecipe,
   }
 }
-
-export default useRecipesMutations

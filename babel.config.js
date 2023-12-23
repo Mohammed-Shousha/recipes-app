@@ -42,6 +42,7 @@ module.exports = {
           '@utils': './utils',
           '@assets': './assets',
           '@context': './context',
+          '@hooks': './hooks',
         },
       },
     ],

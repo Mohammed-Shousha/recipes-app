@@ -14,7 +14,8 @@ import { useDataContext } from '@context'
 
 import { googleIcon } from '@assets/icons'
 
-import useUserMutations from '@utils/hooks/useUserMutations'
+import { useUserMutations } from '@hooks'
+
 import { passwordRegex } from '@utils/database'
 import { HANDLE_GOOGLE_AUTH } from '@utils/graphql/mutations'
 import { GOOGLE_API_URL } from '@utils/constants'

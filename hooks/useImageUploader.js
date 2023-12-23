@@ -3,7 +3,7 @@ import * as ImagePicker from 'expo-image-picker'
 
 import { CLOUDINARY_URL, CLOUDINARY_PRESET } from '@utils/constants'
 
-const useImageUploader = (initialImage) => {
+export const useImageUploader = (initialImage) => {
   const [image, setImage] = useState(initialImage)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -66,5 +66,3 @@ const useImageUploader = (initialImage) => {
     uploadImage,
   }
 }
-
-export default useImageUploader

@@ -7,8 +7,7 @@ import { FormInput } from '@components/styles/Inputs.styles'
 
 import { googleIcon } from '@assets/icons'
 
-import useGoogleAuth from '@utils/hooks/useGoogleAuth'
-import useUserMutations from '@utils/hooks/useUserMutations'
+import { useGoogleAuth, useUserMutations } from '@hooks'
 
 import { LoadingDisplay, Button } from '@components'
 

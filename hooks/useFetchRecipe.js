@@ -6,7 +6,7 @@ import { RECIPES_TYPES } from '@utils/database'
 import { RECIPE_URL } from '@utils/constants'
 import { capitalize } from '@utils/helpers'
 
-const useFetchRecipe = (id) => {
+export const useFetchRecipe = (id) => {
   const { favRecipes } = useDataContext()
 
   const [recipe, setRecipe] = useState({})
@@ -96,5 +96,3 @@ const useFetchRecipe = (id) => {
     error,
   }
 }
-
-export default useFetchRecipe
