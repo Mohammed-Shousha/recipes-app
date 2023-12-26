@@ -13,12 +13,11 @@ import { LoadingDisplay, Button } from '@components'
 
 export const SignIn = () => {
   const { signIn, error } = useUserMutations()
+  const { handleGoogleAuth, loading } = useGoogleAuth()
 
   const [active, setActive] = useState(null)
 
   const passwordRef = useRef()
-
-  const { handleGoogleAuth, loading } = useGoogleAuth()
 
   if (loading) return <LoadingDisplay />
 

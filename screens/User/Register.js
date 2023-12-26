@@ -1,97 +1,27 @@
-import { useRef, useState, useEffect } from 'react'
-import { Platform } from 'react-native'
-import { useMutation } from '@apollo/client'
+import { useRef, useState } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import * as WebBrowser from 'expo-web-browser'
-import { useAuthRequest } from 'expo-auth-session/providers/google'
-import { ANDROID_CLIENT_ID, EXPO_CLIENT_ID } from '@env'
 
 import { ErrorText } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
 
-import { useDataContext } from '@context'
-
 import { googleIcon } from '@assets/icons'
 
-import { useUserMutations } from '@hooks'
+import { useUserMutations, useGoogleAuth } from '@hooks'
 
 import { passwordRegex } from '@utils/database'
-import { HANDLE_GOOGLE_AUTH } from '@utils/graphql/mutations'
-import { GOOGLE_API_URL } from '@utils/constants'
 
 import { LoadingDisplay, Button } from '@components'
 
-WebBrowser.maybeCompleteAuthSession()
-const useProxy = Platform.select({ web: false, default: false })
-
-export const Register = ({ navigation }) => {
-  const { authenticateUser } = useDataContext()
-
+export const Register = () => {
   const { register, error } = useUserMutations()
+  const { handleGoogleAuth, loading } = useGoogleAuth()
 
   const [active, setActive] = useState(null)
-  const [loading, setLoading] = useState(false)
 
   const emailRef = useRef()
   const passwordRef = useRef()
   const confirmPasswordRef = useRef()
-
-  const [GoogleAuth] = useMutation(HANDLE_GOOGLE_AUTH, {
-    onCompleted({ GoogleAuth }) {
-      if (GoogleAuth.id) {
-        const { name, email, favRecipes, recipes, image, password } = GoogleAuth
-
-        authenticateUser({
-          name,
-          email,
-          password,
-          image,
-          favRecipes,
-          userRecipes: recipes,
-        })
-
-        navigation.navigate('User')
-      }
-    },
-  })
-
-  const [request, response, promptAsync] = useAuthRequest({
-    androidClientId: ANDROID_CLIENT_ID,
-    // expoClientId: EXPO_CLIENT_ID,
-    clientId: ANDROID_CLIENT_ID,
-  })
-
-  const getUserData = async (accessToken) => {
-    const response = await fetch(GOOGLE_API_URL(accessToken))
-    const result = await response.json()
-    const { email, name, picture } = result
-    GoogleAuth({
-      variables: {
-        email,
-        name,
-        image: picture,
-      },
-    })
-  }
-
-  const handleGoogleAuth = () => {
-    promptAsync({ useProxy, showInRecents: true })
-    setLoading(true)
-  }
-
-  useEffect(() => {
-    let isMounted = true
-    if (isMounted) {
-      if (response?.type === 'success') {
-        const { authentication } = response
-        getUserData(authentication.accessToken)
-      }
-    }
-    return () => {
-      isMounted = false
-    }
-  }, [response])
 
   if (loading) return <LoadingDisplay />
 
@@ -212,7 +142,6 @@ export const Register = ({ navigation }) => {
             onPress={handleGoogleAuth}
             icon={googleIcon}
             style={{ width: '70%', iconSize: '28' }}
-            disabled={!request}
             secondary
           />
         </>
