@@ -43,6 +43,8 @@ module.exports = {
           '@assets': './assets',
           '@context': './context',
           '@hooks': './hooks',
+          '@hocs': './hocs',
+          '@navigators': './navigators',
         },
       },
     ],

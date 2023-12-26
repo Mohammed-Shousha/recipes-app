@@ -7,7 +7,9 @@
       "@utils/*": ["./utils/*"],
       "@assets/*": ["./assets/*"],
       "@context/*": ["./context/*"],
-      "@hooks/*": ["./hooks/*"]
+      "@hooks/*": ["./hooks/*"],
+      "@hocs/*": ["hocs/*"],
+      "@navigation/*": ["./navigation/*"]
     }
   },
   "exclude": ["node_modules", "dist"]
