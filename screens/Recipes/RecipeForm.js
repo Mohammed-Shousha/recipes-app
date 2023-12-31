@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 import { ScrollView, ActivityIndicator } from 'react-native'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
 
 import {
   EditRecipeImage,
@@ -21,6 +20,7 @@ import edit from '@assets/icons/edit.png'
 
 import { joinLines, separateLines } from '@utils/helpers'
 import { dishTypes } from '@utils/database'
+import { recipeFormSchema } from '@utils/validationSchemas'
 
 import { useImageUploader, useRecipesMutations } from '@hooks'
 
@@ -80,12 +80,7 @@ export const RecipeForm = ({ route }) => {
           ingredients: separateLines(ingredients),
           directions: separateLines(directions),
         }}
-        validationSchema={Yup.object({
-          title: Yup.string().required('Required').min(2, 'Too Short'),
-          time: Yup.number().required('Required'),
-          ingredients: Yup.string().required('Required'),
-          directions: Yup.string().required('Required'),
-        })}
+        validationSchema={recipeFormSchema}
         onSubmit={({ title, time, ingredients, directions }) => {
           handleRecipe(id, {
             email,

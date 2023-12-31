@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
 import { ActivityIndicator } from 'react-native'
 
 import {
@@ -18,6 +17,8 @@ import {
   StyledText,
 } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
+
+import { editProfileSchema } from '@utils/validationSchemas'
 
 import { useDataContext } from '@context'
 
@@ -70,10 +71,7 @@ export const EditProfile = ({ navigation }) => {
           name,
           email,
         }}
-        validationSchema={Yup.object({
-          name: Yup.string().min(2, 'Too Short'),
-          email: Yup.string(),
-        })}
+        validationSchema={editProfileSchema}
         onSubmit={async ({ name, email }) => {
           await changeData({
             variables: {

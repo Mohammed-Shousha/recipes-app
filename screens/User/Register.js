@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
 
 import { ErrorText } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
@@ -9,9 +8,9 @@ import { googleIcon } from '@assets/icons'
 
 import { useUserMutations, useGoogleAuth } from '@hooks'
 
-import { passwordRegex } from '@utils/database'
-
 import { LoadingDisplay, Button } from '@components'
+
+import { registerSchema } from '@utils/validationSchemas'
 
 export const Register = () => {
   const { register, error } = useUserMutations()
@@ -33,19 +32,7 @@ export const Register = () => {
         password: '',
         confirmPassword: '',
       }}
-      validationSchema={Yup.object({
-        name: Yup.string().min(2, 'Too Short').required('Required'),
-        email: Yup.string().trim().email('Wrong Email').required('Required'),
-        password: Yup.string()
-          .required('Required')
-          .matches(
-            passwordRegex,
-            'Password must contain at least one letter, at least one number, and be longer than 8 charaters'
-          ),
-        confirmPassword: Yup.string()
-          .required('Required')
-          .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-      })}
+      validationSchema={registerSchema}
       onSubmit={async ({ name, email, password }) => {
         await register({
           variables: {

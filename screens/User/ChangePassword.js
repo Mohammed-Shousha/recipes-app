@@ -1,16 +1,16 @@
 import { useState, useRef } from 'react'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
 
 import { ErrorText } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
 
 import { useDataContext } from '@context'
 
-import { passwordRegex } from '@utils/database'
 import { useUserMutations } from '@hooks'
 
 import { Button } from '@components'
+
+import { changePasswordSchema } from '@utils/validationSchemas'
 
 export const ChangePassword = () => {
   const { email } = useDataContext()
@@ -34,18 +34,7 @@ export const ChangePassword = () => {
         newPassword: '',
         confirmPassword: '',
       }}
-      validationSchema={Yup.object({
-        password: Yup.string().required('Required'),
-        newPassword: Yup.string()
-          .required('Required')
-          .matches(
-            passwordRegex,
-            'Password must contain at least one letter, at least one number, and be longer than 8 charaters'
-          ),
-        confirmPassword: Yup.string()
-          .required('Required')
-          .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
-      })}
+      validationSchema={changePasswordSchema}
       onSubmit={async ({ password, newPassword }) => {
         await changePassword({
           variables: {
@@ -80,6 +69,7 @@ export const ChangePassword = () => {
           {errors.password && touched.password && (
             <ErrorText>{errors.password}</ErrorText>
           )}
+
           <FormInput
             placeholder="New Password"
             value={values.newPassword}
@@ -95,6 +85,7 @@ export const ChangePassword = () => {
           {errors.newPassword && touched.newPassword && (
             <ErrorText>{errors.newPassword}</ErrorText>
           )}
+
           <FormInput
             placeholder="Confirm Password"
             value={values.confirmPassword}

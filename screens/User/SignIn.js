@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
 
 import { ErrorText } from '@components/styles/Texts.styles'
 import { FormInput } from '@components/styles/Inputs.styles'
 
 import { googleIcon } from '@assets/icons'
+
+import { signInSchema } from '@utils/validationSchemas'
 
 import { useGoogleAuth, useUserMutations } from '@hooks'
 
@@ -27,10 +28,7 @@ export const SignIn = () => {
         email: '',
         password: '',
       }}
-      validationSchema={Yup.object({
-        email: Yup.string().trim().email('Wrong Email').required('Required'),
-        password: Yup.string().required('Required'),
-      })}
+      validationSchema={signInSchema}
       onSubmit={async ({ email, password }) => {
         await signIn({
           variables: {
