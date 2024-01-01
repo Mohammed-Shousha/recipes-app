@@ -10,7 +10,6 @@ import {
 } from '@components/styles/Images.styles'
 import { RowContainer } from '@components/styles/Containers.styles'
 import { ErrorText } from '@components/styles/Texts.styles'
-import { FormInput } from '@components/styles/Inputs.styles'
 import { DropDown } from '@components/styles/DropDown.styles'
 
 import { useDataContext } from '@context'
@@ -24,7 +23,7 @@ import { recipeFormSchema } from '@utils/validationSchemas'
 
 import { useImageUploader, useRecipesMutations } from '@hooks'
 
-import { Button } from '@components'
+import { Button, FormInput } from '@components'
 
 export const RecipeForm = ({ route }) => {
   const { email, userRecipes } = useDataContext()
@@ -54,13 +53,8 @@ export const RecipeForm = ({ route }) => {
   )
 
   const [dropDownOpen, setDropDownOpen] = useState(false)
-  const [activeInput, setActiveInput] = useState(null)
 
   const { loading, image: recipeImage, uploadImage } = useImageUploader(image)
-
-  const activateInput = (input) => setActiveInput(input)
-
-  const deactivateInput = () => setActiveInput(null)
 
   const handleRecipe = async (id, recipeData) => {
     if (id) {
@@ -106,9 +100,6 @@ export const RecipeForm = ({ route }) => {
               placeholder="Recipe Name"
               value={values.title}
               onChangeText={handleChange('title')}
-              onFocus={() => activateInput('title')}
-              onBlur={deactivateInput}
-              active={activeInput === 'title'}
               returnKeyType="next"
             />
             {errors.title && touched.title && (
@@ -133,9 +124,6 @@ export const RecipeForm = ({ route }) => {
               multiline
               numberOfLines={3}
               onChangeText={handleChange('ingredients')}
-              onFocus={() => activateInput('ingredients')}
-              onBlur={deactivateInput}
-              active={activeInput === 'ingredients'}
             />
             {errors.ingredients && touched.ingredients && (
               <ErrorText>{errors.ingredients}</ErrorText>
@@ -146,9 +134,6 @@ export const RecipeForm = ({ route }) => {
               multiline
               numberOfLines={3}
               onChangeText={handleChange('directions')}
-              onFocus={() => activateInput('directions')}
-              onBlur={deactivateInput}
-              active={activeInput === 'directions'}
             />
             {errors.directions && touched.directions && (
               <ErrorText>{errors.directions}</ErrorText>
@@ -158,9 +143,6 @@ export const RecipeForm = ({ route }) => {
               value={values.time}
               keyboardType="numeric"
               onChangeText={handleChange('time')}
-              onFocus={() => activateInput('time')}
-              onBlur={deactivateInput}
-              active={activeInput === 'time'}
               returnKeyType="done"
             />
             {errors.time && touched.time && (

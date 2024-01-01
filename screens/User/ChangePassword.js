@@ -1,14 +1,13 @@
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import { Formik } from 'formik'
 
 import { ErrorText } from '@components/styles/Texts.styles'
-import { FormInput } from '@components/styles/Inputs.styles'
 
 import { useDataContext } from '@context'
 
 import { useUserMutations } from '@hooks'
 
-import { Button } from '@components'
+import { Button, FormInput } from '@components'
 
 import { changePasswordSchema } from '@utils/validationSchemas'
 
@@ -17,15 +16,8 @@ export const ChangePassword = () => {
 
   const { changePassword, error } = useUserMutations()
 
-  const [active, setActive] = useState(null)
-
-  const passwordRef = useRef()
   const newPasswordRef = useRef()
   const confirmPasswordRef = useRef()
-
-  const activateInput = (input) => setActive(input)
-
-  const deactivateInput = () => setActive(null)
 
   return (
     <Formik
@@ -59,12 +51,8 @@ export const ChangePassword = () => {
             value={values.password}
             secureTextEntry
             onChangeText={handleChange('password')}
-            onFocus={() => activateInput('password')}
-            onBlur={deactivateInput}
-            active={active === 'password'}
             returnKeyType="next"
             onSubmitEditing={() => newPasswordRef.current.focus()}
-            ref={passwordRef}
           />
           {errors.password && touched.password && (
             <ErrorText>{errors.password}</ErrorText>
@@ -75,9 +63,6 @@ export const ChangePassword = () => {
             value={values.newPassword}
             secureTextEntry
             onChangeText={handleChange('newPassword')}
-            onFocus={() => activateInput('newPassword')}
-            onBlur={deactivateInput}
-            active={active === 'newPassword'}
             returnKeyType="next"
             onSubmitEditing={() => confirmPasswordRef.current.focus()}
             ref={newPasswordRef}
@@ -91,9 +76,6 @@ export const ChangePassword = () => {
             value={values.confirmPassword}
             onChangeText={handleChange('confirmPassword')}
             secureTextEntry
-            onFocus={() => activateInput('confirmPassword')}
-            onBlur={deactivateInput}
-            active={active === 'confirmPassword'}
             returnKeyType="done"
             ref={confirmPasswordRef}
           />

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Formik } from 'formik'
 import { ActivityIndicator } from 'react-native'
 
@@ -16,7 +15,6 @@ import {
   ProfileText,
   StyledText,
 } from '@components/styles/Texts.styles'
-import { FormInput } from '@components/styles/Inputs.styles'
 
 import { editProfileSchema } from '@utils/validationSchemas'
 
@@ -27,7 +25,7 @@ import { useImageUploader, useUserMutations } from '@hooks'
 import user from '@assets/images/chef.png'
 import edit from '@assets/icons/edit.png'
 
-import { Button } from '@components'
+import { Button, FormInput } from '@components'
 
 export const EditProfile = ({ navigation }) => {
   const { name, email, image, password } = useDataContext()
@@ -35,16 +33,6 @@ export const EditProfile = ({ navigation }) => {
   const { changeData } = useUserMutations()
 
   const { loading, image: userImage, uploadImage } = useImageUploader(image)
-
-  const [active, setActive] = useState(false)
-
-  const activate = () => {
-    setActive(true)
-  }
-
-  const deactivate = () => {
-    setActive(false)
-  }
 
   const handleChangePassword = () => {
     navigation.navigate('Change Password')
@@ -95,9 +83,6 @@ export const EditProfile = ({ navigation }) => {
             <FormInput
               value={values.name}
               onChangeText={handleChange('name')}
-              onFocus={activate}
-              onBlur={deactivate}
-              active={active}
             />
             {errors.name && touched.name && (
               <ErrorText>{errors.name}</ErrorText>

@@ -1,5 +1,5 @@
 import { RowContainer } from '@components/styles/Containers.styles'
-import { Input } from '@components/styles/Inputs.styles'
+import { StyledTextInput } from '@components/styles/Inputs.styles'
 
 import { PressableIcon } from './Icons'
 
@@ -13,7 +13,7 @@ export const IconInput = ({
 }) => {
   return (
     <RowContainer>
-      <Input
+      <StyledTextInput
         placeholder={placeholder}
         value={inputValue}
         onChangeText={setInputValue}

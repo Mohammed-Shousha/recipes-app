@@ -1,8 +1,7 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { Formik } from 'formik'
 
 import { ErrorText } from '@components/styles/Texts.styles'
-import { FormInput } from '@components/styles/Inputs.styles'
 
 import { googleIcon } from '@assets/icons'
 
@@ -10,13 +9,11 @@ import { signInSchema } from '@utils/validationSchemas'
 
 import { useGoogleAuth, useUserMutations } from '@hooks'
 
-import { LoadingDisplay, Button } from '@components'
+import { LoadingDisplay, Button, FormInput } from '@components'
 
 export const SignIn = () => {
   const { signIn, error } = useUserMutations()
   const { handleGoogleAuth, loading } = useGoogleAuth()
-
-  const [active, setActive] = useState(null)
 
   const passwordRef = useRef()
 
@@ -53,35 +50,25 @@ export const SignIn = () => {
             value={values.email}
             autoFocus={false}
             onChangeText={handleChange('email')}
-            onFocus={() => setActive('email')}
-            onBlur={() => {
-              setActive(false)
-              handleBlur('email')
-            }}
-            active={active === 'email'}
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current.focus()}
           />
           {errors.email && touched.email && (
             <ErrorText>{errors.email}</ErrorText>
           )}
+
           <FormInput
             placeholder="Password"
             value={values.password}
             secureTextEntry
             onChangeText={handleChange('password')}
-            onFocus={() => setActive('password')}
-            onBlur={() => {
-              setActive(false)
-              handleBlur('password')
-            }}
-            active={active === 'password'}
             returnKeyType="done"
             ref={passwordRef}
           />
           {errors.password && touched.password && (
             <ErrorText>{errors.password}</ErrorText>
           )}
+
           {error && <ErrorText>{error}</ErrorText>}
 
           <Button
