@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 
-import { useDataContext } from '@context'
+import { useDataState } from '@context'
 
 import { RECIPES_TYPES } from '@utils/database'
 import { RECIPE_URL } from '@utils/constants'
 import { capitalize } from '@utils/helpers'
 
 export const useFetchRecipe = (id) => {
-  const { favRecipes } = useDataContext()
+  const { favRecipes } = useDataState()
 
   const [recipe, setRecipe] = useState({})
   const [ingredients, setIngredients] = useState([])

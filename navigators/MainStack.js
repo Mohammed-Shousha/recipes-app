@@ -9,7 +9,13 @@ const MainStack = createStackNavigator()
 export const MainStackScreen = () => (
   <MainStack.Navigator screenOptions={stackScreenOptions}>
     <MainStack.Screen name="Main" component={withContainer(Main)} />
-    <MainStack.Screen name="Recipes" component={withContainer(Recipes)} />
+    <MainStack.Screen
+      name="Main-Recipes"
+      component={withContainer(Recipes)}
+      options={{
+        title: 'Recipes',
+      }}
+    />
     <MainStack.Screen
       name="Recipe"
       component={withContainer(Recipe)}

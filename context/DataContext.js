@@ -1,14 +1,24 @@
 import { createContext, useReducer, useEffect, useContext } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
+import { setUserData } from './actions'
+
 const DataContext = createContext()
 
-export const useDataContext = () => {
+export const useDataState = () => {
   const context = useContext(DataContext)
   if (!context) {
-    throw new Error('useStateContext must be used within a StateProvider')
+    throw new Error('useDataState must be used within a DataProvider')
   }
-  return context
+  return context.state
+}
+
+export const useDataDispatch = () => {
+  const context = useContext(DataContext)
+  if (!context) {
+    throw new Error('useStateDispatch must be used within a DataProvider')
+  }
+  return context.dispatch
 }
 
 const initialState = {
@@ -20,6 +30,7 @@ const initialState = {
   userRecipes: null,
   isSignedIn: false,
   recipes: [],
+  searchRecipes: [],
 }
 
 const reducer = (state, action) => {
@@ -40,6 +51,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         recipes: action.payload,
+      }
+
+    case 'SET_SEARCH_RECIPES':
+      return {
+        ...state,
+        searchRecipes: action.payload,
       }
 
     case 'SET_USER_DATA':
@@ -66,36 +83,12 @@ const reducer = (state, action) => {
 export const DataProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const setUserData = (userData) => {
-    dispatch({ type: 'SET_USER_DATA', payload: userData })
-  }
-
-  const setRecipes = (recipes) => {
-    dispatch({ type: 'SET_RECIPES', payload: recipes })
-  }
-
-  const setFavRecipes = (favRecipes) => {
-    dispatch({ type: 'SET_FAV_RECIPES', payload: favRecipes })
-  }
-
-  const setUserRecipes = (userRecipes) => {
-    dispatch({ type: 'SET_USER_RECIPES', payload: userRecipes })
-  }
-
-  const authenticateUser = (userData) => {
-    dispatch({ type: 'AUTHENTICATE_USER', payload: userData })
-  }
-
-  const logOut = () => {
-    dispatch({ type: 'LOG_OUT' })
-  }
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const jsonData = await AsyncStorage.getItem('StateData')
         if (jsonData) {
-          setUserData(JSON.parse(jsonData))
+          dispatch(setUserData(JSON.parse(jsonData)))
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -121,13 +114,8 @@ export const DataProvider = ({ children }) => {
   return (
     <DataContext.Provider
       value={{
-        setUserData,
-        setRecipes,
-        setFavRecipes,
-        setUserRecipes,
-        authenticateUser,
-        logOut,
-        ...state,
+        dispatch,
+        state,
       }}
     >
       {children}

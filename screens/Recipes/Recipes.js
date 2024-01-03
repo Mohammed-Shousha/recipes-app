@@ -1,13 +1,17 @@
 import { FlatList } from 'react-native'
+import { useRoute } from '@react-navigation/native'
 
 import emptyDish from '@assets/images/emptyDish.png'
 
-import { useDataContext } from '@context'
+import { useDataState } from '@context'
 
 import { RecipeTile, ErrorDisplay } from '@components'
 
 export const Recipes = () => {
-  const { recipes } = useDataContext()
+  const { recipes: mainRecipes, searchRecipes } = useDataState()
+  const route = useRoute()
+
+  const recipes = route.name === 'Main-Recipes' ? mainRecipes : searchRecipes
 
   if (!recipes)
     return (

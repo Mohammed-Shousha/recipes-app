@@ -4,7 +4,7 @@ import { RowContainer } from '@components/styles/Containers.styles'
 import { RecipeImage } from '@components/styles/Images.styles'
 import { RecipeTitle } from '@components/styles/Texts.styles'
 
-import { useDataContext } from '@context'
+import { useDataState } from '@context'
 
 import heart from '@assets/icons/greyHeart.png'
 import redHeart from '@assets/icons/redHeart.png'
@@ -27,7 +27,7 @@ export const Recipe = ({ route }) => {
 
   const { likeRecipe, unlikeRecipe } = useRecipesMutations()
 
-  const { email, isSignedIn } = useDataContext()
+  const { email, isSignedIn } = useDataState()
 
   const {
     recipe,

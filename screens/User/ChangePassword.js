@@ -3,7 +3,7 @@ import { Formik } from 'formik'
 
 import { ErrorText } from '@components/styles/Texts.styles'
 
-import { useDataContext } from '@context'
+import { useDataState } from '@context'
 
 import { useUserMutations } from '@hooks'
 
@@ -12,7 +12,7 @@ import { Button, FormInput } from '@components'
 import { changePasswordSchema } from '@utils/validationSchemas'
 
 export const ChangePassword = () => {
-  const { email } = useDataContext()
+  const { email } = useDataState()
 
   const { changePassword, error } = useUserMutations()
 

@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native'
 import { AddButton } from '@components/styles/Buttons.styles'
 import { Icon } from '@components/styles/Images.styles'
 
-import { useDataContext } from '@context'
+import { useDataState } from '@context'
 
 import cookbook from '@assets/images/cookbook.png'
 import { plusIcon } from '@assets/icons'
@@ -11,7 +11,7 @@ import { plusIcon } from '@assets/icons'
 import { ErrorDisplay, RecipeTile } from '@components'
 
 export const UserRecipes = ({ navigation }) => {
-  const { userRecipes } = useDataContext()
+  const { userRecipes } = useDataState()
 
   const navigateToAddRecipe = () => {
     navigation.navigate('Add Recipe')

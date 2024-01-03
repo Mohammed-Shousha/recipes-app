@@ -9,10 +9,11 @@ import {
   HANDLE_ADDING_RECIPE,
 } from '@utils/graphql/mutations'
 
-import { useDataContext } from '@context'
+import { useDataDispatch } from '@context'
+import { setUserRecipes, setFavRecipes } from '@context/actions'
 
 export const useRecipesMutations = () => {
-  const { setFavRecipes, setUserRecipes } = useDataContext()
+  const dispatch = useDataDispatch()
 
   const navigation = useNavigation()
 
@@ -27,7 +28,7 @@ export const useRecipesMutations = () => {
   const [addRecipe] = useMutation(HANDLE_ADDING_RECIPE, {
     onCompleted({ AddRecipe }) {
       handleCompleted(AddRecipe, () => {
-        setUserRecipes(AddRecipe.data)
+        dispatch(setUserRecipes(AddRecipe.data))
         navigation.goBack()
       })
     },
@@ -36,7 +37,7 @@ export const useRecipesMutations = () => {
   const [editRecipe] = useMutation(HANDLE_EDITING_RECIPE, {
     onCompleted({ EditRecipe }) {
       handleCompleted(EditRecipe, () => {
-        setUserRecipes(EditRecipe.data)
+        dispatch(setUserRecipes(EditRecipe.data))
         navigation.goBack()
       })
     },
@@ -45,7 +46,7 @@ export const useRecipesMutations = () => {
   const [deleteRecipe] = useMutation(HANDLE_DELETING_RECIPE, {
     onCompleted({ DeleteRecipe }) {
       handleCompleted(DeleteRecipe, () => {
-        setUserRecipes(DeleteRecipe.data)
+        dispatch(setUserRecipes(DeleteRecipe.data))
       })
     },
   })
@@ -53,7 +54,7 @@ export const useRecipesMutations = () => {
   const [likeRecipe] = useMutation(HANDLE_LIKING_RECIPE, {
     onCompleted({ LikeRecipe }) {
       handleCompleted(LikeRecipe, () => {
-        setFavRecipes(LikeRecipe.data)
+        dispatch(setFavRecipes(LikeRecipe.data))
       })
     },
   })
@@ -61,7 +62,7 @@ export const useRecipesMutations = () => {
   const [unlikeRecipe] = useMutation(HANDLE_UNLIKING_RECIPE, {
     onCompleted({ UnlikeRecipe }) {
       handleCompleted(UnlikeRecipe, () => {
-        setFavRecipes(UnlikeRecipe.data)
+        dispatch(setFavRecipes(UnlikeRecipe.data))
       })
     },
   })

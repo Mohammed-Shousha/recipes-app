@@ -1,8 +1,9 @@
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
 import { BoxesContainer } from '@components/styles/Containers.styles'
 
-import { useDataContext } from '@context'
+import { useDataDispatch } from '@context'
+import { setRecipes, setSearchRecipes } from '@context/actions'
 
 import { BoxComponent } from './Box'
 
@@ -11,22 +12,30 @@ export const Boxes = ({
   text = true, // for time
   styledText = false, // for calories
   fetchRecipes,
-  isSearch = false,
 }) => {
   const navigation = useNavigation()
+  const route = useRoute()
 
-  const { setRecipes } = useDataContext()
+  console.log('Boxes', route.name)
+
+  const dispatch = useDataDispatch()
 
   const fetchAndNavigate = async (name) => {
     const recipes = await fetchRecipes(name)
-    setRecipes(recipes)
-    navigation.navigate('Recipes')
+
+    const navigateTo = route.name === 'Main' ? 'Main-Recipes' : 'Recipes'
+    const action = route.name === 'Main' ? setRecipes : setSearchRecipes
+
+    dispatch(action(recipes))
+    navigation.navigate(navigateTo)
   }
 
-  const searchRecipes = async (name) => {
-    if (isSearch) {
+  const searchRecipes = (name) => {
+    if (route.name === 'Search') {
+      console.log('searchRecipes', name)
       navigation.navigate(name)
     } else {
+      console.log('searchRecipes fetch', name)
       fetchAndNavigate(name)
     }
   }

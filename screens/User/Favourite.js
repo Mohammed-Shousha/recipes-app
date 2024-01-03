@@ -1,13 +1,13 @@
 import { ScrollView } from 'react-native'
 
-import { useDataContext } from '@context'
+import { useDataState } from '@context'
 
 import { RecipeTile, ErrorDisplay } from '@components'
 
 import emptyDish from '@assets/images/emptyDish.png'
 
 export const Favourite = () => {
-  const { favRecipes } = useDataContext()
+  const { favRecipes } = useDataState()
 
   if (!favRecipes?.length)
     return (

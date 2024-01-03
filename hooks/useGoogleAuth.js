@@ -5,7 +5,8 @@ import { useAuthRequest } from 'expo-auth-session/providers/google'
 import { useNavigation } from '@react-navigation/native'
 import * as WebBrowser from 'expo-web-browser'
 
-import { useDataContext } from '@context'
+import { useDataDispatch } from '@context'
+import { authenticateUser } from '@context/actions'
 
 import { HANDLE_GOOGLE_AUTH } from '@utils/graphql/mutations'
 import { GOOGLE_API_URL } from '@utils/constants'
@@ -16,7 +17,7 @@ WebBrowser.maybeCompleteAuthSession()
 const useProxy = Platform.select({ web: false, default: false })
 
 export const useGoogleAuth = () => {
-  const { authenticateUser } = useDataContext()
+  const dispatch = useDataDispatch()
   const navigation = useNavigation()
 
   const [loading, setLoading] = useState(false)
@@ -26,16 +27,17 @@ export const useGoogleAuth = () => {
       if (GoogleAuth.id) {
         const { name, email, favRecipes, recipes, image, password } = GoogleAuth
 
-        authenticateUser({
-          name,
-          email,
-          password,
-          image,
-          favRecipes,
-          userRecipes: recipes,
-        })
+        dispatch(
+          authenticateUser({
+            name,
+            email,
+            password,
+            image,
+            favRecipes,
+            userRecipes: recipes,
+          })
+        )
       }
-
       navigation.navigate('User')
     },
   })

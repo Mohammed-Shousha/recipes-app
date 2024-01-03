@@ -12,7 +12,7 @@ import { RowContainer } from '@components/styles/Containers.styles'
 import { ErrorText } from '@components/styles/Texts.styles'
 import { DropDown } from '@components/styles/DropDown.styles'
 
-import { useDataContext } from '@context'
+import { useDataState } from '@context'
 
 import gallery from '@assets/icons/gallery.png'
 import edit from '@assets/icons/edit.png'
@@ -26,7 +26,7 @@ import { useImageUploader, useRecipesMutations } from '@hooks'
 import { Button, FormInput } from '@components'
 
 export const RecipeForm = ({ route }) => {
-  const { email, userRecipes } = useDataContext()
+  const { email, userRecipes } = useDataState()
 
   const { editRecipe, addRecipe } = useRecipesMutations()
 

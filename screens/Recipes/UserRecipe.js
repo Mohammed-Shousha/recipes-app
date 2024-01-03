@@ -4,7 +4,7 @@ import { RowContainer } from '@components/styles/Containers.styles'
 import { RecipeImage } from '@components/styles/Images.styles'
 import { RecipeTitle } from '@components/styles/Texts.styles'
 
-import { useDataContext } from '@context'
+import { useDataState } from '@context'
 
 import bin from '@assets/icons/bin.png'
 import edit from '@assets/icons/edit_2.png'
@@ -23,7 +23,7 @@ import {
 import { useRecipesMutations } from '@hooks'
 
 export const UserRecipe = ({ route, navigation }) => {
-  const { userRecipes, email } = useDataContext()
+  const { userRecipes, email } = useDataState()
 
   const [loading, setLoading] = useState(false)
 

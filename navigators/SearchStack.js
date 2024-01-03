@@ -17,7 +17,10 @@ const SearchStack = createStackNavigator()
 export const SearchStackScreen = () => (
   <SearchStack.Navigator screenOptions={stackScreenOptions}>
     <SearchStack.Screen name="Search" component={withContainer(Search)} />
-    <SearchStack.Screen name="Ingredients" component={IngredientsSearch} />
+    <SearchStack.Screen
+      name="Ingredients"
+      component={withContainer(IngredientsSearch)}
+    />
     <SearchStack.Screen name="Recipes" component={withContainer(Recipes)} />
     <SearchStack.Screen name="Time" component={withContainer(TimeSearch)} />
     <SearchStack.Screen name="Diet" component={withContainer(DietSearch)} />

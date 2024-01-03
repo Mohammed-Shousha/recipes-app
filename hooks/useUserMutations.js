@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 
-import { useDataContext } from '@context'
+import { useDataDispatch } from '@context'
+import { setUserData, authenticateUser } from '@context/actions'
 
 import {
   HANDLE_SIGN_IN,
@@ -12,14 +13,14 @@ import {
 } from '@utils/graphql/mutations'
 
 export const useUserMutations = () => {
-  const { authenticateUser, setUserData } = useDataContext()
+  const dispatch = useDataDispatch()
   const navigation = useNavigation()
 
   const [error, setError] = useState(null)
 
   const handleCompleted = (
     mutationResponse,
-    updateUserFunction,
+    actionCreator,
     navigateTo = 'User'
   ) => {
     if (mutationResponse.id) {
@@ -32,14 +33,17 @@ export const useUserMutations = () => {
         recipes: userRecipes,
       } = mutationResponse
 
-      updateUserFunction?.({
-        name,
-        email,
-        password,
-        image,
-        favRecipes,
-        userRecipes,
-      })
+      actionCreator &&
+        dispatch(
+          actionCreator({
+            name,
+            email,
+            password,
+            image,
+            favRecipes,
+            userRecipes,
+          })
+        )
 
       navigation.navigate(navigateTo)
     } else if (mutationResponse.message) {

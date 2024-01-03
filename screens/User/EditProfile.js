@@ -18,7 +18,7 @@ import {
 
 import { editProfileSchema } from '@utils/validationSchemas'
 
-import { useDataContext } from '@context'
+import { useDataState } from '@context'
 
 import { useImageUploader, useUserMutations } from '@hooks'
 
@@ -28,7 +28,7 @@ import edit from '@assets/icons/edit.png'
 import { Button, FormInput } from '@components'
 
 export const EditProfile = ({ navigation }) => {
-  const { name, email, image, password } = useDataContext()
+  const { name, email, image, password } = useDataState()
 
   const { changeData } = useUserMutations()
 

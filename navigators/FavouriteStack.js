@@ -2,14 +2,14 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { Favourite, Recipe, SignIn, Register, Profile } from '@screens'
 import { withContainer } from '@hocs'
 
-import { useDataContext } from '@context'
+import { useDataState } from '@context'
 
 import { stackScreenOptions, recipeScreenOptions } from '@utils/database'
 
 const FavouriteStack = createStackNavigator()
 
 export const FavouriteStackScreen = () => {
-  const { isSignedIn } = useDataContext()
+  const { isSignedIn } = useDataState()
   return (
     <FavouriteStack.Navigator screenOptions={stackScreenOptions}>
       {isSignedIn ? (

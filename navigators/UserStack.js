@@ -13,14 +13,15 @@ import {
   Register,
 } from '@screens'
 
-import { useDataContext } from '@context'
+import { useDataState } from '@context'
 
 import { stackScreenOptions, recipeScreenOptions } from '@utils/database'
 
 const UserStack = createStackNavigator()
 
 export const UserStackScreen = () => {
-  const { isSignedIn } = useDataContext()
+  const { isSignedIn } = useDataState()
+
   return (
     <UserStack.Navigator screenOptions={stackScreenOptions}>
       {isSignedIn ? (

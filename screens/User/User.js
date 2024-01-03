@@ -5,7 +5,8 @@ import { UserDetailContainer } from '@components/styles/Containers.styles'
 import { UserImage } from '@components/styles/Images.styles'
 import { Line, StyledText, Title } from '@components/styles/Texts.styles'
 
-import { useDataContext } from '@context'
+import { useDataState, useDataDispatch } from '@context'
+import { logOut } from '@context/actions'
 
 import user from '@assets/images/chef.png'
 
@@ -15,7 +16,8 @@ import { RATE_FORM_URL } from '@utils/constants'
 import { PressableIcon, ConfirmModal } from '@components'
 
 export const User = ({ navigation }) => {
-  const { name, image, logOut } = useDataContext()
+  const { name, image } = useDataState()
+  const dispatch = useDataDispatch()
 
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -41,7 +43,7 @@ export const User = ({ navigation }) => {
 
   const handleLogOut = () => {
     closeModal()
-    logOut()
+    dispatch(logOut())
   }
 
   return (

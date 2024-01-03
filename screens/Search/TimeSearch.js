@@ -7,10 +7,12 @@ import { fetchData } from '@utils/helpers'
 
 export const TimeSearch = () => {
   const fetchTimeRecipes = async (name) => {
-    const time = Number(name.split(' ')[0])
+    const time = name.split(' ')[0] // get the first word (time)
+
     const { results } = await fetchData(TIME_SEARCH(time))
 
     return results
   }
+
   return <Boxes categories={timeCategories} fetchRecipes={fetchTimeRecipes} />
 }

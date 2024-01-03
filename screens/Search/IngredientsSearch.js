@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
@@ -9,7 +9,8 @@ import {
   RowContainer,
 } from '@components/styles/Containers.styles'
 
-import { useDataContext } from '@context'
+import { useDataDispatch } from '@context'
+import { setSearchRecipes } from '@context/actions'
 
 import { IconInput, IngredientTile, PressableIcon } from '@components'
 
@@ -20,24 +21,21 @@ import { fetchData } from '@utils/helpers'
 
 export const IngredientsSearch = () => {
   const navigation = useNavigation()
-  const { setRecipes } = useDataContext()
+  const dispatch = useDataDispatch()
 
   const [ingredients, setIngredients] = useState([])
   const [ingredient, setIngredient] = useState('')
 
   const searchRecipesByIngredients = async () => {
     const data = await fetchData(INGREDIENTS_SEARCH(ingredients))
-    if (!data.length) {
-      setRecipes(null)
-    } else {
-      setRecipes(data)
-    }
+
+    dispatch(setSearchRecipes(data.length ? data : null))
+
     navigation.navigate('Recipes')
     setIngredients([])
   }
 
   const addIngredient = () => {
-    setRecipes([])
     if (ingredient.trim()) {
       setIngredients([...ingredients, ingredient.trim()])
       setIngredient('')
@@ -49,10 +47,6 @@ export const IngredientsSearch = () => {
     newIngredients.splice(i, 1)
     setIngredients(newIngredients)
   }
-
-  useEffect(() => {
-    setRecipes([])
-  }, [setRecipes])
 
   return (
     <>

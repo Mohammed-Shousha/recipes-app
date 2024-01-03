@@ -7,15 +7,8 @@ import { fetchData } from '@utils/helpers'
 
 export const CaloriesSearch = () => {
   const fetchCaloriesRecipes = async (name) => {
-    const nameArray = name.split(' ')
-    let calories = ''
-    if (nameArray.length === 2) {
-      // 'under 250'
-      calories = nameArray[1]
-    } else {
-      // '250 to 500' (3)
-      calories = nameArray[2]
-    }
+    const calories = name.split(' ').at(-1) // get the last word (max-calories)
+
     const { results } = await fetchData(CALORIES_SEARCH(calories))
 
     return results

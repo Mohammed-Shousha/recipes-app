@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
 
-import { useDataContext } from '@context'
+import { useDataDispatch } from '@context'
+import { setSearchRecipes } from '@context/actions'
+
 import { searchCategories } from '@utils/database'
 
 import { QUERY_SEARCH } from '@utils/constants'
@@ -10,19 +13,17 @@ import { searchIcon } from '@assets/icons'
 
 import { Boxes, IconInput } from '@components'
 
-export const Search = ({ navigation }) => {
-  const [searchValue, setSearchValue] = useState('')
+export const Search = () => {
+  const navigation = useNavigation()
+  const dispatch = useDataDispatch()
 
-  const { setRecipes } = useDataContext()
+  const [searchValue, setSearchValue] = useState('')
 
   const searchRecipes = async () => {
     const { results } = await fetchData(QUERY_SEARCH(searchValue))
 
-    if (!results.length) {
-      setRecipes(null)
-    } else {
-      setRecipes(results)
-    }
+    dispatch(setSearchRecipes(results.length ? results : null))
+
     navigation.navigate('Recipes')
     setSearchValue('')
   }
@@ -36,7 +37,7 @@ export const Search = ({ navigation }) => {
         inputValue={searchValue}
         setInputValue={setSearchValue}
       />
-      <Boxes categories={searchCategories} isSearch />
+      <Boxes categories={searchCategories} />
     </>
   )
 }
